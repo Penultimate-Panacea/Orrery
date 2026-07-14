@@ -1,0 +1,122 @@
+from math import pi
+STEPS = 48
+STEP_ANGLE = 360 / STEPS
+
+SATURN_STEPS = 36
+SATURN_STEP_ANGLE = 360 / SATURN_STEPS
+SATURN_STEP_OFFSET = -5.0
+
+GRID12_STEPS = 12
+GRID12_STEP_ANGLE = 360 / GRID12_STEPS
+
+CANVAS_SIZE = 800
+BG = "white"
+GRID48_OUTLINE = "#cfcfcf"
+GRID12_OUTLINE = "#7a7a7a"
+ARC_WIDTH = 8
+
+ARC_SWEEP_STEPS = [13, 9, 5, 3, 1]
+
+RADII = [70, 110, 150, 190, 230]
+MAX_RADIUS = CANVAS_SIZE // 2 - 20
+RADII = [min(r, MAX_RADIUS) for r in RADII]
+
+
+def snap_to_steps(angle_degrees: float) -> float:
+    step_index = int(round(angle_degrees / STEP_ANGLE))
+    return (step_index % STEPS) * STEP_ANGLE
+
+
+def deg_to_rad(d: float) -> float:
+    return d * pi / 180
+
+
+def norm_angle_deg(a: float) -> float:
+    return a % 360.0
+
+estate_color_dict = {'cosmic':"#b7cece", 'spiritual':"#89408c", 'terrestrial':"#583e23"}
+element_color_dict = {'fire':"#7c1b1b", 'water':"#0e40ad", 'earth':"#774714", 'air':"#19b3ad"}
+season_color_dict = {'winter':"#43acc7", 'spring':"#0d5945", 'summer':"#edd892", 'autumn':"#dd8c61"}
+
+
+# CONJ Table Structure, index is the step, returned list is the indicies of the houses
+CONJ_MERCURY = [{0, 1, 2, 3}, {0, 1, 2, 3}, {0, 1, 2, 3}, {0, 1, 2, 3}, {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {2, 3, 4, 5}, {2, 3, 4, 5}, {2, 3, 4, 5}, {2, 3, 4, 5}, {3, 4, 5, 6}, {3, 4, 5, 6}, {3, 4, 5, 6}, {3, 4, 5, 6}, {4, 5, 6, 7}, {4, 5, 6, 7}, {4, 5, 6, 7}, {4, 5, 6, 7}, {8, 5, 6, 7}, {8, 5, 6, 7}, {8, 5, 6, 7}, {8, 5, 6, 7}, {8, 9, 6, 7}, {8, 9, 6, 7}, {8, 9, 6, 7}, {8, 9, 6, 7}, {8, 9, 10, 7}, {8, 9, 10, 7}, {8, 9, 10, 7}, {8, 9, 10, 7}, {8, 9, 10, 11}, {8, 9, 10, 11}, {8, 9, 10, 11}, {8, 9, 10, 11}, {0, 9, 10, 11}, {0, 9, 10, 11}, {0, 9, 10, 11}, {0, 9, 10, 11}, {0, 1, 10, 11}, {0, 1, 10, 11}, {0, 1, 10, 11}, {0, 1, 10, 11}, {0, 1, 2, 11}, {0, 1, 2, 11}, {0, 1, 2, 11}, {0, 1, 2, 11}]
+CONJ_VENUS = [{0, 1, 2}, {0, 1, 2}, {0, 1, 2}, {0, 1, 2}, {1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {2, 3, 4}, {2, 3, 4}, {2, 3, 4}, {2, 3, 4}, {3, 4, 5}, {3, 4, 5}, {3, 4, 5}, {3, 4, 5}, {4, 5, 6}, {4, 5, 6}, {4, 5, 6}, {4, 5, 6}, {5, 6, 7}, {5, 6, 7}, {5, 6, 7}, {5, 6, 7}, {8, 6, 7}, {8, 6, 7}, {8, 6, 7}, {8, 6, 7}, {8, 9, 7}, {8, 9, 7}, {8, 9, 7}, {8, 9, 7}, {8, 9, 10}, {8, 9, 10}, {8, 9, 10}, {8, 9, 10}, {9, 10, 11}, {9, 10, 11}, {9, 10, 11}, {9, 10, 11}, {0, 10, 11}, {0, 10, 11}, {0, 10, 11}, {0, 10, 11}, {0, 1, 11}, {0, 1, 11}, {0, 1, 11}, {0, 1, 11}]
+CONJ_MARS = [{0, 1}, {0, 1}, {0, 1}, {0, 1}, {1, 2}, {1, 2}, {1, 2}, {1, 2}, {2, 3}, {2, 3}, {2, 3}, {2, 3}, {3, 4}, {3, 4}, {3, 4}, {3, 4}, {4, 5}, {4, 5}, {4, 5}, {4, 5}, {5, 6}, {5, 6}, {5, 6}, {5, 6}, {6, 7}, {6, 7}, {6, 7}, {6, 7}, {8, 7}, {8, 7}, {8, 7}, {8, 7}, {8, 9}, {8, 9}, {8, 9}, {8, 9}, {9, 10}, {9, 10}, {9, 10}, {9, 10}, {10, 11}, {10, 11}, {10, 11}, {10, 11}, {0, 11}, {0, 11}, {0, 11}, {0, 11}]
+CONJ_JUPITER = [{0}, {0}, {0, 1}, {0, 1}, {1}, {1}, {1, 2}, {1, 2}, {2}, {2}, {2, 3}, {2, 3}, {3}, {3}, {3, 4}, {3, 4}, {4}, {4}, {4, 5}, {4, 5}, {5}, {5}, {5, 6}, {5, 6}, {6}, {6}, {6, 7}, {6, 7}, {7}, {7}, {8, 7}, {8, 7}, {8}, {8}, {8, 9}, {8, 9}, {9}, {9}, {9, 10}, {9, 10}, {10}, {10}, {10, 11}, {10, 11}, {11}, {11}, {0, 11}, {0, 11}]
+CONJ_SOL = [{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}]
+CONJ_SATURN = [{0},{0},{0,1},{1},{1},{1,2},{2},{2},{2,3},{3},{3},{3,4},{4},{4},{4,5},{5},{5},{5,6},{6},{6},{6,7},{7},{7},{7,8},{8},{8},{8,9},{9},{9},{9,10},{10},{10},{10,11},{11},{11},{0,11}]
+DELIM = "\u260C"
+
+
+def sectors_covered_by_arc_snap_points(
+        start_snap_point: int,
+        arc_snap_points: int,
+        snap_points_circle: int,
+        sectors: int = 12,
+) -> set[int]:
+    """
+    Arc includes snap points: start, start+1, ..., start+arc_snap_points-1 (inclusive),
+    wrapping modulo snap_points_circle.
+
+    A sector counts if at least one snap point in that arc falls inside it.
+    Sector index mapping:
+        sector(i) = floor( (i * sectors) / snap_points_circle )
+    """
+    if arc_snap_points <= 0 or snap_points_circle <= 0 or sectors <= 0:
+        return set()
+
+    N = snap_points_circle
+    start = start_snap_point % N
+
+    covered = set()
+    for k in range(arc_snap_points):
+        i = (start + k) % N
+        sector = (i * sectors) // N
+        if 0 <= sector < sectors:
+            covered.add(sector)
+    return covered
+
+
+print("Mercury")
+mercury_list = []
+index = 0
+while index < 48:
+    mercury_list.append(sectors_covered_by_arc_snap_points(index, 13, 48))
+    # print(sectors_covered_by_arc_snap_points(index,13,48))
+    index += 1
+print(mercury_list)
+
+print("Venus")
+venus_list = []
+index = 0
+while index < 48:
+    venus_list.append(sectors_covered_by_arc_snap_points(index, 9, 48))
+    # print(sectors_covered_by_arc_snap_points(index,13,48))
+    index += 1
+print(venus_list)
+
+print("Mars")
+mars_list = []
+index = 0
+while index < 48:
+    mars_list.append(sectors_covered_by_arc_snap_points(index, 5, 48))
+    # print(sectors_covered_by_arc_snap_points(index,13,48))
+    index += 1
+print(mars_list)
+
+print("Jupiter")
+jupiter_list = []
+index = 0
+while index < 48:
+    jupiter_list.append(sectors_covered_by_arc_snap_points(index, 3, 48))
+    # print(sectors_covered_by_arc_snap_points(index,13,48))
+    index += 1
+print(jupiter_list)
+
+MERCURY = '\u263F'
+VENUS = '\u2640'
+MARS = '\u2641'
+JUPITER = '\u2642'
+SATURN = '\u2643'
+SOL = '\u2609'
