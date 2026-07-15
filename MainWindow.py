@@ -23,6 +23,7 @@ from faustian import Faustian
 from sorcerer import Sorcerer
 from sage import Sage
 from wizard import Wizard
+from king import AddKingDialog
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -61,15 +62,35 @@ class MainWindow(QWidget):
         ]
         self.house_color_mode = ["estate"] * 12
 
+        self.kings_data = []  # should be a list of dicts, where each dict is a king
+
         self.wizards: List[Wizard] = [
             Necromancer(self.planet_conjunction_dict()),
             Hierophant(self.planet_conjunction_dict()),
-            Warlock(self.planet_conjunction_dict()),
+            Warlock(self.planet_conjunction_dict(),self.planets,self.kings_data),
             Mariner(self.planet_conjunction_dict(), self.planets),
             Faustian(self.planet_conjunction_dict(), self.generate_house_planet_conjunction_array()),
             Sorcerer(self.planet_conjunction_dict()),
             Sage(self.planet_conjunction_dict, self.planets, "Terrestrial")
         ]
+
+
+
+
+        self.kings_table = QTableWidget()
+        self.kings_table.setColumnCount(4)
+        self.kings_table.setHorizontalHeaderLabels([
+            "\u2654", lib.SUN_SIGN, lib.MOON_SIGN, lib.RISING_SIGN
+        ])
+        self.kings_table.setEditTriggers(
+            QTableWidget.EditTrigger.NoEditTriggers
+        )
+        self.kings_table.setSelectionBehavior(
+            QTableWidget.SelectionBehavior.SelectRows
+        )
+        self.kings_table.setSelectionMode(
+            QTableWidget.SelectionMode.SingleSelection
+        )
 
         self.scene = ArcScene()
         self.view = QGraphicsView(self.scene)
@@ -178,9 +199,23 @@ class MainWindow(QWidget):
 
         # right: conjunction
         right = QVBoxLayout()
-        right.addWidget(QLabel("Conjunctions (simplified)"))
-        self.table = self.create_conjunction_table(self.generate_house_planet_conjunction_array())
-        right.addWidget(self.table, 1)
+        right.addWidget(QLabel("House Conjunctions"))
+        self.conjunction_table = self.create_conjunction_table(self.generate_house_planet_conjunction_array())
+        right.addWidget(self.conjunction_table, 0)
+
+        btn_row = QHBoxLayout()
+        self.add_king_btn = QPushButton("Add King")
+        self.remove_king_btn = QPushButton("Remove King (by index)")
+        btn_row.addWidget(self.add_king_btn)
+        btn_row.addWidget(self.remove_king_btn)
+
+        # Add to the existing `right` layout
+        right.addWidget(self.kings_table)
+        right.addLayout(btn_row)
+
+        self.add_king_btn.clicked.connect(self.on_add_king)
+        self.remove_king_btn.clicked.connect(self.on_remove_king_by_index)
+
         read_the_stars_box = QGroupBox("Read the stars")
         read_the_stars_layout = QGridLayout()
         read_the_stars_box.setLayout(read_the_stars_layout)
@@ -200,7 +235,7 @@ class MainWindow(QWidget):
 
         btn_warlock = QPushButton("Warlock")
         read_the_stars_layout.addWidget(btn_warlock)
-        # btn_warlock.clicked.connect(self.warlock)
+        btn_warlock.clicked.connect(self.wizards[2].warlock_popup)
 
         btn_mariner = QPushButton("Mariner")
         read_the_stars_layout.addWidget(btn_mariner)
@@ -360,5 +395,31 @@ class MainWindow(QWidget):
 
         # return in the same order as planets_to_check
         return {p: sorted(adj.get(p, set()), key=str) for p in planets_to_check}
+
+    def on_add_king(self):
+        dlg = AddKingDialog(self)
+        if dlg.exec() == dlg.DialogCode.Accepted:
+            data = dlg.get_king_data()
+            # data: {name, sun, moon, rising}
+            self.kings_data.append(data)
+            self._append_king_to_table(data)
+        print(self.kings_data)
+
+    def _append_king_to_table(self, king):
+        row = self.kings_table.rowCount()
+        self.kings_table.insertRow(row)
+
+        self.kings_table.setItem(row, 0, QTableWidgetItem(king["name"]))
+        self.kings_table.setItem(row, 1, QTableWidgetItem(king["sun"]))
+        self.kings_table.setItem(row, 2, QTableWidgetItem(king["moon"]))
+        self.kings_table.setItem(row, 3, QTableWidgetItem(king["rising"]))
+
+    def on_remove_king_by_index(self):
+        row = self.kings_table.currentRow()
+        if row < 0:
+            return
+        if row < len(self.kings_data):
+            self.kings_data.pop(row) # remove from data
+        self.kings_table.removeRow(row) # remove from view
 
 

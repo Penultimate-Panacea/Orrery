@@ -20,6 +20,12 @@ JUPITER = '\u2642'
 SATURN = '\u2643'
 SOL = '\u2609'
 
+SUN_SIGN ='\u2609'
+MOON_SIGN = '\u263E'
+RISING_SIGN = '\u260A'
+
+SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces']
+
 moonphases = ["./resources/svg/new_moon.svg","./resources/svg/visions.svg","./resources/svg/planning.svg","./resources/svg/story.svg","./resources/svg/meeting.svg","./resources/svg/quiet.svg"]
 html = ["./resources/html/new_moon.html","./resources/html/visions.html","./resources/html/planning.html","./resources/html/story.html","./resources/html/meeting.html","./resources/html/quiet.html"]
 def sectors_covered_by_arc_snap_points(
