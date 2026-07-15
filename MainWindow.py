@@ -1,356 +1,22 @@
 # coding=utf-8
-# qt_arcs_planets_houses_v3.py
 import sys
-import math
 import lib
 import time
-import os
-from dataclasses import dataclass
-from typing import List, Tuple, Set
+from typing import List
 sys.path.insert(1, './BreezeStyleSheets-main/resources')
-import qdarkstyle
 
-from PyQt6.QtCore import Qt, QRectF, QPointF, QFile, QTextStream, QIODevice
-from PyQt6.QtGui import QPen, QColor, QPainterPath, QBrush, QFont, QTextDocument, QFontDatabase
-from PyQt6.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
-    QGraphicsView, QGraphicsScene, QPushButton, QLabel, QTableWidget,
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QTextDocument
+from PyQt6.QtWidgets import ( QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
+    QGraphicsView, QPushButton, QLabel, QTableWidget,
     QTableWidgetItem, QGroupBox, QRadioButton, QButtonGroup, QSizePolicy, QDialog, QTextEdit, QTextBrowser
 )
-from PyQt6.QtSvgWidgets import QSvgWidget
-
-
-# -----------------------------
-# Houses (12 equal regions)
-# -----------------------------
-@dataclass
-class House:
-    name: str
-    index: int                 # 0..11
-    estate_color: str
-    season_color: str
-    element_color: str
-
-    @property
-    def start_deg(self) -> float:  # 0 at 12 o'clock, increasing clockwise
-        return self.index * 30.0
-
-    @property
-    def end_deg(self) -> float:
-        return (self.index + 1) * 30.0
-
-    def contains_angle(self, deg: float) -> bool:
-        d = deg % 360.0
-        start = self.start_deg % 360.0
-        end = self.end_deg % 360.0
-        if self.index == 11:
-            return d >= start or d < end
-        return (d >= start) and (d < end)
-
-
-    def color_for(self, mode: str) -> str:
-        if mode == "estate":
-            return self.estate_color
-        if mode == "season":
-            return self.season_color
-        return self.element_color
-
-
-# -----------------------------
-# Planets (arcs)
-# -----------------------------
-@dataclass
-class Planet:
-    name: str
-    arc_color: str
-    span_steps: int
-    step_count_circle: int
-    conjunction_table: list
-    current_step: int = 0
-    ring_radius: float = 140.0
-    ring_thickness: float = 14.0
-    grid_offset_half_step: bool = False  # used for 36-step half-step offset
-
-
-    @property
-    def step_deg(self) -> float:
-        return 360.0 / self.step_count_circle
-
-    def start_deg(self) -> float:
-        # 0 at 12 o'clock clockwise
-        base = (self.current_step % self.step_count_circle)
-        if self.grid_offset_half_step:
-            base = base + 0.5
-        return (base % self.step_count_circle) * self.step_deg
-
-    def angle_for_step(self, step_offset: int) -> float:
-        base = (self.current_step + step_offset) % self.step_count_circle
-        if self.grid_offset_half_step:
-            base = base + 0.5
-        return (base % self.step_count_circle) * self.step_deg
-
-
-# -----------------------------
-# Drawing scene
-# -----------------------------
-class ArcScene(QGraphicsScene):
-    def __init__(self):
-        super().__init__()
-        self.setSceneRect(QRectF(-320, -280, 640, 560))
-        self.planets_items: List[object] = []
-        self.house_fill_items: List[object] = []
-        self.houses_line_items: List[object] = []
-        self.houses_label_items: List[object] = []
-        self.planet_label_items: List[object] = []
-
-    @staticmethod
-    def polar_point_scene(r: float, qt_deg: float) -> QPointF:
-        rad = math.radians(qt_deg)  # Qt: 0 at +x, CCW+
-        x = r * math.cos(rad)
-        y = -r * math.sin(rad)     # scene y grows downward
-        return QPointF(x, y)
-
-    def clear_all(self):
-        for it in self.planets_items:
-            self.removeItem(it)
-        self.planets_items.clear()
-
-        for it in self.planet_label_items:
-            self.removeItem(it)
-        self.planet_label_items.clear()
-
-        for it in self.house_fill_items:
-            self.removeItem(it)
-        self.house_fill_items.clear()
-
-        for it in self.houses_line_items:
-            self.removeItem(it)
-        self.houses_line_items.clear()
-
-        for it in self.houses_label_items:
-            self.removeItem(it)
-        self.houses_label_items.clear()
-
-    def draw_house_fills_and_labels(self, houses: List[House], house_color_mode: List[str]):
-
-        # ring outer for determining house wedge size
-        max_r = 235
-
-        # center dot
-        pen_dot = QPen(QColor("#111111"))
-        self.addEllipse(-4, -4, 8, 8, pen_dot, QColor("#111111"))
-
-        for i in range(12):
-            house = houses[i]
-            mode = house_color_mode[i]
-            col = QColor(house.color_for(mode))
-            fill = QColor(col)
-            fill.setAlpha(55)  # transparent
-
-            # house wedge: our angles are 0 at 12 o'clock, clockwise
-            # convert our -> qt:
-            # our=0 at 12 clockwise => qt=90 at CCW
-            # qt = 90 - our
-            our_start = i * 30.0
-            our_end = (i + 1) * 30.0
-
-            qt_start = 90.0 - (our_start % 360.0)
-            qt_end = 90.0 - (our_end % 360.0)
-
-            # Build wedge path as a filled sector from start->end clockwise in our space.
-            # Convert to qt sweep: clockwise in our => negative CCW in qt.
-            qt_span = -(30.0)
-
-            rect = QRectF(-max_r, -max_r, 2 * max_r, 2 * max_r)
-
-            path = QPainterPath()
-            center = QPointF(0, 0)
-            path.moveTo(center)
-
-            # arcTo draws along qt_span
-            # move from center to arc start point implicitly:
-            start_pt = self.polar_point_scene(max_r, qt_start)
-            path.moveTo(start_pt)
-            path.arcTo(rect, qt_start, qt_span)
-
-            path.lineTo(center)
-            path.closeSubpath()
-
-            self.house_fill_items.append(self.addPath(path, QPen(Qt.PenStyle.NoPen), QBrush(fill)))
-
-            # separator line
-            sep_pen = QPen(QColor("#2a2a2a"))
-            sep_pen.setWidth(1)
-            end_pt = self.polar_point_scene(max_r, qt_start)
-            self.houses_line_items.append(self.addLine(0, 0, end_pt.x(), end_pt.y(), sep_pen))
-
-            # label
-            mid_our = i * 30.0 + 15.0
-            qt_mid = 90.0 - (mid_our % 360.0)
-            label_pos = self.polar_point_scene(max_r - 35, qt_mid)
-
-            label = self.addText(house.name)
-            label_color = QColor(col)
-            label_color.setAlpha(220)
-            label.setDefaultTextColor(label_color)
-
-            f = QFont()
-            f.setPointSize(12)
-            label.setFont(f)
-
-            br = label.boundingRect()
-            label.setPos(label_pos.x() - br.width() / 2, label_pos.y() - br.height() / 2)
-            self.houses_label_items.append(label)
-
-    def draw_arc(self, planet: Planet):
-        r_outer = planet.ring_radius
-        t = planet.ring_thickness
-        r_inner = max(0.0, r_outer - t)
-
-        start_our = planet.start_deg() % 360.0
-        qt_start = 90.0 - start_our
-        span_deg = planet.span_steps * planet.step_deg
-        qt_span = -span_deg  # clockwise sweep
-
-        rect_outer = QRectF(-r_outer, -r_outer, 2 * r_outer, 2 * r_outer)
-        rect_inner = QRectF(-r_inner, -r_inner, 2 * r_inner, 2 * r_inner)
-
-        outer_start_pt = self.polar_point_scene(r_outer, qt_start)
-        inner_end_pt = self.polar_point_scene(r_inner, qt_start + qt_span)
-
-        path = QPainterPath()
-        path.moveTo(outer_start_pt)
-
-        # Outer boundary
-        path.arcTo(rect_outer, qt_start, qt_span)
-
-        # End radial edge to inner boundary
-        path.lineTo(inner_end_pt)
-
-        # Inner boundary back to start
-        path.arcTo(rect_inner, qt_start + qt_span, -qt_span)
-
-        path.closeSubpath()
-
-        pen = QPen(QColor(planet.arc_color))
-        pen.setWidth(1)
-        brush = QBrush(QColor(planet.arc_color))
-
-        item = self.addPath(path, pen, brush)
-        self.planets_items.append(item)
-
-        # planet label near arc midpoint
-        mid_step_offset = planet.span_steps / 2.0
-        mid_our = planet.angle_for_step(mid_step_offset)
-        qt_mid = 90.0 - (mid_our % 360.0)
-        label_pos = self.polar_point_scene(r_outer - t * 0.4, qt_mid)
-
-        text = self.addText(planet.name)
-        if planet.grid_offset_half_step: # Saturn will be black in background so the color must be white
-            text.setDefaultTextColor(QColor("White"))
-        else: text.setDefaultTextColor(QColor("Black"))
-        f = QFont()
-        f.setPointSize(14)
-        text.setFont(f)
-
-        br = text.boundingRect()
-        text.setPos(label_pos.x() - br.width() / 2, label_pos.y() - br.height() / 2)
-        self.planet_label_items.append(text)
-
-    def redraw(self, houses, planets, house_color_mode):
-        self.clear_all()
-        self.draw_house_fills_and_labels(houses, house_color_mode)
-        for p in planets:
-            self.draw_arc(p)
-
-
-# -----------------------------
-# Moon Phase Widget
-# -----------------------------
-
-class GamePhaseWidget(QWidget):
-    """
-    Displays the current SVG from a list, a Next button, and an HTML info area.
-    """
-    def __init__(self, svg_paths: list[str], html_snippets: list[str] | None = None, parent=None):
-        super().__init__(parent)
-
-        self.svg_paths = svg_paths or []
-        self.html_snippets = html_snippets or [""] * len(self.svg_paths)
-        if len(self.html_snippets) < len(self.svg_paths):
-            self.html_snippets += [""] * (len(self.svg_paths) - len(self.html_snippets))
-
-        self.index = 0
-
-        # --- UI ---
-        main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(10, 10, 10, 10)
-        main_layout.setSpacing(10)
-
-        top_row = QHBoxLayout()
-        top_row.setSpacing(10)
-
-        self.svg_title = QLabel("SVG Viewer")
-        self.svg_title.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-
-        self.next_btn = QPushButton("Next")
-        self.next_btn.clicked.connect(self.next_svg)
-
-        top_row.addWidget(self.svg_title, 1)
-        top_row.addWidget(self.next_btn, 0)
-
-        self.svg_widget = QSvgWidget()
-        self.svg_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.svg_widget.setMinimumHeight(300)
-
-        self.info_browser = QTextBrowser()
-        self.info_browser.setOpenExternalLinks(True)
-
-        main_layout.addLayout(top_row)
-        main_layout.addWidget(self.svg_widget, 1)
-        main_layout.addWidget(self.info_browser, 0)
-
-        if not self.svg_paths:
-            self.info_browser.setHtml("<b>No SVGs provided.</b>")
-            self.next_btn.setEnabled(False)
-        else:
-            self.update_view()
-
-    def current_svg_path(self) -> str | None:
-        if 0 <= self.index < len(self.svg_paths):
-            return self.svg_paths[self.index]
-        return None
-
-    def update_view(self):
-        path = self.current_svg_path()
-        if not path or not os.path.exists(path):
-            self.svg_widget.load(b"")
-            self.info_browser.setHtml("<b>Missing SVG file.</b>")
-            return
-
-        self.svg_title.setText(f"SVG Viewer ({self.index + 1}/{len(self.svg_paths)})")
-        self.svg_widget.load(path)
-
-        html = self.html_snippets[self.index] if self.index < len(self.html_snippets) else ""
-        self.info_browser.setHtml(html)
-
-    def next_svg(self):
-        if not self.svg_paths:
-            return
-        self.index = (self.index + 1) % len(self.svg_paths)
-        self.update_view()
-
-    # Optional: expose a way to go back / set index
-    def set_index(self, idx: int):
-        if not self.svg_paths:
-            return
-        self.index = idx % len(self.svg_paths)
-        self.update_view()
-
-# -----------------------------
-# Main widget
-# -----------------------------
-class MainWidget(QWidget):
+from house import House
+from planet import Planet
+from ArcScene import ArcScene
+from MoonPhaseWidget import MoonPhaseWidget
+
+class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("The Orrery \u260C")
@@ -443,7 +109,7 @@ class MainWidget(QWidget):
 
         moonphases = ["new_moon.svg","visions.svg","planning.svg","story.svg","meeting.svg","quiet.svg"]
         html = ["new_moon.html","visions.html","planning.html","story.html","meeting.html","quiet.html"]
-        game_phase = GamePhaseWidget(moonphases,html)
+        game_phase = MoonPhaseWidget(moonphases,html)
         left.addWidget(game_phase,1)
 
         # middle: graphics
@@ -978,8 +644,7 @@ class MainWidget(QWidget):
         faust_pop = QDialog()
         faust_pop.setWindowTitle("Faustian Reads the Stars")
 
-        layout = QVBoxLayout(faust_pop)  # attach layout to the dialog
-
+        layout = QVBoxLayout(faust_pop)
         faust_alone_html = ""
         if magic_number == 0:
             mercury_alone_html = """
@@ -1012,29 +677,3 @@ class MainWidget(QWidget):
         faust_pop.resize(900, 600)
         faust_pop.exec()
 
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    latin = "NotoSans-VariableFont_wdth,wght.ttf"
-    sym1 = "NotoSansSymbols2-Regular.ttf"
-    sym2 = "NotoSansSymbols-VariableFont_wght.ttf"  # or another symbols font
-
-
-    def load_font(path):
-        fid = QFontDatabase.addApplicationFont(path)
-        fams = QFontDatabase.applicationFontFamilies(fid)
-        if not fams:
-            raise RuntimeError(f"Failed to load {path}")
-        return fams[0]
-
-
-    latin_family = load_font(latin)
-    sym1_family = load_font(sym1)
-    sym2_family = load_font(sym2)
-    font = QFont(latin_family, 12)
-    font.setFamilies([latin_family, sym1_family, sym2_family])
-    app.setStyleSheet(qdarkstyle.load_stylesheet())
-    w = MainWidget()
-    w.resize(1500, 760)
-    w.show()
-    sys.exit(app.exec())

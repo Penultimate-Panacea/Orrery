@@ -1,0 +1,48 @@
+# coding=utf-8
+import sys
+import math
+import lib
+import time
+import os
+from dataclasses import dataclass
+from typing import List, Tuple, Set
+sys.path.insert(1, './BreezeStyleSheets-main/resources')
+import qdarkstyle
+
+from PyQt6.QtCore import Qt, QRectF, QPointF
+from PyQt6.QtGui import QPen, QColor, QPainterPath, QBrush, QFont, QTextDocument
+from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
+    QGraphicsView, QGraphicsScene, QPushButton, QLabel, QTableWidget,
+    QTableWidgetItem, QGroupBox, QRadioButton, QButtonGroup, QSizePolicy, QDialog, QTextEdit, QTextBrowser
+)
+from PyQt6.QtSvgWidgets import QSvgWidget
+
+@dataclass
+class Planet:
+    name: str
+    arc_color: str
+    span_steps: int
+    step_count_circle: int
+    conjunction_table: list
+    current_step: int = 0
+    ring_radius: float = 140.0
+    ring_thickness: float = 14.0
+    grid_offset_half_step: bool = False  # used for 36-step half-step offset
+
+
+    @property
+    def step_deg(self) -> float:
+        return 360.0 / self.step_count_circle
+
+    def start_deg(self) -> float:
+        # 0 at 12 o'clock clockwise
+        base = (self.current_step % self.step_count_circle)
+        if self.grid_offset_half_step:
+            base = base + 0.5
+        return (base % self.step_count_circle) * self.step_deg
+
+    def angle_for_step(self, step_offset: int) -> float:
+        base = (self.current_step + step_offset) % self.step_count_circle
+        if self.grid_offset_half_step:
+            base = base + 0.5
+        return (base % self.step_count_circle) * self.step_deg
