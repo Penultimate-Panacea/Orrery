@@ -1,39 +1,4 @@
-from math import pi
-STEPS = 48
-STEP_ANGLE = 360 / STEPS
-
-SATURN_STEPS = 36
-SATURN_STEP_ANGLE = 360 / SATURN_STEPS
-SATURN_STEP_OFFSET = -5.0
-
-GRID12_STEPS = 12
-GRID12_STEP_ANGLE = 360 / GRID12_STEPS
-
-CANVAS_SIZE = 800
-BG = "white"
-GRID48_OUTLINE = "#cfcfcf"
-GRID12_OUTLINE = "#7a7a7a"
-ARC_WIDTH = 8
-
-ARC_SWEEP_STEPS = [13, 9, 5, 3, 1]
-
-RADII = [70, 110, 150, 190, 230]
-MAX_RADIUS = CANVAS_SIZE // 2 - 20
-RADII = [min(r, MAX_RADIUS) for r in RADII]
-
-
-def snap_to_steps(angle_degrees: float) -> float:
-    step_index = int(round(angle_degrees / STEP_ANGLE))
-    return (step_index % STEPS) * STEP_ANGLE
-
-
-def deg_to_rad(d: float) -> float:
-    return d * pi / 180
-
-
-def norm_angle_deg(a: float) -> float:
-    return a % 360.0
-
+# coding=utf-8
 estate_color_dict = {'cosmic':"#b7cece", 'spiritual':"#89408c", 'terrestrial':"#583e23"}
 element_color_dict = {'fire':"#7c1b1b", 'water':"#0e40ad", 'earth':"#774714", 'air':"#19b3ad"}
 season_color_dict = {'winter':"#43acc7", 'spring':"#0d5945", 'summer':"#edd892", 'autumn':"#dd8c61"}
