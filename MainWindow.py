@@ -63,8 +63,8 @@ class MainWindow(QWidget):
         self.wizards: List[Wizard] = [
             Necromancer(self.planet_conjunction_dict()),
             Hierophant(self.planet_conjunction_dict()),
-            Mariner(self.planet_conjunction_dict()),
             Warlock(self.planet_conjunction_dict()),
+            Mariner(self.planet_conjunction_dict(), self.planets),
             Faustian(self.planet_conjunction_dict(), self.generate_house_planet_conjunction_array()),
             Sorcerer(self.planet_conjunction_dict()),
             Sage(self.planet_conjunction_dict)
@@ -192,20 +192,27 @@ class MainWindow(QWidget):
         btn_necromancer = QPushButton("Necromancer")
         read_the_stars_layout.addWidget(btn_necromancer)
         btn_necromancer.clicked.connect(self.wizards[0].make_magic_number)
+
         btn_hierophant = QPushButton("Hierophant")
         read_the_stars_layout.addWidget(btn_hierophant)
         btn_hierophant.clicked.connect(self.wizards[1].make_magic_number)
+
         btn_warlock = QPushButton("Warlock")
         read_the_stars_layout.addWidget(btn_warlock)
         # btn_warlock.clicked.connect(self.warlock)
+
         btn_mariner = QPushButton("Mariner")
         read_the_stars_layout.addWidget(btn_mariner)
+        btn_mariner.clicked.connect(self.wizards[3].generate_planets_in_season)
+
         btn_faustian = QPushButton("Faustian")
         read_the_stars_layout.addWidget(btn_faustian)
         btn_faustian.clicked.connect(self.wizards[4].generate_faust_factor) # TODO incomplete, need to add house information
+
         btn_sorcerer = QPushButton("Sorcerer")
         read_the_stars_layout.addWidget(btn_sorcerer)
         btn_sorcerer.clicked.connect(self.wizards[5].make_magic_number)
+
         btn_sage = QPushButton("Sage")
         read_the_stars_layout.addWidget(btn_sage)
 
