@@ -289,7 +289,7 @@ class MainWindow(QWidget):
         return table
 
     def update_conjunction_table(self):
-        table = self.table
+        table = self.conjunction_table
         new_data = self.generate_house_planet_conjunction_array()
         table.setRowCount(len(new_data))
         table.clearContents()
