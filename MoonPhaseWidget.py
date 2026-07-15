@@ -46,8 +46,8 @@ class MoonPhaseWidget(QWidget):
         self.info_browser.setOpenExternalLinks(True)
 
         main_layout.addLayout(top_row)
-        main_layout.addWidget(self.svg_widget, 1)
-        main_layout.addWidget(self.info_browser, 0)
+        main_layout.addWidget(self.svg_widget, 0)
+        main_layout.addWidget(self.info_browser, 1)
 
         if not self.svg_paths:
             self.info_browser.setHtml("<b>No SVGs provided.</b>")
@@ -82,17 +82,15 @@ class MoonPhaseWidget(QWidget):
 
         self.info_browser.setHtml(html)
 
+        w = self.svg_widget.size().width()
+        if w <= 0:
+            return
+        self.svg_widget.setMaximumHeight(w)
+
     def next_svg(self):
         if not self.svg_paths:
             return
         self.index = (self.index + 1) % len(self.svg_paths)
-        self.update_view()
-
-    # Optional: expose a way to go back / set index
-    def set_index(self, idx: int):
-        if not self.svg_paths:
-            return
-        self.index = idx % len(self.svg_paths)
         self.update_view()
 
 # -----------------------------

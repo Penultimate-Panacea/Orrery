@@ -123,7 +123,7 @@ class MainWindow(QWidget):
 
         # Game Phase Widget
         game_phase = MoonPhaseWidget(lib.moonphases, lib.html)
-        left.addWidget(game_phase,1)
+        left.addWidget(game_phase,8)
 
         # middle: graphics
         center = QVBoxLayout()
