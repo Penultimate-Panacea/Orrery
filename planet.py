@@ -13,7 +13,7 @@ class Planet:
     current_step: int = 0
     ring_radius: float = 140.0
     ring_thickness: float = 14.0
-    grid_offset_half_step: bool = False  # used for 36-step half-step offset
+    grid_offset_half_step: bool = False  # used for Saturn's 36-step half-step offset
 
 
     @property
@@ -32,3 +32,6 @@ class Planet:
         if self.grid_offset_half_step:
             base = base + 0.5
         return (base % self.step_count_circle) * self.step_deg
+
+    def set_current_step(self, new_step):
+        self.current_step = new_step
