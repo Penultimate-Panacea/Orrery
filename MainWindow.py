@@ -22,6 +22,7 @@ from faustian import Faustian
 from sorcerer import Sorcerer
 from sage import Sage
 from wizard import Wizard
+from SaveLoad import SaveLoadWidget
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -69,6 +70,8 @@ class MainWindow(QWidget):
             Sorcerer(self.planet_conjunction_dict()),
             Sage(self.planet_conjunction_dict)
         ]
+
+        self.save_load_widget = SaveLoadWidget(get_planets=self.planets, set_planets_steps=self.load_planet_steps,parent=self)
 
         self.scene = ArcScene()
         self.view = QGraphicsView(self.scene)
@@ -126,7 +129,12 @@ class MainWindow(QWidget):
         left.addWidget(game_phase,8)
 
         # middle: graphics
-        center = QVBoxLayout()
+        center = QVBoxLayout() # name being reused from earlier implementation
+        middle = QHBoxLayout()
+        middle_left = QVBoxLayout()
+        middle_right = QVBoxLayout()
+
+
 
         # Move controls
         move_box = QGroupBox("Move arcs (snap)")
@@ -175,6 +183,17 @@ class MainWindow(QWidget):
 
         center.addWidget(adv_all)
 
+
+        middle_right.addWidget(self.save_load_widget)
+
+        left_container = QWidget()
+        left_container.setLayout(center)
+
+        right_container = QWidget()
+        right_container.setLayout(middle_right)
+        middle.addWidget(left_container)
+        middle.addWidget(right_container)
+
         # right: conjunction
         right = QVBoxLayout()
         right.addWidget(QLabel("Conjunctions (simplified)"))
@@ -213,7 +232,7 @@ class MainWindow(QWidget):
 
         top = QHBoxLayout()
         top.addLayout(left, 1)
-        top.addLayout(center, 3)
+        top.addLayout(middle, 3)
         top.addLayout(right, 1)
         self.setLayout(top)
 
@@ -284,8 +303,12 @@ class MainWindow(QWidget):
             self.house_color_mode,
         )
 
-
-
+    def load_planet_steps(self, steps_list):
+        for i, planet in enumerate(self.planets):
+            if i >= len(steps_list):
+                break
+            planet.current_step = steps_list[i]
+        self.redraw()
 
     def clear_layout(layout):
         while layout.count():
