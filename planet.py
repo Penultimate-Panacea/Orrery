@@ -1,21 +1,6 @@
 # coding=utf-8
-import sys
-import math
-import lib
-import time
-import os
 from dataclasses import dataclass
-from typing import List, Tuple, Set
-sys.path.insert(1, './BreezeStyleSheets-main/resources')
-import qdarkstyle
 
-from PyQt6.QtCore import Qt, QRectF, QPointF
-from PyQt6.QtGui import QPen, QColor, QPainterPath, QBrush, QFont, QTextDocument
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
-    QGraphicsView, QGraphicsScene, QPushButton, QLabel, QTableWidget,
-    QTableWidgetItem, QGroupBox, QRadioButton, QButtonGroup, QSizePolicy, QDialog, QTextEdit, QTextBrowser
-)
-from PyQt6.QtSvgWidgets import QSvgWidget
 
 @dataclass
 class Planet:
