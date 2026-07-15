@@ -16,11 +16,16 @@ class Warlock(Wizard):
         warlock_pop = QDialog()
         warlock_pop.setWindowTitle("Warlock")
 
+        test_king = [{'name': "Joe", 'sun': 'Taurus', 'moon': 'Gemini', 'rising': 'Aries'}]
+
         layout = QVBoxLayout(warlock_pop)
         master_king_text = ""
         if not len(test_king) == 0:
+            print("HERE BE KINGS")
             for king in test_king:
-                master_king_text.join(self.king_string(king))
+                print(self.king_string(king))
+                master_king_text+=self.king_string(king)
+                print(master_king_text)
         else:
             print("NO KINGS")
 
@@ -134,7 +139,7 @@ class Warlock(Wizard):
 
 
         king_string = f"""
-        <h2> The Court of King %s </h1>
+        <h1> The Court of King %s </h1>
         {sun_string}
         {moon_string}
         {rising_string}
