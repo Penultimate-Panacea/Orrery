@@ -19,7 +19,8 @@ class Faustian(Wizard):
         faust_pop.setWindowTitle("Faustian Reads the Stars")
 
         layout = QVBoxLayout(faust_pop)
-        faust_alone_html = ""
+        mercury_alone_html = ""
+        mercury_among_html = ""
         if magic_number == 0:
             mercury_alone_html = """
                 <h3> The Devil seeks the affection of another Wizard.</h3>
