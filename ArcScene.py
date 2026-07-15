@@ -59,8 +59,7 @@ class ArcScene(QGraphicsScene):
             mode = house_color_mode[i]
             col = QColor(house.color_for(mode))
             fill = QColor(col)
-            fill.setAlpha(55)  # transparent
-
+            fill.setAlpha(150)
             # house wedge: our angles are 0 at 12 o'clock, clockwise
             # convert our -> qt:
             # our=0 at 12 clockwise => qt=90 at CCW
@@ -105,11 +104,11 @@ class ArcScene(QGraphicsScene):
 
             label = self.addText(house.name)
             label_color = QColor(col)
-            label_color.setAlpha(220)
+            label_color.setAlpha(255)
             label.setDefaultTextColor(label_color)
 
             f = QFont()
-            f.setPointSize(12)
+            f.setPointSize(14)
             label.setFont(f)
 
             br = label.boundingRect()
