@@ -29,7 +29,7 @@ class SaveLoadWidget(QWidget):
         self.btn_load.clicked.connect(self.load_from_file)
 
     def save_to_file(self):
-        planets = list(self.get_planets())
+        planets = list(self.get_planets)
         steps = [p.current_step for p in planets]
 
         file_path, _ = QFileDialog.getSaveFileName(
