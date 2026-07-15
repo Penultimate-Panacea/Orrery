@@ -5,6 +5,7 @@ from typing import List
 from PyQt6.QtCore import Qt, QRectF, QPointF
 from PyQt6.QtGui import QPen, QColor, QPainterPath, QBrush, QFont
 from PyQt6.QtWidgets import QGraphicsScene
+from planet import Planet
 
 class ArcScene(QGraphicsScene):
     def __init__(self):
@@ -147,6 +148,7 @@ class ArcScene(QGraphicsScene):
 
         pen = QPen(QColor(planet.arc_color))
         pen.setWidth(1)
+        pen.setCapStyle(Qt.RoundCap)
         brush = QBrush(QColor(planet.arc_color))
 
         item = self.addPath(path, pen, brush)
