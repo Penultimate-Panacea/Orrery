@@ -6,10 +6,11 @@ from typing import List
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QTextDocument
-from PyQt6.QtWidgets import ( QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
-    QGraphicsView, QPushButton, QLabel, QTableWidget,
-    QTableWidgetItem, QGroupBox, QRadioButton, QButtonGroup, QSizePolicy, QDialog, QTextEdit
-)
+from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
+                             QGraphicsView, QPushButton, QLabel, QTableWidget,
+                             QTableWidgetItem, QGroupBox, QRadioButton, QButtonGroup, QSizePolicy, QDialog, QTextEdit,
+                             QComboBox
+                             )
 from house import House
 from planet import Planet
 from ArcScene import ArcScene
@@ -67,7 +68,7 @@ class MainWindow(QWidget):
             Mariner(self.planet_conjunction_dict(), self.planets),
             Faustian(self.planet_conjunction_dict(), self.generate_house_planet_conjunction_array()),
             Sorcerer(self.planet_conjunction_dict()),
-            Sage(self.planet_conjunction_dict)
+            Sage(self.planet_conjunction_dict, self.planets, "Terrestrial")
         ]
 
         self.scene = ArcScene()
@@ -213,8 +214,19 @@ class MainWindow(QWidget):
         read_the_stars_layout.addWidget(btn_sorcerer)
         btn_sorcerer.clicked.connect(self.wizards[5].sorcerer_popup)
 
+        estate_combo = QComboBox()
+        read_the_stars_layout.addWidget(estate_combo)
+        estate_combo.addItem("Terrestrial")
+        estate_combo.addItem("Spiritual")
+        estate_combo.addItem("Cosmic")
+        estate_combo.currentTextChanged.connect(self.wizards[6].set_estate)
+
         btn_sage = QPushButton("Sage")
         read_the_stars_layout.addWidget(btn_sage)
+        btn_sage.clicked.connect(self.wizards[6].sage_popup)
+
+
+
 
         right.addWidget(read_the_stars_box, 1)
 
