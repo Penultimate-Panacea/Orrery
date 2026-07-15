@@ -7,9 +7,9 @@ from MainWindow import MainWindow
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    latin = "NotoSans-VariableFont_wdth,wght.ttf"
-    sym1 = "NotoSansSymbols2-Regular.ttf"
-    sym2 = "NotoSansSymbols-VariableFont_wght.ttf"  #
+    latin = "./resources/fonts/NotoSans-VariableFont_wdth,wght.ttf"
+    sym1 = "./resources/fonts/NotoSansSymbols2-Regular.ttf"
+    sym2 = "./resources/fonts/NotoSansSymbols-VariableFont_wght.ttf"  #
 
 
     def load_font(path):

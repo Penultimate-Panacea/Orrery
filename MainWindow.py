@@ -105,10 +105,7 @@ class MainWindow(QWidget):
         left.addLayout(self.swatch_grid, 1)
 
         # Game Phase Widget
-
-        moonphases = ["new_moon.svg","visions.svg","planning.svg","story.svg","meeting.svg","quiet.svg"]
-        html = ["new_moon.html","visions.html","planning.html","story.html","meeting.html","quiet.html"]
-        game_phase = MoonPhaseWidget(moonphases,html)
+        game_phase = MoonPhaseWidget(lib.moonphases, lib.html)
         left.addWidget(game_phase,1)
 
         # middle: graphics

@@ -13,7 +13,15 @@ CONJ_SOL = [{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}]
 CONJ_SATURN = [{0},{0},{0,1},{1},{1},{1,2},{2},{2},{2,3},{3},{3},{3,4},{4},{4},{4,5},{5},{5},{5,6},{6},{6},{6,7},{7},{7},{7,8},{8},{8},{8,9},{9},{9},{9,10},{10},{10},{10,11},{11},{11},{0,11}]
 DELIM = "\u260C"
 
+MERCURY = '\u263F'
+VENUS = '\u2640'
+MARS = '\u2641'
+JUPITER = '\u2642'
+SATURN = '\u2643'
+SOL = '\u2609'
 
+moonphases = ["./resources/svg/new_moon.svg","./resources/svg/visions.svg","./resources/svg/planning.svg","./resources/svg/story.svg","./resources/svg/meeting.svg","./resources/svg/quiet.svg"]
+html = ["./resources/html/new_moon.html","./resources/html/visions.html","./resources/html/planning.html","./resources/html/story.html","./resources/html/meeting.html","./resources/html/quiet.html"]
 def sectors_covered_by_arc_snap_points(
         start_snap_point: int,
         arc_snap_points: int,
@@ -79,9 +87,3 @@ while index < 48:
     index += 1
 print(jupiter_list)
 
-MERCURY = '\u263F'
-VENUS = '\u2640'
-MARS = '\u2641'
-JUPITER = '\u2642'
-SATURN = '\u2643'
-SOL = '\u2609'
