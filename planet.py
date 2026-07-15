@@ -1,11 +1,12 @@
 # coding=utf-8
 from dataclasses import dataclass
+from PyQt6.QtGui import QColor
 
 
 @dataclass
 class Planet:
     name: str
-    arc_color: str
+    arc_color: QColor
     span_steps: int
     step_count_circle: int
     conjunction_table: list
