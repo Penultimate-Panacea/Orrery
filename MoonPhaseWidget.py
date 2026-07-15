@@ -70,7 +70,16 @@ class MoonPhaseWidget(QWidget):
         self.svg_title.setText(f"SVG Viewer ({self.index + 1}/{len(self.svg_paths)})")
         self.svg_widget.load(path)
 
-        html = self.html_snippets[self.index] if self.index < len(self.html_snippets) else ""
+        html_item = self.html_snippets[self.index] if self.index < len(self.html_snippets) else ""
+
+        # If html_item is a file path, load its contents
+        if isinstance(html_item, str) and os.path.exists(html_item):
+            with open(html_item, "r", encoding="utf-8") as f:
+                html = f.read()
+        else:
+            # Otherwise assume html_item already IS the HTML string
+            html = html_item or ""
+
         self.info_browser.setHtml(html)
 
     def next_svg(self):
