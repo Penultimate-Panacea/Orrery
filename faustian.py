@@ -42,13 +42,12 @@ class Faustian(Wizard):
         print("Conjunctions are: " + str(conjunctions))
         mercury_conjunctions = conjunctions[lib.MERCURY]
         faust_factor = len(mercury_conjunctions)
-        self.faustian_popup(faust_factor)
         return
     
-    def faustian_popup(self, magic_number):
+    def faustian_popup(self):
         faust_pop = QDialog()
         faust_pop.setWindowTitle("Faustian Reads the Stars")
-
+        magic_number = self.generate_faust_factor()
         locations_with_cards = house_scheme_cards(self.house_planet_conjunctions, '☿')
         if 'Aries' in locations_with_cards:
             locations_with_cards["The monks and pilgrims of the Temples <i> (Aries, Hierophant) </i>"] = locations_with_cards.pop('Aries')

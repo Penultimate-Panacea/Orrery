@@ -35,14 +35,15 @@ class Hierophant(Wizard):
             print("Sol in Conjunction")
             hierophant_magic_number ^= (1 << 5)
         print(hierophant_magic_number)
-        self.hierophant_popup(hierophant_magic_number)
-        return
+        return hierophant_magic_number
         ## TODO: Magic number bits 6 & 7 are reserved for calamity and extinction which are beyond the scope of the project at the moment
 
 
-    def hierophant_popup(self, magic_number):
+    def hierophant_popup(self):
         hiero_pop = QDialog()
         hiero_pop.setWindowTitle("Hierophant Reads the Stars")
+
+        magic_number = self.make_magic_number()
 
         layout = QVBoxLayout(hiero_pop)  # attach layout to the dialog
 

@@ -36,12 +36,12 @@ class Sorcerer(Wizard):
             print ("Saturn in Conjunction")
             sorcerer_magic_number ^= (1 << 5)
         print(sorcerer_magic_number)
-        self.sorcerer_popup(sorcerer_magic_number)
-        return
+        return sorcerer_magic_number
             ## TODO: Magic number bits 6 & 7 are reserved for calamity and extinction which are beyond the scope of the project at the moment
-    def sorcerer_popup(self, magic_number):
+    def sorcerer_popup(self):
         sorc_pop = QDialog()
         sorc_pop.setWindowTitle("Sorcerer Reads the Stars")
+        magic_number = self.make_magic_number()
 
         layout = QVBoxLayout(sorc_pop)  # attach layout to the dialog
 
@@ -52,9 +52,9 @@ class Sorcerer(Wizard):
                     For each Region with any number of Hidden Traces on it, double the number of Traces in that region. If there are no hidden traces, instead ask the Celestial Audience which Wizard has the last control over his Domain. Place a Hidden Trace in each Region of that Wizard's Domain.
                 """
 
-        sol_mercury_OR_venus_html = ""
+        sol_mercury_XOR_venus_html = ""
         if magic_number & (1 << 1):
-            sol_mercury_OR_venus_html = """
+            sol_mercury_XOR_venus_html = """
                 <h3> Mercury or Venus in Conjunction -- Magic dreams of Power, and those who serve it feel its call.</h3>
                 Place a hidden trace on each Occultist. If there are no Occultists, place a new Occultist, accompanied by three Hidden Traces, in one of the Wizard's Authorities.
             """
@@ -94,7 +94,7 @@ class Sorcerer(Wizard):
             <div style="font-family: serif;">
               <h2> Hierophant </h2>
               {sol_alone_html}
-              {sol_mercury_OR_venus_html}
+              {sol_mercury_XOR_venus_html}
               {sol_mercury_AND_venus_html}
               {sol_mars_html}
               {sol_saturn_html}

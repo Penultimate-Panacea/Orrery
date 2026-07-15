@@ -191,11 +191,11 @@ class MainWindow(QWidget):
         # resize button
         btn_necromancer = QPushButton("Necromancer")
         read_the_stars_layout.addWidget(btn_necromancer)
-        btn_necromancer.clicked.connect(self.wizards[0].make_magic_number)
+        btn_necromancer.clicked.connect(self.wizards[0].necromancer_popup)
 
         btn_hierophant = QPushButton("Hierophant")
         read_the_stars_layout.addWidget(btn_hierophant)
-        btn_hierophant.clicked.connect(self.wizards[1].make_magic_number)
+        btn_hierophant.clicked.connect(self.wizards[1].hierophant_popup)
 
         btn_warlock = QPushButton("Warlock")
         read_the_stars_layout.addWidget(btn_warlock)
@@ -203,15 +203,15 @@ class MainWindow(QWidget):
 
         btn_mariner = QPushButton("Mariner")
         read_the_stars_layout.addWidget(btn_mariner)
-        btn_mariner.clicked.connect(self.wizards[3].generate_planets_in_season)
+        btn_mariner.clicked.connect(self.wizards[3].mariner_popup)
 
         btn_faustian = QPushButton("Faustian")
         read_the_stars_layout.addWidget(btn_faustian)
-        btn_faustian.clicked.connect(self.wizards[4].generate_faust_factor) # TODO incomplete, need to add house information
+        btn_faustian.clicked.connect(self.wizards[4].faustian_popup) # TODO incomplete, need to add house information
 
         btn_sorcerer = QPushButton("Sorcerer")
         read_the_stars_layout.addWidget(btn_sorcerer)
-        btn_sorcerer.clicked.connect(self.wizards[5].make_magic_number)
+        btn_sorcerer.clicked.connect(self.wizards[5].sorcerer_popup)
 
         btn_sage = QPushButton("Sage")
         read_the_stars_layout.addWidget(btn_sage)

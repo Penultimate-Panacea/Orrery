@@ -31,12 +31,13 @@ class Necromancer(Wizard):
             print ("Sol in Conjunction")
             necromancer_magic_number ^= (1 << 5)
         print(necromancer_magic_number)
-        self.necromancer_popup(necromancer_magic_number)
-
+        return necromancer_magic_number
             ## TODO: Magic number bits 6 & 7 are reserved for calamity and extinction which are beyond the scope of the project at the moment
-    def necromancer_popup(self, magic_number):
+    def necromancer_popup(self):
         necro_pop = QDialog()
         necro_pop.setWindowTitle("Necromancer Reads the Stars")
+
+        magic_number = self.make_magic_number()
 
         layout = QVBoxLayout(necro_pop)  # attach layout to the dialog
 
