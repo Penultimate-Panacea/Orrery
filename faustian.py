@@ -46,7 +46,6 @@ class Faustian(Wizard):
         return
     
     def faustian_popup(self, magic_number):
-        global card_string
         faust_pop = QDialog()
         faust_pop.setWindowTitle("Faustian Reads the Stars")
 
