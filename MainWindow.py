@@ -65,7 +65,7 @@ class MainWindow(QWidget):
             Hierophant(self.planet_conjunction_dict()),
             Mariner(self.planet_conjunction_dict()),
             Warlock(self.planet_conjunction_dict()),
-            Faustian(self.planet_conjunction_dict()),
+            Faustian(self.planet_conjunction_dict(), self.generate_house_planet_conjunction_array()),
             Sorcerer(self.planet_conjunction_dict()),
             Sage(self.planet_conjunction_dict)
         ]

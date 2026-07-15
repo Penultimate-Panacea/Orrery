@@ -10,5 +10,6 @@ class Wizard:
         self.air = None
         self.planet_conjunction_dict = planet_conjunction_dict
 
+
     def update_conjunctions(self, new_dict):
         self.planet_conjunction_dict = new_dict
