@@ -2,9 +2,8 @@
 import pickle
 from pathlib import Path
 
-from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
-    QWidget, QPushButton, QFileDialog, QVBoxLayout, QMessageBox
+    QWidget, QFileDialog, QMessageBox
 )
 
 
@@ -18,24 +17,8 @@ class SaveLoadWidget(QWidget):
         self.get_pendulum = get_pendulum
         self.set_pendulum = set_pendulum
 
-        self.btn_save = QPushButton("Save")
-        self.btn_load = QPushButton("Load")
-
-        layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        layout.addWidget(self.btn_save)
-        layout.addWidget(self.btn_load)
-        layout.addStretch(1)
-        self.setLayout(layout)
-
-        self.btn_save.clicked.connect(self.save_to_file)
-        self.btn_load.clicked.connect(self.load_from_file)
-
-    def save_to_file(self):
-        planets = list(self.get_planets)
-        kings = list(self.get_kings)
-        pendulum = self.get_pendulum
+    def save_to_file(self, planets, kings, pendulum):
+        print("launching save to file")
         steps = [p.current_step for p in planets]
 
         file_path, _ = QFileDialog.getSaveFileName(
