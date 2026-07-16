@@ -465,6 +465,8 @@ class MainWindow(QWidget):
             if i >= len(steps_list):
                 break
             planet.current_step = steps_list[i]
+        for w in self.wizards:
+            w.update_conjunctions(self.planets)
         self.redraw()
 
     def load_kings(self, kings_list):
