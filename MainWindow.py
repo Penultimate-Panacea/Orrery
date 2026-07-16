@@ -260,12 +260,7 @@ class MainWindow(QWidget):
         read_the_stars_box = QGroupBox("Read the stars")
         read_the_stars_layout = QGridLayout()
         read_the_stars_box.setLayout(read_the_stars_layout)
-        # TODO
-        # for w in wizards:
-        # make button
-        # connect button
-        # relabel button
-        # resize button
+
         btn_necromancer = QPushButton("Keeper of the Gates")
         read_the_stars_layout.addWidget(btn_necromancer)
         btn_necromancer.clicked.connect(self.wizards[0].necromancer_popup)
