@@ -9,10 +9,14 @@ from PyQt6.QtWidgets import (
 
 
 class SaveLoadWidget(QWidget):
-    def __init__(self, get_planets, set_planets_steps, parent=None):
+    def __init__(self, get_planets, set_planets_steps, get_kings, set_kings, get_pendulum, set_pendulum, parent=None):
         super().__init__(parent)
         self.get_planets = get_planets
         self.set_planets_steps = set_planets_steps
+        self.get_kings = get_kings
+        self.set_kings = set_kings
+        self.get_pendulum = get_pendulum
+        self.set_pendulum = set_pendulum
 
         self.btn_save = QPushButton("Save")
         self.btn_load = QPushButton("Load")
@@ -30,6 +34,8 @@ class SaveLoadWidget(QWidget):
 
     def save_to_file(self):
         planets = list(self.get_planets)
+        kings = list(self.get_kings)
+        pendulum = self.get_pendulum
         steps = [p.current_step for p in planets]
 
         file_path, _ = QFileDialog.getSaveFileName(
@@ -46,7 +52,9 @@ class SaveLoadWidget(QWidget):
 
         data = {
             "version": 1,
-            "current_steps": steps
+            "current_steps": steps,
+            "kings" : kings,
+            "pendulum" : pendulum
         }
 
         try:
@@ -69,10 +77,14 @@ class SaveLoadWidget(QWidget):
             data = pickle.loads(raw)
 
             steps = data.get("current_steps", None)
+            kings = data.get("kings", None)
+            pendulum = data.get("pendulum", None)
             if not isinstance(steps, list):
                 raise ValueError("Invalid file contents: current_steps must be a list")
 
             self.set_planets_steps(steps)
+            self.set_kings(kings)
+            self.set_pendulum(pendulum)
 
         except Exception as e:
             QMessageBox.critical(self, "Load failed", str(e))
