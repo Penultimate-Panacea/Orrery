@@ -29,7 +29,7 @@ class Warlock(Wizard):
         else:
             print("NO KINGS")
 
-        warlock_stars_html = f""""
+        self.read_the_stars_html = f""""
             <h1> Warlock </h1>
                       {master_king_text}
                       <h2> After processing all Courts as above:</h2>
@@ -38,7 +38,7 @@ class Warlock(Wizard):
         """
 
         warlock_document = QTextDocument()
-        warlock_document.setHtml(warlock_stars_html)
+        warlock_document.setHtml(self.read_the_stars_html)
 
         text = QTextEdit()
         text.setReadOnly(True)

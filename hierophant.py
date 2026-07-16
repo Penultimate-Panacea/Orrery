@@ -89,7 +89,7 @@ class Hierophant(Wizard):
                                        <h3> Sol in Conjunction -- The masses are <i>Observant</i></h3>
                                        Choose a Holidat this month. It counts as a Feast Day for the rest of the month. If the current month is already a Feast Day, instead a new Prophet appears at the Temple with the greatest number of Abundances, preaching of a radical interpeation to the Orthodoxy of the Immortal Flame.
                                    """
-        jupiter_stars_html = f"""
+        self.read_the_stars_html = f"""
             <div style="font-family: serif;">
               <h2> Hierophant </h2>
               {jupiter_alone_html}
@@ -102,7 +102,7 @@ class Hierophant(Wizard):
         """
 
         jupiter_document = QTextDocument()
-        jupiter_document.setHtml(jupiter_stars_html)
+        jupiter_document.setHtml(self.read_the_stars_html)
 
         text = QTextEdit()
         text.setReadOnly(True)

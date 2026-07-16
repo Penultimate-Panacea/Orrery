@@ -90,9 +90,9 @@ class Sorcerer(Wizard):
                                        <h3> Saturn in Conjunction -- Magic dreams of desolation, and its presence in Isha leads to calamity.</h3>
                                        Place three Hidden Traces in one of the Secret Regions, as dangerous power builds at the edge of the world. Ask the Wizard whose Domain it falls under to invent a mighty enemy Occultist, but to keep them secret from you for now --- you can discover who they are when you Investigate.
                                    """
-        sol_stars_html = f"""
+        self.read_the_stars_html = f"""
             <div style="font-family: serif;">
-              <h2> Hierophant </h2>
+              <h2> Sorcerer </h2>
               {sol_alone_html}
               {sol_mercury_XOR_venus_html}
               {sol_mercury_AND_venus_html}
@@ -103,7 +103,7 @@ class Sorcerer(Wizard):
         """
 
         sol_document = QTextDocument()
-        sol_document.setHtml(sol_stars_html)
+        sol_document.setHtml(self.read_the_stars_html)
 
         text = QTextEdit()
         text.setReadOnly(True)

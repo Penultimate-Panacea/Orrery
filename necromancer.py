@@ -84,7 +84,7 @@ class Necromancer(Wizard):
                                        I.  Exhaust all Allies. <br>
                                        II. Advance all Foes.
                                    """
-        saturn_stars_html = f"""
+        self.read_the_stars_html = f"""
             <div style="font-family: serif;">
               <h2> Necromancer </h2>
               {saturn_alone_html}
@@ -97,7 +97,7 @@ class Necromancer(Wizard):
         """
 
         saturn_document = QTextDocument()
-        saturn_document.setHtml(saturn_stars_html)
+        saturn_document.setHtml(self.read_the_stars_html)
 
         text = QTextEdit()
         text.setReadOnly(True)

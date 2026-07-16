@@ -231,7 +231,7 @@ class Mariner(Wizard):
                     Remove half of all Routes, rounding up.
                 """
 
-        season_stars_html = f"""
+        self.read_the_stars_html = f"""
                     <div style="font-family: serif;">
                       <h1> Mariner </h1>
                       {general_seasonal_effects}
@@ -243,7 +243,7 @@ class Mariner(Wizard):
                     </div>
                 """
         mariner_document = QTextDocument()
-        mariner_document.setHtml(season_stars_html)
+        mariner_document.setHtml(self.read_the_stars_html)
 
         text = QTextEdit()
         text.setReadOnly(True)

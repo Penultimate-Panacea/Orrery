@@ -88,7 +88,7 @@ class Faustian(Wizard):
             {card_string}
             """
 
-        mercury_stars_html = f"""
+        self.read_the_stars_html = f"""
             <div style="font-family: serif;">
               <h2> Faustian </h2>
               {mercury_alone_html}
@@ -97,7 +97,7 @@ class Faustian(Wizard):
         """
 
         faust_document = QTextDocument()
-        faust_document.setHtml(mercury_stars_html)
+        faust_document.setHtml(self.read_the_stars_html)
 
         text = QTextEdit()
         text.setReadOnly(True)

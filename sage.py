@@ -155,7 +155,7 @@ class Sage(Wizard):
                     II. <b>Move towards Extinction.</b>
                 """
 
-        estate_stars_html = f"""
+        self.read_the_stars_html = f"""
                 <div style="font-family: serif;">
                   <h1> Sage </h1>
                   {mercury}
@@ -168,7 +168,7 @@ class Sage(Wizard):
             """
 
         sage_document = QTextDocument()
-        sage_document.setHtml(estate_stars_html)
+        sage_document.setHtml(self.read_the_stars_html)
 
         text = QTextEdit()
         text.setReadOnly(True)
