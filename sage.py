@@ -157,7 +157,7 @@ class Sage(Wizard):
 
         self.read_the_stars_html = f"""
                 <div style="font-family: serif;">
-                  <h1> Keeper of the Stars whose fate is controlled by the %s Estate</h1>
+                  <h1 class="break-page"> Keeper of the Stars whose fate is controlled by the %s Estate</h1>
                   {mercury}
                   {venus}
                   {mars}

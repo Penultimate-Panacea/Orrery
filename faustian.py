@@ -75,22 +75,22 @@ class Faustian(Wizard):
             locations_with_cards["The dead and nearly dead of the Graven Isle <i> Pisces, Necromancer </i>"] = locations_with_cards.pop('Pisces')
         layout = QVBoxLayout(faust_pop)
         mercury_alone_html = ""
-        card_string = "%s" % "".join(["<h3>%s</h3> now have %s schemes of the devil in their midst.<br>" % (k, locations_with_cards[k]) for k in sorted(locations_with_cards)])
+        card_string = "%s" % "".join(["<h2>%s</h2> now have %s schemes of the devil in their midst.<br>" % (k, locations_with_cards[k]) for k in sorted(locations_with_cards)])
         mercury_among_html = ""
         if magic_number == 0:
             mercury_alone_html = """
-                <h3> The Devil seeks the affection of another Wizard.</h3>
+                <h2> The Devil seeks the affection of another Wizard.</h2>
                     Another Wizard recieves an invitation to Spend Time and have a Scene with the Devil, in which the Devil will make him a Bargain. If a Wizard refuses to meet with the Devil at all, the Devil places a Scheme onto each of that Wizard's Communities.
                 """
         else:
             mercury_among_html = f"""
-            <h3> The Devil Schemes </h3>
+            <h2> The Devil Schemes </h2>
             {card_string}
             """
 
         self.read_the_stars_html = f"""
             <div style="font-family: serif;">
-              <h2> Keeper of the Chains whose fate is controlled by %s </h2>
+              <h1 class="break-page"> Keeper of the Chains whose fate is controlled by %s </h1>
               {mercury_alone_html}
               {mercury_among_html}
             </div>
