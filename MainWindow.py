@@ -480,5 +480,4 @@ class MainWindow(QWidget):
     def load_pendulum(self, pendulum):
         print("loading pendulum")
         self.estate_combo.setCurrentIndex(self.estate_combo.findText(pendulum))
-
         self.redraw()
