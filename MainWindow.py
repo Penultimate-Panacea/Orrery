@@ -150,7 +150,7 @@ class MainWindow(QWidget):
         # middle: graphics
         center = QVBoxLayout()
 
-        # Move controls
+        # Move controls (left box)
         move_box = QGroupBox("Move arcs (snap)")
         move_layout = QGridLayout()
         move_box.setLayout(move_layout)
@@ -169,6 +169,7 @@ class MainWindow(QWidget):
                     elif kind == "step_ccw":
                         p.current_step = (p.current_step - 1) % p.step_count_circle
                     self.redraw()
+
                 return cb
 
             btn_span_ccw = QPushButton("span ↓")
@@ -186,8 +187,43 @@ class MainWindow(QWidget):
             move_layout.addWidget(btn_step_ccw, row, 3)
             move_layout.addWidget(btn_step_cw, row, 4)
 
+        save_load_box = QGroupBox("Utilities")
+        save_load_layout = QGridLayout()
+        save_load_box.setLayout(save_load_layout)
+
+        utility_button_height = 80
+
+        btn_save = QPushButton("Save Data")
+        btn_save.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        btn_save.setMinimumHeight(utility_button_height)
+        btn_load = QPushButton("Load Data")
+        btn_load.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        btn_load.setMinimumHeight(utility_button_height)
+        btn_print = QPushButton("Print")
+        btn_print.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        btn_print.setMinimumHeight(utility_button_height)
+        btn_cal = QPushButton("Calendar Controls")
+        btn_cal.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        btn_cal.setMinimumHeight(utility_button_height)
+        save_load_layout.setColumnStretch(1, 1)
+        save_load_layout.setColumnStretch(0, 1)
+        save_load_layout.setRowStretch(0, 1)
+        save_load_layout.setRowStretch(1, 1)
+        save_load_layout.addWidget(btn_save, 0, 0)
+        save_load_layout.addWidget(btn_load, 0, 1)
+        save_load_layout.addWidget(btn_print, 1, 0)
+        save_load_layout.addWidget(btn_cal, 1, 1)
+
         center.addWidget(self.view, 1)
-        center.addWidget(move_box)
+
+        row_layout = QHBoxLayout()
+        row_layout.addWidget(move_box)
+        row_layout.addWidget(save_load_box)
+
+        row_layout.setStretchFactor(move_box, 1)
+        row_layout.setStretchFactor(save_load_box, 1)
+
+        center.addLayout(row_layout)
 
         # advance-all button
         adv_all = QPushButton("Advance all planets by span (CW) + active house +1")
@@ -205,7 +241,7 @@ class MainWindow(QWidget):
 
         btn_row = QHBoxLayout()
         self.add_king_btn = QPushButton("Add King")
-        self.remove_king_btn = QPushButton("Remove King (by index)")
+        self.remove_king_btn = QPushButton("Remove King")
         btn_row.addWidget(self.add_king_btn)
         btn_row.addWidget(self.remove_king_btn)
 
@@ -341,6 +377,8 @@ class MainWindow(QWidget):
 
 
 
+
+
     def clear_layout(layout):
         while layout.count():
             item = layout.takeAt(0)
@@ -422,4 +460,21 @@ class MainWindow(QWidget):
             self.kings_data.pop(row) # remove from data
         self.kings_table.removeRow(row) # remove from view
 
+    def load_planet_steps(self, steps_list):
+        for i, planet in enumerate(self.planets):
+            if i >= len(steps_list):
+                break
+            planet.current_step = steps_list[i]
+        self.redraw()
 
+    def load_kings(self, kings_list):
+        for i, king in enumerate(self.kings_data):
+            if i >= len(kings_list):
+                break
+            king[i] = kings_list[i]
+        self.redraw()
+
+    def load_pendulum(self, pendulum):
+        #load pendulum
+
+        self.redraw()
