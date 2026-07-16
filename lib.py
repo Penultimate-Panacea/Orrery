@@ -15,9 +15,9 @@ DELIM = "\u260C"
 
 MERCURY = '\u263F'
 VENUS = '\u2640'
-MARS = '\u2641'
-JUPITER = '\u2642'
-SATURN = '\u2643'
+MARS = '\u2642'
+JUPITER = '\u2643'
+SATURN = '\u2644'
 SOL = '\u2609'
 
 SUN_SIGN ='\u2609'
