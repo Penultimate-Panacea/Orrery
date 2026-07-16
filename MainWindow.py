@@ -279,7 +279,7 @@ class MainWindow(QWidget):
 
         btn_faustian = QPushButton("Faustian")
         read_the_stars_layout.addWidget(btn_faustian)
-        btn_faustian.clicked.connect(self.wizards[4].faustian_popup) # TODO incomplete, need to add house information
+        btn_faustian.clicked.connect(self.wizards[4].faustian_popup)
 
         btn_sorcerer = QPushButton("Sorcerer")
         read_the_stars_layout.addWidget(btn_sorcerer)
