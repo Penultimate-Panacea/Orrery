@@ -98,7 +98,7 @@ class MainWindow(QWidget):
         self.view.setRenderHint(self.view.renderHints().Antialiasing)
         self.view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         estate_combo = QComboBox()
-        self.save_load = SaveLoadWidget(get_planets=self.planets,get_kings=self.kings_data,get_pendulum=estate_combo.currentText(),set_planets_steps=self.load_planet_steps, set_kings=self.load_kings, set_pendulum=self.load_pendulum)
+        self.save_load = SaveLoadWidget(get_planets=self.planets,get_kings=self.kings_data,get_pendulum=estate_combo.currentText(),set_planets_steps=self.load_planet_steps, set_kings=self.load_kings, set_pendulum=self.load_pendulum, conjunction_update=self.update_conjunction_table)
 
         # Left panel: swatches + per-house color radio
         left = QVBoxLayout()

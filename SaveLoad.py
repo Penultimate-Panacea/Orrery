@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
 
 
 class SaveLoadWidget(QWidget):
-    def __init__(self, get_planets, set_planets_steps, get_kings, set_kings, get_pendulum, set_pendulum, parent=None):
+    def __init__(self, get_planets, set_planets_steps, get_kings, set_kings, get_pendulum, set_pendulum, conjunction_update, parent=None):
         super().__init__(parent)
         self.get_planets = get_planets
         self.set_planets_steps = set_planets_steps
@@ -16,6 +16,7 @@ class SaveLoadWidget(QWidget):
         self.set_kings = set_kings
         self.get_pendulum = get_pendulum
         self.set_pendulum = set_pendulum
+        self.update_conjunction_table = conjunction_update
 
     def save_to_file(self, planets, kings, pendulum):
         print("launching save to file")
@@ -68,6 +69,7 @@ class SaveLoadWidget(QWidget):
             self.set_planets_steps(steps)
             self.set_kings(kings)
             self.set_pendulum(pendulum)
+            self.update_conjunction_table()
 
         except Exception as e:
             QMessageBox.critical(self, "Load failed", str(e))
