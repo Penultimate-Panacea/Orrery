@@ -90,11 +90,11 @@ class Faustian(Wizard):
 
         self.read_the_stars_html = f"""
             <div style="font-family: serif;">
-              <h2> Faustian </h2>
+              <h2> Keeper of the Chains whose fate is controlled by %s </h2>
               {mercury_alone_html}
               {mercury_among_html}
             </div>
-        """
+        """ % lib.MERCURY
 
         faust_document = QTextDocument()
         faust_document.setHtml(self.read_the_stars_html)

@@ -157,7 +157,7 @@ class Sage(Wizard):
 
         self.read_the_stars_html = f"""
                 <div style="font-family: serif;">
-                  <h1> Sage </h1>
+                  <h1> Keeper of the Stars whose fate is controlled by the %s Estate</h1>
                   {mercury}
                   {venus}
                   {mars}
@@ -165,7 +165,7 @@ class Sage(Wizard):
                   {jupiter_and_saturn}
                   {none_in_estate}
                 </div>
-            """
+            """ % self.estate
 
         sage_document = QTextDocument()
         sage_document.setHtml(self.read_the_stars_html)

@@ -92,7 +92,7 @@ class Sorcerer(Wizard):
                                    """
         self.read_the_stars_html = f"""
             <div style="font-family: serif;">
-              <h2> Sorcerer </h2>
+              <h2> Keeper of the Runes whose fate is controlled by %s </h2>
               {sol_alone_html}
               {sol_mercury_XOR_venus_html}
               {sol_mercury_AND_venus_html}
@@ -100,7 +100,7 @@ class Sorcerer(Wizard):
               {sol_saturn_html}
               {sol_jupiter_html}
             </div>
-        """
+        """ % lib.SOL
 
         sol_document = QTextDocument()
         sol_document.setHtml(self.read_the_stars_html)
