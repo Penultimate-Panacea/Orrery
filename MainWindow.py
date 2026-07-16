@@ -24,6 +24,7 @@ from sorcerer import Sorcerer
 from sage import Sage
 from wizard import Wizard
 from king import AddKingDialog
+from SaveLoad import SaveLoadWidget
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -96,6 +97,8 @@ class MainWindow(QWidget):
         self.view = QGraphicsView(self.scene)
         self.view.setRenderHint(self.view.renderHints().Antialiasing)
         self.view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        estate_combo = QComboBox()
+        self.save_load = SaveLoadWidget(get_planets=self.planets,get_kings=self.kings_data,get_pendulum=estate_combo.currentText(),set_planets_steps=self.load_planet_steps, set_kings=self.load_kings, set_pendulum=self.load_pendulum)
 
         # Left panel: swatches + per-house color radio
         left = QVBoxLayout()
@@ -196,9 +199,11 @@ class MainWindow(QWidget):
         btn_save = QPushButton("Save Data")
         btn_save.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_save.setMinimumHeight(utility_button_height)
+        btn_save.clicked.connect(lambda checked=False: self.save_load.save_to_file(self.planets, self.kings_data, estate_combo.currentText()))
         btn_load = QPushButton("Load Data")
         btn_load.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_load.setMinimumHeight(utility_button_height)
+        btn_load.clicked.connect(self.save_load.load_from_file)
         btn_print = QPushButton("Print")
         btn_print.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_print.setMinimumHeight(utility_button_height)
@@ -250,7 +255,7 @@ class MainWindow(QWidget):
         right.addLayout(btn_row)
 
         self.add_king_btn.clicked.connect(self.on_add_king)
-        self.remove_king_btn.clicked.connect(self.on_remove_king_by_index)
+        self.remove_king_btn.clicked.connect(self.on_remove_king_by_selection)
 
         read_the_stars_box = QGroupBox("Read the stars")
         read_the_stars_layout = QGridLayout()
@@ -261,29 +266,33 @@ class MainWindow(QWidget):
         # connect button
         # relabel button
         # resize button
-        btn_necromancer = QPushButton("Necromancer")
+        btn_necromancer = QPushButton("Keeper of the Gates")
         read_the_stars_layout.addWidget(btn_necromancer)
         btn_necromancer.clicked.connect(self.wizards[0].necromancer_popup)
 
-        btn_hierophant = QPushButton("Hierophant")
+        btn_hierophant = QPushButton("Keeper of the Flames")
         read_the_stars_layout.addWidget(btn_hierophant)
         btn_hierophant.clicked.connect(self.wizards[1].hierophant_popup)
 
-        btn_warlock = QPushButton("Warlock")
+        btn_warlock = QPushButton("Keeper of the Throne")
         read_the_stars_layout.addWidget(btn_warlock)
         btn_warlock.clicked.connect(self.wizards[2].warlock_popup)
 
-        btn_mariner = QPushButton("Mariner")
+        btn_mariner = QPushButton("Keeper of the Wilds")
         read_the_stars_layout.addWidget(btn_mariner)
         btn_mariner.clicked.connect(self.wizards[3].mariner_popup)
 
-        btn_faustian = QPushButton("Faustian")
+        btn_faustian = QPushButton("Keeper of the Chains")
         read_the_stars_layout.addWidget(btn_faustian)
         btn_faustian.clicked.connect(self.wizards[4].faustian_popup)
 
-        btn_sorcerer = QPushButton("Sorcerer")
+        btn_sorcerer = QPushButton("Keeper of the Runes")
         read_the_stars_layout.addWidget(btn_sorcerer)
         btn_sorcerer.clicked.connect(self.wizards[5].sorcerer_popup)
+
+        btn_sage = QPushButton("Keeper of the Stars")
+        read_the_stars_layout.addWidget(btn_sage)
+        btn_sage.clicked.connect(self.wizards[6].sage_popup)
 
         estate_combo = QComboBox()
         read_the_stars_layout.addWidget(estate_combo)
@@ -291,11 +300,6 @@ class MainWindow(QWidget):
         estate_combo.addItem("Spiritual")
         estate_combo.addItem("Cosmic")
         estate_combo.currentTextChanged.connect(self.wizards[6].set_estate)
-
-        btn_sage = QPushButton("Sage")
-        read_the_stars_layout.addWidget(btn_sage)
-        btn_sage.clicked.connect(self.wizards[6].sage_popup)
-
 
 
 
@@ -452,7 +456,7 @@ class MainWindow(QWidget):
         self.kings_table.setItem(row, 2, QTableWidgetItem(king["moon"]))
         self.kings_table.setItem(row, 3, QTableWidgetItem(king["rising"]))
 
-    def on_remove_king_by_index(self):
+    def on_remove_king_by_selection(self):
         row = self.kings_table.currentRow()
         if row < 0:
             return
@@ -461,6 +465,7 @@ class MainWindow(QWidget):
         self.kings_table.removeRow(row) # remove from view
 
     def load_planet_steps(self, steps_list):
+        print("loading planet steps")
         for i, planet in enumerate(self.planets):
             if i >= len(steps_list):
                 break
@@ -468,13 +473,17 @@ class MainWindow(QWidget):
         self.redraw()
 
     def load_kings(self, kings_list):
-        for i, king in enumerate(self.kings_data):
+        print("loading kings")
+        self.kings_table.clearContents()
+        self.kings_table.setRowCount(0)
+        for i, king in enumerate(kings_list):
             if i >= len(kings_list):
                 break
-            king[i] = kings_list[i]
+            self._append_king_to_table(king)
         self.redraw()
 
     def load_pendulum(self, pendulum):
+        print("loading pendulum")
         #load pendulum
 
         self.redraw()
