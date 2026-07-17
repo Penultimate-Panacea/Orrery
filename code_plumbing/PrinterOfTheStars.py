@@ -42,9 +42,11 @@ class PrinterOfTheStars:
         self.document = self.assemble_document()
 
     def assemble_document(self) -> str:
-        full_html = f"""<html><head></head><body>
-<h1 class="break-page"> The Report on the Stars as of {self.date} </h1>"""
+        full_html = f"""<html><head><style>
+                .break {{page-break-before: always;}}</style></head><body>
+        <h1 class="break-page"> The Report on the Stars as of {self.date} </h1>"""
         for w in self.wizards:
+            full_html += """<div class="break"></div>"""
             full_html += w.read_the_stars_html
         full_html += "</body></html>"
         self.document= full_html
