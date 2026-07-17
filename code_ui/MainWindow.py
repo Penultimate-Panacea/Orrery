@@ -11,8 +11,8 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
                              )
 from code_plumbing.house import House
 from code_plumbing.planet import Planet
-from ArcScene import ArcScene
-from MoonPhaseWidget import MoonPhaseWidget
+from code_ui.ArcScene import ArcScene
+from code_ui.MoonPhaseWidget import MoonPhaseWidget
 from code_wizards.necromancer import Necromancer
 from code_wizards.hierophant import Hierophant
 from code_wizards.mariner import Mariner
@@ -22,7 +22,7 @@ from code_wizards.sorcerer import Sorcerer
 from code_wizards.sage import Sage
 from code_wizards.wizard import Wizard
 from code_plumbing.king import AddKingDialog
-from SaveLoad import SaveLoadWidget
+from code_ui.SaveLoad import SaveLoadWidget
 from code_plumbing.PrinterOfTheStars import PrinterOfTheStars
 
 class MainWindow(QWidget):

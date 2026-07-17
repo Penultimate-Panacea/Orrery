@@ -1,6 +1,6 @@
 # coding=utf-8
 import time
-from lib import current_year
+from code_plumbing.lib import current_year
 from PyQt6.QtWidgets import QApplication, QDialog, QLabel,QProgressBar,QVBoxLayout
 from PyQt6.QtCore import Qt,QTimer
 from PyQt6.QtGui import QTextDocument, QPageSize
