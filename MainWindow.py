@@ -25,6 +25,7 @@ from sage import Sage
 from wizard import Wizard
 from king import AddKingDialog
 from SaveLoad import SaveLoadWidget
+from PrinterOfTheStars import PrinterOfTheStars
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -99,6 +100,7 @@ class MainWindow(QWidget):
         self.view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.estate_combo = QComboBox()
         self.save_load = SaveLoadWidget(get_planets=self.planets,get_kings=self.kings_data,get_pendulum=self.estate_combo.currentText(),set_planets_steps=self.load_planet_steps, set_kings=self.load_kings, set_pendulum=self.load_pendulum, conjunction_update=self.update_conjunction_table)
+        self.printer = PrinterOfTheStars(self.wizards, self.planets)
 
         # Left panel: swatches + per-house color radio
         left = QVBoxLayout()
@@ -207,6 +209,7 @@ class MainWindow(QWidget):
         btn_print = QPushButton("Print")
         btn_print.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_print.setMinimumHeight(utility_button_height)
+        btn_print.clicked.connect(self.printer.print_html)
         btn_cal = QPushButton("Calendar Controls")
         btn_cal.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_cal.setMinimumHeight(utility_button_height)
