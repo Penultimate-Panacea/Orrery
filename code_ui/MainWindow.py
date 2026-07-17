@@ -378,6 +378,8 @@ class MainWindow(QWidget):
     def printer_logic(self):
         for w in self.wizards:
             w.read_the_stars()
+        self.printer.update_wizards(self.wizards)
+        self.printer.update_planets(self.planets)
         self.printer.print_html()
 
 

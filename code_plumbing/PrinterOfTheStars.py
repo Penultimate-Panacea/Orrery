@@ -47,7 +47,7 @@ class PrinterOfTheStars:
         for w in self.wizards:
             full_html += w.read_the_stars_html
         full_html += "</body></html>"
-        return full_html
+        self.document= full_html
 
     def _configure_printer(self) -> QPrinter:
         printer = QPrinter(QPrinterInfo.defaultPrinter())
@@ -87,4 +87,14 @@ class PrinterOfTheStars:
         QTimer.singleShot(grace_ms, dlg.accept)
 
     def print_html(self) -> None:
+        self.assemble_document()
         self.print_html_to_default_printer()
+
+    def update_wizards(self, new_wizards):
+        print("Old Necromancer Text: %s" % self.wizards[0].read_the_stars_html)
+        self.wizards = new_wizards
+        print("New Necromancer Text: %s" % self.wizards[0].read_the_stars_html)
+
+
+    def update_planets(self, new_planets):
+        self.planets = new_planets
