@@ -1,11 +1,10 @@
 # coding=utf-8
-import sys
 import math
 from typing import List
 from PyQt6.QtCore import Qt, QRectF, QPointF
 from PyQt6.QtGui import QPen, QColor, QPainterPath, QBrush, QFont
 from PyQt6.QtWidgets import QGraphicsScene
-from planet import Planet
+from code_plumbing.planet import Planet
 
 class ArcScene(QGraphicsScene):
     def __init__(self):

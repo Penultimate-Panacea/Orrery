@@ -1,5 +1,4 @@
 # coding=utf-8
-import lib
 
 class Wizard:
     def __init__(self,planet_conjunction_dict):

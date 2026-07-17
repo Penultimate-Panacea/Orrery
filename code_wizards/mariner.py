@@ -1,6 +1,6 @@
 # coding=utf-8
 from wizard import Wizard
-import lib
+from code_plumbing import lib
 from PyQt6.QtGui import QTextDocument
 from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
 class Mariner(Wizard):

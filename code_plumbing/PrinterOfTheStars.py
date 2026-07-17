@@ -71,16 +71,13 @@ class PrinterOfTheStars:
 
     def print_html_to_default_printer(self) -> None:
         # Qt requires a QApplication for printing
-        app_created = False
         app = QApplication.instance()
-        if app is None:
-            app = QApplication([])
-            app_created = True
+        # if app is None:
+       #     app = QApplication([])
 
         printer = self._configure_printer()
 
         doc = QTextDocument()
-        # For text-only HTML, QTextDocument is typically fine.
         doc.setHtml(self.document)
 
         dlg = SpoolingDialog(message="Sending to printer (spooling may take a moment)…")

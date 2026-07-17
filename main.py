@@ -3,7 +3,7 @@ import sys
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtGui import QFontDatabase, QFont
 import qdarkstyle
-from MainWindow import MainWindow
+from code_ui.MainWindow import MainWindow
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

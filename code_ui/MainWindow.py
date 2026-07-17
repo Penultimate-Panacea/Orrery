@@ -1,31 +1,29 @@
 # coding=utf-8
-import sys
-import lib
+from code_plumbing import lib
 import time
 from typing import List
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor, QTextDocument
+from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
                              QGraphicsView, QPushButton, QLabel, QTableWidget,
-                             QTableWidgetItem, QGroupBox, QRadioButton, QButtonGroup, QSizePolicy, QDialog, QTextEdit,
-                             QComboBox
+                             QTableWidgetItem, QGroupBox, QRadioButton, QButtonGroup, QSizePolicy, QComboBox
                              )
-from house import House
-from planet import Planet
+from code_plumbing.house import House
+from code_plumbing.planet import Planet
 from ArcScene import ArcScene
 from MoonPhaseWidget import MoonPhaseWidget
-from necromancer import Necromancer
-from hierophant import Hierophant
-from mariner import Mariner
-from warlock import Warlock
-from faustian import Faustian
-from sorcerer import Sorcerer
-from sage import Sage
-from wizard import Wizard
-from king import AddKingDialog
+from code_wizards.necromancer import Necromancer
+from code_wizards.hierophant import Hierophant
+from code_wizards.mariner import Mariner
+from code_wizards.warlock import Warlock
+from code_wizards.faustian import Faustian
+from code_wizards.sorcerer import Sorcerer
+from code_wizards.sage import Sage
+from code_wizards.wizard import Wizard
+from code_plumbing.king import AddKingDialog
 from SaveLoad import SaveLoadWidget
-from PrinterOfTheStars import PrinterOfTheStars
+from code_plumbing.PrinterOfTheStars import PrinterOfTheStars
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -53,11 +51,11 @@ class MainWindow(QWidget):
         ]
 
         self.planets: List[Planet] = [
-            Planet(lib.MERCURY, QColor("Blue"), span_steps=13, step_count_circle=48, current_step=0,  ring_radius=100, ring_thickness=16, conjunction_table=lib.CONJ_MERCURY),
-            Planet(lib.VENUS, QColor("Green"), span_steps=9,  step_count_circle=48, current_step=1,  ring_radius=140, ring_thickness=16, conjunction_table=lib.CONJ_VENUS),
-            Planet(lib.MARS, QColor("Red"), span_steps=5,  step_count_circle=48, current_step=2, ring_radius=180, ring_thickness=16, conjunction_table=lib.CONJ_MARS),
-            Planet(lib.JUPITER, QColor("Orange"), span_steps=3,  step_count_circle=48, current_step=3, ring_radius=220, ring_thickness=16, conjunction_table=lib.CONJ_JUPITER),
-            Planet(lib.SATURN, QColor("Gray"), span_steps=1,  step_count_circle=36, current_step=0,  ring_radius=280, ring_thickness=16,
+            Planet(lib.MERCURY, QColor("Blue"), span_steps=13, step_count_circle=48, current_step=0, ring_radius=100, ring_thickness=16, conjunction_table=lib.CONJ_MERCURY),
+            Planet(lib.VENUS, QColor("Green"), span_steps=9, step_count_circle=48, current_step=1, ring_radius=140, ring_thickness=16, conjunction_table=lib.CONJ_VENUS),
+            Planet(lib.MARS, QColor("Red"), span_steps=5, step_count_circle=48, current_step=2, ring_radius=180, ring_thickness=16, conjunction_table=lib.CONJ_MARS),
+            Planet(lib.JUPITER, QColor("Orange"), span_steps=3, step_count_circle=48, current_step=3, ring_radius=220, ring_thickness=16, conjunction_table=lib.CONJ_JUPITER),
+            Planet(lib.SATURN, QColor("Gray"), span_steps=1, step_count_circle=36, current_step=0, ring_radius=280, ring_thickness=16,
                    grid_offset_half_step=True, conjunction_table=lib.CONJ_SATURN),
             Planet(lib.SOL, QColor("Yellow"), span_steps=1, step_count_circle=12, current_step=0, ring_radius=240,
                    ring_thickness=16, conjunction_table=lib.CONJ_SOL)
