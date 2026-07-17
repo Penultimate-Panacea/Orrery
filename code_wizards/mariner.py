@@ -55,193 +55,8 @@ class Mariner(Wizard):
         mariner_pop.setWindowTitle("Mariner")
 
         layout = QVBoxLayout(mariner_pop)
+        self.read_the_stars()
 
-        season = self.determine_season()
-        planets_in_season = self.generate_planets_in_season()
-
-        none_in_season = ""
-        mercury_venus = ""
-        mars = ""
-        jupiter = ""
-        saturn = ""
-        general_seasonal_effects = ""
-
-        if season == "Spring":
-            general_seasonal_effects = """
-                <h2> The Winds of Spring </h2>
-                Governed by <i>Zephyrus</i>, the West Wind, which blows from the Western Horizon towards the East. <br><br>Move all Storms one Sea Eastwards, then place a Storm in either the Northwest or Southwest Horizon.
-            """
-        elif season == "Summer":
-            general_seasonal_effects = """
-                <h2> The Winds of Summer </h2>
-                Governed by <i>Auster</i>, the South Wind, which blows from the Southern Horizon towards the North. <br><br>Move all Storms one Sea Northwards, then place a Storm in either the Southwest or Southeast Horizon.
-            """
-        elif season == "Autumn":
-            general_seasonal_effects = """
-                <h2> The Winds of Autumn </h2>
-                Governed by <i>Volturnus</i>, the East Wind, which blows from the Eastern Horizon towards the West. <br><br>Move all Storms one Sea Westwards, then place a Storm in either the Northwest or Southwest Horizon.
-            """
-        elif season == "Winter":
-            general_seasonal_effects = """
-                <h2> The Winds of Winter </h2>
-                GGoverned by <i>Boreas</i>, the North Wind, which blows from the Northern Horizon towards the South. <br><br>Move all Storms one Sea Southwards, then place a Storm in either the Northwest or Northeast Horizon.
-            """
-
-        if (lib.MERCURY in planets_in_season) ^ (lib.VENUS in planets_in_season):
-            if season == "Spring":
-                mercury_venus = """
-                    <h2> Mercury or Venus in Season -- The West Wind brings gentle rains</h2>
-                    Place three Routes on any paths.
-                """
-            if season == "Summer":
-                mercury_venus = """
-                    <h2> Mercury or Venus in Season -- The South Wind brings warm weather</h2>
-                    Place three Routes on any paths.
-                """
-            if season == "Autumn":
-                mercury_venus = """
-                    <h2> Mercury or Venus in Season -- The East wind brings cool tidings</h2>
-                    Place two Routes on any paths.
-                """
-            if season == "Winter":
-                mercury_venus = """
-                    <h2> Mercury or Venus in Season -- The North wind brings cold weather</h2>
-                    Place one Route on any paths.
-                """
-        if (lib.MERCURY in planets_in_season) and (lib.VENUS in planets_in_season):
-            if season == "Spring":
-                mercury_venus = """
-                    <h2> Mercury and Venus in Season -- The West Wind brings rains.</h2>
-                    I.  Place three Routes on any paths. <br>
-                    II. Place three Storms adjacent to any Storm
-                """
-            if season == "Summer":
-                mercury_venus = """
-                    <h2> Mercury and Venus in Season -- The South Wind brings warm weather and a tropical storm.</h2>
-                    I.  Place three Routes on any paths. <br>
-                    II. For each Storm, place another Storm in the Sea north of it.
-                """
-            if season == "Autumn":
-                mercury_venus = """
-                    <h2> Mercury and Venus in Season -- The East Wind brings cool tidings and a hurricane.</h2>
-                    I.  Place two Routes on any paths. <br>
-                    II. For each Storm, place two Storms in adjacent Seas.
-                """
-            if season == "Winter":
-                mercury_venus = """
-                    <h2> Mercury and Venus in Season -- The North Wind brings freezing weather.</h2>
-                    I.  Place one Route on any paths. <br>
-                    II. For each Storm, place one a Storm in <i>every</i> adjacent Seas.
-                """
-        if lib.MARS in planets_in_season:
-            if season == "Spring":
-                mars = """
-                    <h2>Mars in Season -- The Triarchy of Ur bring wealth to Isha</h2>
-                    Place an extra Bounty on each Isle connected to the Western Horizon. If there are no Isles connected in this way, instead place two Parasitic Routes, pointing towards the Western Horizon (or Connecting to Isles with Parasitic Routes connecting to the Western Horizon), as Urite warships move to extract wealth on their own terms.
-                """
-            if season == "Summer":
-                mars = """
-                    <h2>Mars in Season -- The Jarls of Nebelheim turn their gaze southwards, towards warmer seas</h2>
-                    Place an extra Bounty on each Isle connected to the Northern Horizon. If there are no Isles connected in this way, instead place three Parasitic Routes, pointing towards the Northern Horizon (or Connecting to Isles with Parasitic Routes connecting to the Southern Horizon), as the hrotingmen raid Isha.
-                """
-            if season == "Autumn":
-                mars = """
-                    <h2>Mars in Season -- The black ships of the Drujlands smuggle illegal treasures into Isha</h2>
-                    Place an extra Bounty on each Isle connected to the Western Horizon. If there are no Isles connected in this way, instead place two Parasitic Routes, pointing towards the Western Horizon (or Connecting to Isles with Parasitic Routes connecting to the Western Horizon), as the Drujites seek forbidden reagents for their magic.
-                """
-            if season == "Winter":
-                mars = """
-                    <h2>Mars in Season -- The golden ships of the Hecares bring rare spices north</h2>
-                    Place an extra Bounty on each Isle connected to the Southern Horizon. If there are no Isles connected in this way, instead place three Parasitic Routes, pointing towards the Southern Horizon (or Connecting to Isles with Parasitic Routes connecting to the Southern Horizon), as King Elpenor raids Isha to fuel his war efforts.
-                """
-        if lib.JUPITER in planets_in_season:
-            if season == "Spring":
-                jupiter = """
-                    <h2> Jupiter is Season -- A Beast of Air acts </h2>
-                    <b><u>IF this is the First Time Jupiter has appeared in Spring</u></b><br>
-                    A strange beast arrives in Isha from the distant west. Add a Roc, a Sphinx, or other Beast of Air to any empty Sea on the Map. <br><br>
-                    <b><u>ELSE</u></b><br>
-                    The Beast's flight changes weather patterns. Move each Storm away from the Beast. 
-                """
-            if season == "Summer":
-                jupiter = """
-                    <h2> Jupiter is Season -- A Beast of Fire acts </h2>
-                    <b><u>IF this is the First Time Jupiter has appeared in Summer</u></b><br>
-                    A beautiful beast arrives from the distant south. Add a Dragon, Phoenix, or other Beast of Fire to any empty Sea on the Map. <br><br>
-                    <b><u>ELSE</u></b><br>
-                    Bounty hunters upset the great beast. Replace all Routes adjacent to the Beast with Parasitic Routes. 
-                """
-            if season == "Autumn":
-                jupiter = """
-                    <h2> Jupiter is Season -- A Beast of Earth acts </h2>
-                    <b><u>IF this is the First Time Jupiter has appeared in Autumn</u></b><br>
-                    A great beast awakens from beneath the soil Add a Giant, Behemoth, or other Beast of Earth Nesting the Isle with the lowest Commerce. <br><br>
-                    <b><u>ELSE</u></b><br>
-                    The inhabitants of the Isle begin illegal operations to bring it food. Place a Parasitic Route connecting that Isle to any other Isle. 
-                """
-            if season == "Winter":
-                jupiter = """
-                    <h2> Jupiter is Season -- A Beast of Water acts </h2>
-                    <b><u>IF this is the First Time Jupiter has appeared in Winter</u></b><br>
-                    An enormous beast arrives from the freezing north, seeking warmer waters. Add a Kraken, Sea Serpent, or other Beast of Water to any empty Sea on the Map. <br><br>
-                    <b><u>ELSE</u></b><br>
-                    The Beast asserts its domain. Destroy all adjacent Routes.
-                """
-        if lib.SATURN in planets_in_season:
-            if season == "Spring":
-                saturn = """
-                <h2> Saturn in Season -- An Earthquake strikes Isha</h2>
-                Choose any two random Isles across Isha, and draw a straight line connecting them. Remove all Bounty from Isles touching this straight line.
-                """
-            if season == "Summer":
-                saturn = """
-                <h2> Saturn in Season -- Pirates roam the archipelago</h2>
-                 For each Isle tied for the fewest Bounty, place a Parasitic Route pointing towards that Isle.
-                """
-            if season == "Autumn":
-                saturn = """
-                <h2> Saturn in Season -- Upon sacred Tahv the slumbering Mt. Ithax rumbles, and lava pours from its peak.</h2>
-                Place a Storm in two Seas adjacent to Tahv. If Tahv is already surrounded by Storms, Mt. Ithax instead erupts. Ravage Tahv, and place a Storm in every Sea adjacent to Tahv.                
-                """
-            if season == "Winter":
-                saturn = """
-                <h2> Saturn in Season -- A wretched rot strikes Isha's storehouses</h2>
-                 For the rest of the Season, reduce the Commerce of all Isles by 1.
-                """
-        if len(planets_in_season) == 0:
-            if season == "Spring":
-                none_in_season = """
-                    <h2> No Celestial Bodies within Season -- Still winds bring rotten fish to the shores of Isha.</h2>
-                    Remove each Route which isn't itself adjacent to a Storm.
-                """
-            if season == "Summer":
-                none_in_season = """
-                    <h2> No Celestial Bodies within Season -- A heatwave washes across Isha, and crops wither in the drought.</h2>
-                    Remove each Route which isn't itself adjacent to a Storm.
-                """
-            if season == "Autumn":
-                none_in_season = """
-                    <h2> No Celestial Bodies within Season -- Fickle winds bring disarray to Isha's shipping lanes.</h2>
-                    I.  Remove three Routes<br>
-                    II. Pace a Storm in each Sea without any adjacent Storms.
-                """
-            if season == "Winter":
-                none_in_season = """
-                    <h2> No Celestial Bodies within Season -- Isha's ports freeze over, and a wretched cold settles across the archipelago.</h2>
-                    Remove half of all Routes, rounding up.
-                """
-
-        self.read_the_stars_html = f"""
-                    <div style="font-family: serif;">
-                      <h1 class="break-page"> Keeper of the Wilds whose fate is controlled by the Seasons </h1>
-                      {general_seasonal_effects}
-                      {none_in_season}
-                      {mercury_venus}
-                      {mars}
-                      {jupiter}
-                      {saturn}
-                    </div>
-                """
         mariner_document = QTextDocument()
         mariner_document.setHtml(self.read_the_stars_html)
 
@@ -254,4 +69,190 @@ class Mariner(Wizard):
         mariner_pop.resize(900,600)
         mariner_pop.exec()
 
+    def read_the_stars(self):
+        season = self.determine_season()
+        planets_in_season = self.generate_planets_in_season()
 
+        none_in_season = ""
+        mercury_venus = ""
+        mars = ""
+        jupiter = ""
+        saturn = ""
+        general_seasonal_effects = ""
+
+        if season == "Spring":
+            general_seasonal_effects = """
+                        <h2> The Winds of Spring </h2>
+                        Governed by <i>Zephyrus</i>, the West Wind, which blows from the Western Horizon towards the East. <br><br>Move all Storms one Sea Eastwards, then place a Storm in either the Northwest or Southwest Horizon.
+                    """
+        elif season == "Summer":
+            general_seasonal_effects = """
+                        <h2> The Winds of Summer </h2>
+                        Governed by <i>Auster</i>, the South Wind, which blows from the Southern Horizon towards the North. <br><br>Move all Storms one Sea Northwards, then place a Storm in either the Southwest or Southeast Horizon.
+                    """
+        elif season == "Autumn":
+            general_seasonal_effects = """
+                        <h2> The Winds of Autumn </h2>
+                        Governed by <i>Volturnus</i>, the East Wind, which blows from the Eastern Horizon towards the West. <br><br>Move all Storms one Sea Westwards, then place a Storm in either the Northwest or Southwest Horizon.
+                    """
+        elif season == "Winter":
+            general_seasonal_effects = """
+                        <h2> The Winds of Winter </h2>
+                        GGoverned by <i>Boreas</i>, the North Wind, which blows from the Northern Horizon towards the South. <br><br>Move all Storms one Sea Southwards, then place a Storm in either the Northwest or Northeast Horizon.
+                    """
+
+        if (lib.MERCURY in planets_in_season) ^ (lib.VENUS in planets_in_season):
+            if season == "Spring":
+                mercury_venus = """
+                            <h2> Mercury or Venus in Season -- The West Wind brings gentle rains</h2>
+                            Place three Routes on any paths.
+                        """
+            if season == "Summer":
+                mercury_venus = """
+                            <h2> Mercury or Venus in Season -- The South Wind brings warm weather</h2>
+                            Place three Routes on any paths.
+                        """
+            if season == "Autumn":
+                mercury_venus = """
+                            <h2> Mercury or Venus in Season -- The East wind brings cool tidings</h2>
+                            Place two Routes on any paths.
+                        """
+            if season == "Winter":
+                mercury_venus = """
+                            <h2> Mercury or Venus in Season -- The North wind brings cold weather</h2>
+                            Place one Route on any paths.
+                        """
+        if (lib.MERCURY in planets_in_season) and (lib.VENUS in planets_in_season):
+            if season == "Spring":
+                mercury_venus = """
+                            <h2> Mercury and Venus in Season -- The West Wind brings rains.</h2>
+                            I.  Place three Routes on any paths. <br>
+                            II. Place three Storms adjacent to any Storm
+                        """
+            if season == "Summer":
+                mercury_venus = """
+                            <h2> Mercury and Venus in Season -- The South Wind brings warm weather and a tropical storm.</h2>
+                            I.  Place three Routes on any paths. <br>
+                            II. For each Storm, place another Storm in the Sea north of it.
+                        """
+            if season == "Autumn":
+                mercury_venus = """
+                            <h2> Mercury and Venus in Season -- The East Wind brings cool tidings and a hurricane.</h2>
+                            I.  Place two Routes on any paths. <br>
+                            II. For each Storm, place two Storms in adjacent Seas.
+                        """
+            if season == "Winter":
+                mercury_venus = """
+                            <h2> Mercury and Venus in Season -- The North Wind brings freezing weather.</h2>
+                            I.  Place one Route on any paths. <br>
+                            II. For each Storm, place one a Storm in <i>every</i> adjacent Seas.
+                        """
+        if lib.MARS in planets_in_season:
+            if season == "Spring":
+                mars = """
+                            <h2>Mars in Season -- The Triarchy of Ur bring wealth to Isha</h2>
+                            Place an extra Bounty on each Isle connected to the Western Horizon. If there are no Isles connected in this way, instead place two Parasitic Routes, pointing towards the Western Horizon (or Connecting to Isles with Parasitic Routes connecting to the Western Horizon), as Urite warships move to extract wealth on their own terms.
+                        """
+            if season == "Summer":
+                mars = """
+                            <h2>Mars in Season -- The Jarls of Nebelheim turn their gaze southwards, towards warmer seas</h2>
+                            Place an extra Bounty on each Isle connected to the Northern Horizon. If there are no Isles connected in this way, instead place three Parasitic Routes, pointing towards the Northern Horizon (or Connecting to Isles with Parasitic Routes connecting to the Southern Horizon), as the hrotingmen raid Isha.
+                        """
+            if season == "Autumn":
+                mars = """
+                            <h2>Mars in Season -- The black ships of the Drujlands smuggle illegal treasures into Isha</h2>
+                            Place an extra Bounty on each Isle connected to the Western Horizon. If there are no Isles connected in this way, instead place two Parasitic Routes, pointing towards the Western Horizon (or Connecting to Isles with Parasitic Routes connecting to the Western Horizon), as the Drujites seek forbidden reagents for their magic.
+                        """
+            if season == "Winter":
+                mars = """
+                            <h2>Mars in Season -- The golden ships of the Hecares bring rare spices north</h2>
+                            Place an extra Bounty on each Isle connected to the Southern Horizon. If there are no Isles connected in this way, instead place three Parasitic Routes, pointing towards the Southern Horizon (or Connecting to Isles with Parasitic Routes connecting to the Southern Horizon), as King Elpenor raids Isha to fuel his war efforts.
+                        """
+        if lib.JUPITER in planets_in_season:
+            if season == "Spring":
+                jupiter = """
+                            <h2> Jupiter is Season -- A Beast of Air acts </h2>
+                            <b><u>IF this is the First Time Jupiter has appeared in Spring</u></b><br>
+                            A strange beast arrives in Isha from the distant west. Add a Roc, a Sphinx, or other Beast of Air to any empty Sea on the Map. <br><br>
+                            <b><u>ELSE</u></b><br>
+                            The Beast's flight changes weather patterns. Move each Storm away from the Beast. 
+                        """
+            if season == "Summer":
+                jupiter = """
+                            <h2> Jupiter is Season -- A Beast of Fire acts </h2>
+                            <b><u>IF this is the First Time Jupiter has appeared in Summer</u></b><br>
+                            A beautiful beast arrives from the distant south. Add a Dragon, Phoenix, or other Beast of Fire to any empty Sea on the Map. <br><br>
+                            <b><u>ELSE</u></b><br>
+                            Bounty hunters upset the great beast. Replace all Routes adjacent to the Beast with Parasitic Routes. 
+                        """
+            if season == "Autumn":
+                jupiter = """
+                            <h2> Jupiter is Season -- A Beast of Earth acts </h2>
+                            <b><u>IF this is the First Time Jupiter has appeared in Autumn</u></b><br>
+                            A great beast awakens from beneath the soil Add a Giant, Behemoth, or other Beast of Earth Nesting the Isle with the lowest Commerce. <br><br>
+                            <b><u>ELSE</u></b><br>
+                            The inhabitants of the Isle begin illegal operations to bring it food. Place a Parasitic Route connecting that Isle to any other Isle. 
+                        """
+            if season == "Winter":
+                jupiter = """
+                            <h2> Jupiter is Season -- A Beast of Water acts </h2>
+                            <b><u>IF this is the First Time Jupiter has appeared in Winter</u></b><br>
+                            An enormous beast arrives from the freezing north, seeking warmer waters. Add a Kraken, Sea Serpent, or other Beast of Water to any empty Sea on the Map. <br><br>
+                            <b><u>ELSE</u></b><br>
+                            The Beast asserts its domain. Destroy all adjacent Routes.
+                        """
+        if lib.SATURN in planets_in_season:
+            if season == "Spring":
+                saturn = """
+                        <h2> Saturn in Season -- An Earthquake strikes Isha</h2>
+                        Choose any two random Isles across Isha, and draw a straight line connecting them. Remove all Bounty from Isles touching this straight line.
+                        """
+            if season == "Summer":
+                saturn = """
+                        <h2> Saturn in Season -- Pirates roam the archipelago</h2>
+                         For each Isle tied for the fewest Bounty, place a Parasitic Route pointing towards that Isle.
+                        """
+            if season == "Autumn":
+                saturn = """
+                        <h2> Saturn in Season -- Upon sacred Tahv the slumbering Mt. Ithax rumbles, and lava pours from its peak.</h2>
+                        Place a Storm in two Seas adjacent to Tahv. If Tahv is already surrounded by Storms, Mt. Ithax instead erupts. Ravage Tahv, and place a Storm in every Sea adjacent to Tahv.                
+                        """
+            if season == "Winter":
+                saturn = """
+                        <h2> Saturn in Season -- A wretched rot strikes Isha's storehouses</h2>
+                         For the rest of the Season, reduce the Commerce of all Isles by 1.
+                        """
+        if len(planets_in_season) == 0:
+            if season == "Spring":
+                none_in_season = """
+                            <h2> No Celestial Bodies within Season -- Still winds bring rotten fish to the shores of Isha.</h2>
+                            Remove each Route which isn't itself adjacent to a Storm.
+                        """
+            if season == "Summer":
+                none_in_season = """
+                            <h2> No Celestial Bodies within Season -- A heatwave washes across Isha, and crops wither in the drought.</h2>
+                            Remove each Route which isn't itself adjacent to a Storm.
+                        """
+            if season == "Autumn":
+                none_in_season = """
+                            <h2> No Celestial Bodies within Season -- Fickle winds bring disarray to Isha's shipping lanes.</h2>
+                            I.  Remove three Routes<br>
+                            II. Pace a Storm in each Sea without any adjacent Storms.
+                        """
+            if season == "Winter":
+                none_in_season = """
+                            <h2> No Celestial Bodies within Season -- Isha's ports freeze over, and a wretched cold settles across the archipelago.</h2>
+                            Remove half of all Routes, rounding up.
+                        """
+
+        self.read_the_stars_html = f"""
+                            <div style="font-family: serif;">
+                              <h1 class="break-page"> Keeper of the Wilds whose fate is controlled by the Seasons </h1>
+                              {general_seasonal_effects}
+                              {none_in_season}
+                              {mercury_venus}
+                              {mars}
+                              {jupiter}
+                              {saturn}
+                            </div>
+                        """

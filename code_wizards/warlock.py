@@ -18,24 +18,7 @@ class Warlock(Wizard):
         # test_king = [{'name': "Joe", 'sun': 'Taurus', 'moon': 'Gemini', 'rising': 'Aries'}]
 
         layout = QVBoxLayout(warlock_pop)
-        master_king_text = ""
-        if not len(self.kings) == 0:
-            print("HERE BE KINGS")
-            for king in self.kings:
-                print(self.king_string(king))
-                master_king_text+=self.king_string(king)
-                print(master_king_text)
-        else:
-            print("NO KINGS")
-
-        self.read_the_stars_html = f""""
-            <h1 class="break-page"> Keeper of the Throne whose fate is controlled by the signs that the King was born under.</h1>
-                      {master_king_text}
-                      <h2> After processing all Courts as above:</h2>
-                      Starting with the King's Guide and proceeding counterlockwise around the Court (<i>in order:</i> Guide, Love, Friend, and then Heir), resolve the Agenda of each Noble with a unique Allegiance in the King's Inner Circle. If a Noble's Agenda would occur, and the King has already put in motion the Agenda of another Noble of the same Allegiance, the King instead ignores the Noble's demands.
-                    </div>
-        """
-
+        self.read_the_stars()
         warlock_document = QTextDocument()
         warlock_document.setHtml(self.read_the_stars_html)
 
@@ -154,3 +137,22 @@ class Warlock(Wizard):
             return True
         else:
             return False
+
+    def read_the_stars(self):
+        master_king_text = ""
+        if not len(self.kings) == 0:
+            print("HERE BE KINGS")
+            for king in self.kings:
+                print(self.king_string(king))
+                master_king_text += self.king_string(king)
+                print(master_king_text)
+        else:
+            print("NO KINGS")
+
+        self.read_the_stars_html = f""""
+                    <h1 class="break-page"> Keeper of the Throne whose fate is controlled by the signs that the King was born under.</h1>
+                              {master_king_text}
+                              <h2> After processing all Courts as above:</h2>
+                              Starting with the King's Guide and proceeding counterlockwise around the Court (<i>in order:</i> Guide, Love, Friend, and then Heir), resolve the Agenda of each Noble with a unique Allegiance in the King's Inner Circle. If a Noble's Agenda would occur, and the King has already put in motion the Agenda of another Noble of the same Allegiance, the King instead ignores the Noble's demands.
+                            </div>
+                """

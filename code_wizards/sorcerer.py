@@ -41,67 +41,9 @@ class Sorcerer(Wizard):
     def sorcerer_popup(self):
         sorc_pop = QDialog()
         sorc_pop.setWindowTitle("Sorcerer Reads the Stars")
-        magic_number = self.make_magic_number()
+        layout = QVBoxLayout(sorc_pop)
 
-        layout = QVBoxLayout(sorc_pop)  # attach layout to the dialog
-
-        sol_alone_html = ""
-        if magic_number & (1 << 0):
-            sol_alone_html = """
-                <h2> Sol Stands Alone -- Magic dreams of Wildness, and it sparks across the land</h2>
-                    For each Region with any number of Hidden Traces on it, double the number of Traces in that region. If there are no hidden traces, instead ask the Celestial Audience which Wizard has the last control over his Domain. Place a Hidden Trace in each Region of that Wizard's Domain.
-                """
-
-        sol_mercury_XOR_venus_html = ""
-        if magic_number & (1 << 1):
-            sol_mercury_XOR_venus_html = """
-                <h2> Mercury or Venus in Conjunction -- Magic dreams of Power, and those who serve it feel its call.</h2>
-                Place a hidden trace on each Occultist. If there are no Occultists, place a new Occultist, accompanied by three Hidden Traces, in one of the Wizard's Authorities.
-            """
-
-        sol_mercury_AND_venus_html = ""
-        if magic_number & (1 << 2):
-            sol_mercury_AND_venus_html = """
-                       <h2> Mercury and Venus in Conjunction -- Magic dreams of Power, and those who serve it feel its call </h2>
-                       I.   Place a hidden trace on each Occultist. <br>
-                       II.  Place a new Occultist, accompanied by three Hidden Traces, in one of the Wizard's Authorities.
-                   """
-
-        sol_mars_html = ""
-        if magic_number & (1 << 3):
-            sol_mars_html = """
-                               <h2> Mars in Conjunction -- Magic dreams of excitement, and across the Faraway Sea, the world hears its call.</h2>
-                               For each Region with a Trace on it, place another Hidden Trace upon it. If fewer than three Traces are placed in this way, then place two Hidden Traces on three different Islands.
-                           """
-
-        sol_jupiter_html = ""
-        if magic_number & (1 << 4):
-            sol_jupiter_html = """
-                                    <h2> Jupiter in Conjunction -- Magic dreams of wisdom, and its students become fascinated with its seductive power.</i></h2>
-                                    I.  Put a Hidden Trace on one of your Agents. <br>
-                                    II. They become an Occultist.<br>
-                                    The Agent will remain loyal (and the Academy will thus remain under your Control) until you Confiscate the Agent's Traces, at which point they will depart the Academy and move into an adjacent Domain. <br>
-                                    <b>If there is already an Occultist on an Academy,</b> or if you have no Agents, instead ask the Celestial Audience which Domain is stealing from your own, and move half of all Traces in your Tower into that Domain's Authority. These Traces become Hidden.
-                                """
-
-        sol_saturn_html = ""
-        if magic_number & (1 << 5):
-            sol_saturn_html = """
-                                       <h2> Saturn in Conjunction -- Magic dreams of desolation, and its presence in Isha leads to calamity.</h2>
-                                       Place three Hidden Traces in one of the Secret Regions, as dangerous power builds at the edge of the world. Ask the Wizard whose Domain it falls under to invent a mighty enemy Occultist, but to keep them secret from you for now --- you can discover who they are when you Investigate.
-                                   """
-        self.read_the_stars_html = f"""
-            <div style="font-family: serif;">
-              <h1 class="break-page"> Keeper of the Runes whose fate is controlled by %s </h1>
-              {sol_alone_html}
-              {sol_mercury_XOR_venus_html}
-              {sol_mercury_AND_venus_html}
-              {sol_mars_html}
-              {sol_saturn_html}
-              {sol_jupiter_html}
-            </div>
-        """ % lib.SOL
-
+        self.read_the_stars()
         sol_document = QTextDocument()
         sol_document.setHtml(self.read_the_stars_html)
 
@@ -113,3 +55,63 @@ class Sorcerer(Wizard):
 
         sorc_pop.resize(900, 600)
         sorc_pop.exec()
+
+    def read_the_stars(self):
+        magic_number = self.make_magic_number()
+
+        sol_alone_html = ""
+        if magic_number & (1 << 0):
+            sol_alone_html = """
+                        <h2> Sol Stands Alone -- Magic dreams of Wildness, and it sparks across the land</h2>
+                            For each Region with any number of Hidden Traces on it, double the number of Traces in that region. If there are no hidden traces, instead ask the Celestial Audience which Wizard has the last control over his Domain. Place a Hidden Trace in each Region of that Wizard's Domain.
+                        """
+
+        sol_mercury_XOR_venus_html = ""
+        if magic_number & (1 << 1):
+            sol_mercury_XOR_venus_html = """
+                        <h2> Mercury or Venus in Conjunction -- Magic dreams of Power, and those who serve it feel its call.</h2>
+                        Place a hidden trace on each Occultist. If there are no Occultists, place a new Occultist, accompanied by three Hidden Traces, in one of the Wizard's Authorities.
+                    """
+
+        sol_mercury_AND_venus_html = ""
+        if magic_number & (1 << 2):
+            sol_mercury_AND_venus_html = """
+                               <h2> Mercury and Venus in Conjunction -- Magic dreams of Power, and those who serve it feel its call </h2>
+                               I.   Place a hidden trace on each Occultist. <br>
+                               II.  Place a new Occultist, accompanied by three Hidden Traces, in one of the Wizard's Authorities.
+                           """
+
+        sol_mars_html = ""
+        if magic_number & (1 << 3):
+            sol_mars_html = """
+                                       <h2> Mars in Conjunction -- Magic dreams of excitement, and across the Faraway Sea, the world hears its call.</h2>
+                                       For each Region with a Trace on it, place another Hidden Trace upon it. If fewer than three Traces are placed in this way, then place two Hidden Traces on three different Islands.
+                                   """
+
+        sol_jupiter_html = ""
+        if magic_number & (1 << 4):
+            sol_jupiter_html = """
+                                            <h2> Jupiter in Conjunction -- Magic dreams of wisdom, and its students become fascinated with its seductive power.</i></h2>
+                                            I.  Put a Hidden Trace on one of your Agents. <br>
+                                            II. They become an Occultist.<br>
+                                            The Agent will remain loyal (and the Academy will thus remain under your Control) until you Confiscate the Agent's Traces, at which point they will depart the Academy and move into an adjacent Domain. <br>
+                                            <b>If there is already an Occultist on an Academy,</b> or if you have no Agents, instead ask the Celestial Audience which Domain is stealing from your own, and move half of all Traces in your Tower into that Domain's Authority. These Traces become Hidden.
+                                        """
+
+        sol_saturn_html = ""
+        if magic_number & (1 << 5):
+            sol_saturn_html = """
+                                               <h2> Saturn in Conjunction -- Magic dreams of desolation, and its presence in Isha leads to calamity.</h2>
+                                               Place three Hidden Traces in one of the Secret Regions, as dangerous power builds at the edge of the world. Ask the Wizard whose Domain it falls under to invent a mighty enemy Occultist, but to keep them secret from you for now --- you can discover who they are when you Investigate.
+                                           """
+        self.read_the_stars_html = f"""
+                    <div style="font-family: serif;">
+                      <h1 class="break-page"> Keeper of the Runes whose fate is controlled by %s </h1>
+                      {sol_alone_html}
+                      {sol_mercury_XOR_venus_html}
+                      {sol_mercury_AND_venus_html}
+                      {sol_mars_html}
+                      {sol_saturn_html}
+                      {sol_jupiter_html}
+                    </div>
+                """ % lib.SOL
