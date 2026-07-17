@@ -207,7 +207,7 @@ class MainWindow(QWidget):
         btn_print = QPushButton("Print")
         btn_print.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_print.setMinimumHeight(utility_button_height)
-        btn_print.clicked.connect(self.printer.print_html)
+        btn_print.clicked.connect(self.printer_logic)
         btn_cal = QPushButton("Calendar Controls")
         btn_cal.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_cal.setMinimumHeight(utility_button_height)
@@ -375,7 +375,10 @@ class MainWindow(QWidget):
         )
 
 
-
+    def printer_logic(self):
+        for w in self.wizards:
+            w.read_the_stars()
+        self.printer.print_html()
 
 
 
