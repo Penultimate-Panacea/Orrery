@@ -61,6 +61,13 @@ class AddKingDialog(QDialog):
             "sun": self.sun_combo.currentText(),
             "moon": self.moon_combo.currentText(),
             "rising": self.rising_combo.currentText(),
+            "aristocracy": 0,
+            "mercantilism": 0,
+            "orthodoxy": 0,
+            "piracy": 0,
+            "rebellion": 0,
+            "ergoism": 0,
+            "monarchy": 0
         }
 
     def accept(self):
