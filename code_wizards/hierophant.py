@@ -129,7 +129,7 @@ class Hierophant(Wizard):
                       {venus_html}
                       {mars_html}
                       {saturn_html}
-                      {sol_html}
+                      {jupiter_html}
                       <br><br><br>
                           <center><h3> Report produced for {self.date_string}</h3> </center>
                     </div>
