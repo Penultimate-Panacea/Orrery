@@ -3,7 +3,8 @@ estate_color_dict = {'cosmic':"#b7cece", 'spiritual':"#89408c", 'terrestrial':"#
 element_color_dict = {'fire':"#7c1b1b", 'water':"#0e40ad", 'earth':"#774714", 'air':"#19b3ad"}
 season_color_dict = {'winter':"#43acc7", 'spring':"#0d5945", 'summer':"#edd892", 'autumn':"#dd8c61"}
 
-current_year = 0 # TODO replace with more fine controls based off on Calendar Button
+current_cycle = 0
+name_of_calendar = "Age of Awakening"
 
 # CONJ Table Structure, index is the step, returned list is the indicies of the houses
 CONJ_MERCURY = [{0, 1, 2, 3}, {0, 1, 2, 3}, {0, 1, 2, 3}, {0, 1, 2, 3}, {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {2, 3, 4, 5}, {2, 3, 4, 5}, {2, 3, 4, 5}, {2, 3, 4, 5}, {3, 4, 5, 6}, {3, 4, 5, 6}, {3, 4, 5, 6}, {3, 4, 5, 6}, {4, 5, 6, 7}, {4, 5, 6, 7}, {4, 5, 6, 7}, {4, 5, 6, 7}, {8, 5, 6, 7}, {8, 5, 6, 7}, {8, 5, 6, 7}, {8, 5, 6, 7}, {8, 9, 6, 7}, {8, 9, 6, 7}, {8, 9, 6, 7}, {8, 9, 6, 7}, {8, 9, 10, 7}, {8, 9, 10, 7}, {8, 9, 10, 7}, {8, 9, 10, 7}, {8, 9, 10, 11}, {8, 9, 10, 11}, {8, 9, 10, 11}, {8, 9, 10, 11}, {0, 9, 10, 11}, {0, 9, 10, 11}, {0, 9, 10, 11}, {0, 9, 10, 11}, {0, 1, 10, 11}, {0, 1, 10, 11}, {0, 1, 10, 11}, {0, 1, 10, 11}, {0, 1, 2, 11}, {0, 1, 2, 11}, {0, 1, 2, 11}, {0, 1, 2, 11}]

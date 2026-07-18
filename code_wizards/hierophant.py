@@ -102,6 +102,7 @@ class Hierophant(Wizard):
                                                <h2> Sol in Conjunction -- The masses are <i>Observant</i></h2>
                                                Choose a Holidat this month. It counts as a Feast Day for the rest of the month. If the current month is already a Feast Day, instead a new Prophet appears at the Temple with the greatest number of Abundances, preaching of a radical interpeation to the Orthodoxy of the Immortal Flame.
                                            """
+        self.set_date_string()
         self.read_the_stars_html = f"""
                     <div style="font-family: serif;">
                       <h1 class="break-page"> Keeper of the Flames whose fate is controlled by %s </h1> 
@@ -111,6 +112,8 @@ class Hierophant(Wizard):
                       {jupiter_mars_html}
                       {jupiter_saturn_html}
                       {jupiter_sol_html}
+                      <br><br><br>
+                          <center><h3> Report produced for {self.date_string}</h3> </center>
                     </div>
                 """ % lib.JUPITER
         return

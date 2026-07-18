@@ -3,3 +3,6 @@
         page-break-before: always;
     }
 }
+h1 {
+  color: red;
+}

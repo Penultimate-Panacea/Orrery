@@ -125,12 +125,14 @@ class Faustian(Wizard):
                     <h2> The Devil Schemes </h2>
                     {card_string}
                     """
-
+        self.set_date_string()
         self.read_the_stars_html = f"""
                     <div style="font-family: serif;">
                       <h1 class="break-page"> Keeper of the Chains whose fate is controlled by %s </h1>
                       {mercury_alone_html}
                       {mercury_among_html}
+                      <br><br><br>
+                          <center><h3> Report produced for {self.date_string}</h3> </center>
                     </div>
                 """ % lib.MERCURY
         return

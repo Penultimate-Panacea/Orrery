@@ -34,6 +34,7 @@ class MainWindow(QWidget):
             "season": lib.season_color_dict,
             "element": lib.element_color_dict,
         }
+        lib.current_cycle = 0
 
         self.houses: List[House] = [
             House("Aries", 0, lib.estate_color_dict['terrestrial'], lib.season_color_dict['spring'], lib.element_color_dict['fire']),
@@ -366,6 +367,7 @@ class MainWindow(QWidget):
             print(p.name + " is at " + str(p.current_step))
         self.redraw()
         time.sleep(0.01)
+        lib.current_cycle += 1
 
     def redraw(self):
         self.scene.redraw(

@@ -148,12 +148,14 @@ class Warlock(Wizard):
                 print(master_king_text)
         else:
             print("NO KINGS")
-
+        self.set_date_string()
         self.read_the_stars_html = f"""
             <div style="font-family: serif;">
                     <h1 class="break-page"> Keeper of the Throne whose fate is controlled by the signs that the King was born under.</h1>
                               {master_king_text}
                               <h2> After processing all Courts as above:</h2>
                               Starting with the King's Guide and proceeding counter-clockwise around the Court (<i>in order:</i> Guide, Love, Friend, and then Heir), resolve the Agenda of each Noble with a unique Allegiance in the King's Inner Circle. If a Noble's Agenda would occur, and the King has already put in motion the Agenda of another Noble of the same Allegiance, the King instead ignores the Noble's demands.
+                            <br><br><br>
+                          <center><h3> Report produced for {self.date_string}</h3> </center>
                             </div>
                 """

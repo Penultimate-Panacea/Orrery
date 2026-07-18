@@ -1,6 +1,6 @@
 # coding=utf-8
 import time
-from code_plumbing.lib import current_year
+import code_plumbing.lib as lib
 from PyQt6.QtWidgets import QApplication, QDialog, QLabel,QProgressBar,QVBoxLayout
 from PyQt6.QtCore import Qt,QTimer
 from PyQt6.QtGui import QTextDocument, QPageSize
@@ -29,30 +29,23 @@ class SpoolingDialog(QDialog):
 class PrinterOfTheStars:
     def __init__(self, wizards, planets, timeout_s: int = 30, printer_name: str | None = None):
         self.wizards = wizards
-        month_index = planets[5].current_step
-        months = [
-            'April', 'May', 'June', 'July', 'August', 'September',
-            'October', 'November', 'December', 'January', 'February', 'March'
-        ]
-        self.date = months[month_index].join(str(current_year))
-
         self.timeout_s = timeout_s
         self.printer_name = printer_name
-
         self.document = self.assemble_document()
 
     def assemble_document(self) -> str:
         full_html = f"""<html><head><style>
-                .break {{page-break-before: always;}}</style></head><body>
-        <h1 class="break-page"> The Report on the Stars as of {self.date} </h1>"""
+                .break {{page-break-before: always;}} 
+                </style></head><<body>"""
         for w in self.wizards:
             full_html += """<div class="break"></div>"""
             full_html += w.read_the_stars_html
-        full_html += "</body></html>"
+        full_html += ("</body></html>")
         self.document= full_html
 
     def _configure_printer(self) -> QPrinter:
         printer = QPrinter(QPrinterInfo.defaultPrinter())
+        printer.setFromTo(2,8)
 
         # a bit of future proofing if multiplre printers are to be used
         if self.printer_name:
@@ -68,6 +61,7 @@ class PrinterOfTheStars:
 
         # Make Qt fill the page
         printer.setFullPage(True)
+        printer.setDocName(self.wizards[0].date_string)
 
         return printer
 

@@ -104,6 +104,7 @@ class Sorcerer(Wizard):
                                                <h2> Saturn in Conjunction -- Magic dreams of desolation, and its presence in Isha leads to calamity.</h2>
                                                Place three Hidden Traces in one of the Secret Regions, as dangerous power builds at the edge of the world. Ask the Wizard whose Domain it falls under to invent a mighty enemy Occultist, but to keep them secret from you for now --- you can discover who they are when you Investigate.
                                            """
+        self.set_date_string()
         self.read_the_stars_html = f"""
                     <div style="font-family: serif;">
                       <h1 class="break-page"> Keeper of the Runes whose fate is controlled by %s </h1>
@@ -113,5 +114,7 @@ class Sorcerer(Wizard):
                       {sol_mars_html}
                       {sol_saturn_html}
                       {sol_jupiter_html}
+                      <br><br><br>
+                          <center><h3> Report produced for {self.date_string}</h3> </center>
                     </div>
                 """ % lib.SOL

@@ -244,7 +244,7 @@ class Mariner(Wizard):
                             <h2> No Celestial Bodies within Season -- Isha's ports freeze over, and a wretched cold settles across the archipelago.</h2>
                             Remove half of all Routes, rounding up.
                         """
-
+        self.set_date_string()
         self.read_the_stars_html = f"""
                             <div style="font-family: serif;">
                               <h1 class="break-page"> Keeper of the Wilds whose fate is controlled by the Seasons </h1>
@@ -254,5 +254,7 @@ class Mariner(Wizard):
                               {mars}
                               {jupiter}
                               {saturn}
+                              <br><br><br>
+                          <center><h3> Report produced for {self.date_string}</h3> </center>
                             </div>
                         """

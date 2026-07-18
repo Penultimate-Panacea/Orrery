@@ -168,7 +168,7 @@ class Sage(Wizard):
                             I. Add a new Paradigm of your choice and give a Complication to each other Wizard as the dreaming world quakes in fear of its arrival.<br>
                             II. <b>Move towards Extinction.</b>
                         """
-
+        self.set_date_string()
         self.read_the_stars_html = f"""
                         <div style="font-family: serif;">
                           <h1 class="break-page"> Keeper of the Stars whose fate is controlled by the %s Estate</h1>
@@ -178,5 +178,7 @@ class Sage(Wizard):
                           {jupiter_xor_saturn}
                           {jupiter_and_saturn}
                           {none_in_estate}
+                          <br><br><br>
+                          <center><h3> Report produced for {self.date_string}</h3> </center>
                         </div>
                     """ % self.estate

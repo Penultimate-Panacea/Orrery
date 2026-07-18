@@ -99,6 +99,7 @@ class Necromancer(Wizard):
                                                I.  Exhaust all Allies. <br>
                                                II. Advance all Foes.
                                            """
+        self.set_date_string()
         self.read_the_stars_html = f"""
                     <div style="font-family: serif;">
                       <h1 class="break-page"> Keeper of the Gates whose fate is controlled by %s </h1>
@@ -108,5 +109,7 @@ class Necromancer(Wizard):
                       {saturn_mars_html}
                       {saturn_jupiter_html}
                       {saturn_sol_html}
+                      <br><br><br>
+                          <center><h3> Report produced for {self.date_string}</h3> </center>
                     </div>
                 """ % lib.SATURN
