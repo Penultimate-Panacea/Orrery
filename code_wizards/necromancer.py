@@ -59,45 +59,44 @@ class Necromancer(Wizard):
         saturn_alone_html = ""
         if magic_number & (1 << 0):
             saturn_alone_html = """
-                        <h2> Saturn Stands Alone -- Tragedy outside Death brings many new souls to its Gates. </h2>
-                        Add a total of eight Souls to the Red, Yellow, and Black Gates, distributed in whatever way you please.
+                        <h2> Saturn Stands Alone -- Tragedy outside Isha brings many new souls to its Gates. </h2>
+                        Add a total of eight Souls to the Edge of Life, distributed in any fashion.
                     """
 
         saturn_mercury_html = ""
         if magic_number & (1 << 1):
             saturn_mercury_html = """
-                        <h2> Mercury in Conjunction -- The dead claw against the Gates. </h2>
-                        Advance all Foes forward in Death. If a Foe is in a Near Gate, and nothing bars its way, it Escapes.
+                        <h2> Mercury in Conjunction with Saturn -- The dead claw against the Gates. </h2>
+                        Move all Foes closer to life again.
                     """
 
         saturn_venus_html = ""
         if magic_number & (1 << 2):
             saturn_venus_html = """
-                               <h2> Venus in Conjunction -- A Foe consolidates Power. </h2>
-                               Create a new Foe within Death, a recent enemy of the Pact or a familiar face. Place them within any Far Gate.
+                               <h2> Venus in Conjunction with Saturn -- Allies of Death grow distant and long for release. </h2>
+                                Move any Ally of your choice to a connected further Gate.
                            """
 
         saturn_mars_html = ""
         if magic_number & (1 << 3):
             saturn_mars_html = """
-                                       <h2> Mars in Conjunction -- Primoridal evil festers in the furthest Gates. </h2>
-                                       I.   Move all Foes in Far and Furthest Gates forward. <br>
-                                       II.  Create a new Foe within Death, an ancient evil forgotten by the Pact who has finally escaped their bondage. Place them within Terminus.
+                                       <h2> Mars in Conjunction with Saturn -- Primordial evil festers in distant lands. </h2>
+                                       I. The furthest non-Hostile Gate becomes Hostile. <br>
+                                       II. Move all Foes in Hostile Gates (or in spaces adjacent to Hostile Gates) closer to life.
                                    """
 
         saturn_jupiter_html = ""
         if magic_number & (1 << 4):
             saturn_jupiter_html = """
-                                            <h2> Jupiter in Conjunction -- A new Disruptive Ghoulcaller. </h2>
-                                            Create a Ghoulcaller and place them in any Near Gate. As long as they continue their operations unchecked, every month all Souls and Foes of Death in an attached Far or Furthest Gate will advance towards them, like a piece of wriggling bait.
+                                            <h2> Jupiter in Conjunction with Saturn -- The Allies of the Necromancer lack their power entirely.</h2>
+                                            As long as this conjunction remains, they cannot prevent Foes from moving closer to life. <italic>(This does not apply to Reliable Ghoul-Callers.)</italic>
                                         """
 
         saturn_sol_html = ""
         if magic_number & (1 << 5):
             saturn_sol_html = """
-                                               <h2> Sol in Conjunction --The armies of death coordinate together and march against you. </h2>
-                                               I.  Exhaust all Allies. <br>
-                                               II. Advance all Foes.
+                                               <h2> Sol in Conjunction with Saturn -- The armies of death coordinate together and march against you.</h2>
+                                               Move all Foes closer to life. If they would be stopped by an Ally, destroy that Ally.
                                            """
         self.set_date_string()
         self.read_the_stars_html = f"""
