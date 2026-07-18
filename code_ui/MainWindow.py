@@ -21,7 +21,7 @@ from code_wizards.faustian import Faustian
 from code_wizards.sorcerer import Sorcerer
 from code_wizards.sage import Sage
 from code_wizards.wizard import Wizard
-from code_plumbing.king import AddKingDialog
+from code_plumbing.king import SetKingDialog
 from code_ui.SaveLoad import SaveLoadWidget
 from code_plumbing.PrinterOfTheStars import PrinterOfTheStars
 
@@ -63,12 +63,12 @@ class MainWindow(QWidget):
         ]
         self.house_color_mode = ["estate"] * 12
 
-        self.kings_data = []  # should be a list of dicts, where each dict is a king
+        self.king = None # placeholder king
 
         self.wizards: List[Wizard] = [
             Necromancer(self.planet_conjunction_dict()),
             Hierophant(self.planet_conjunction_dict()),
-            Warlock(self.planet_conjunction_dict(),self.planets,self.kings_data),
+            Warlock(self.planet_conjunction_dict(),self.planets,self.king),
             Mariner(self.planet_conjunction_dict(), self.planets),
             Faustian(self.planet_conjunction_dict(), self.generate_house_planet_conjunction_array()),
             Sorcerer(self.planet_conjunction_dict()),
@@ -98,7 +98,7 @@ class MainWindow(QWidget):
         self.view.setRenderHint(self.view.renderHints().Antialiasing)
         self.view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.estate_combo = QComboBox()
-        self.save_load = SaveLoadWidget(get_planets=self.planets,get_kings=self.kings_data,get_pendulum=self.estate_combo.currentText(),set_planets_steps=self.load_planet_steps, set_kings=self.load_kings, set_pendulum=self.load_pendulum, conjunction_update=self.update_conjunction_table)
+        self.save_load = SaveLoadWidget(get_planets=self.planets,get_king=self.king,get_pendulum=self.estate_combo.currentText(),set_planets_steps=self.load_planet_steps, set_king=self.load_king, set_pendulum=self.load_pendulum, conjunction_update=self.update_conjunction_table)
         self.printer = PrinterOfTheStars(self.wizards, self.planets)
 
         # Left panel: swatches + per-house color radio
@@ -200,7 +200,7 @@ class MainWindow(QWidget):
         btn_save = QPushButton("Save Data")
         btn_save.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_save.setMinimumHeight(utility_button_height)
-        btn_save.clicked.connect(lambda checked=False: self.save_load.save_to_file(self.planets, self.kings_data, self.estate_combo.currentText()))
+        btn_save.clicked.connect(lambda checked=False: self.save_load.save_to_file(self.planets, self.king, self.estate_combo.currentText()))
         btn_load = QPushButton("Load Data")
         btn_load.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_load.setMinimumHeight(utility_button_height)
@@ -443,13 +443,10 @@ class MainWindow(QWidget):
         return {p: sorted(adj.get(p, set()), key=str) for p in planets_to_check}
 
     def on_add_king(self):
-        dlg = AddKingDialog(self)
+        dlg = SetKingDialog(self,self.king)
         if dlg.exec() == dlg.DialogCode.Accepted:
-            data = dlg.get_king_data()
-            # data: {name, sun, moon, rising}
-            self.kings_data.append(data)
-            self._append_king_to_table(data)
-        print(self.kings_data)
+            self.king=get_king_data
+        print(self.king)
 
     def _append_king_to_table(self, king):
         row = self.kings_table.rowCount()
@@ -464,8 +461,8 @@ class MainWindow(QWidget):
         row = self.kings_table.currentRow()
         if row < 0:
             return
-        if row < len(self.kings_data):
-            self.kings_data.pop(row) # remove from data
+        if row < len(self.king):
+            self.king.pop(row) # remove from data
         self.kings_table.removeRow(row) # remove from view
 
     def load_planet_steps(self, steps_list):
@@ -478,14 +475,11 @@ class MainWindow(QWidget):
             w.update_conjunctions(self.planets)
         self.redraw()
 
-    def load_kings(self, kings_list):
+    def load_king(self):
         print("loading kings")
         self.kings_table.clearContents()
         self.kings_table.setRowCount(0)
-        for i, king in enumerate(kings_list):
-            if i >= len(kings_list):
-                break
-            self._append_king_to_table(king)
+        self._append_king_to_table(self.king)
         self.redraw()
 
     def load_pendulum(self, pendulum):
