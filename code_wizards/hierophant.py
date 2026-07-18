@@ -10,29 +10,29 @@ class Hierophant(Wizard):
     def make_magic_number(self):
         conjunctions = self.planet_conjunction_dict
         print("Conjunctions are: " + str(conjunctions))
-        jupiter_conjunctions = conjunctions[lib.JUPITER]
+        sol_conjunctions = conjunctions[lib.SOL]
         hierophant_magic_number = 0b0000000
-        if len(jupiter_conjunctions) == 0:
-            print("Jupiter Stands Alone")
+        if len(sol_conjunctions) == 0:
+            print("Sol Stands Alone")
             hierophant_magic_number ^= (1 << 0)
 
-        if lib.MERCURY in jupiter_conjunctions:
-            print("Mercury in Conjunction")
+        if lib.MERCURY in sol_conjunctions:
+            print("Mercury in Conjunction with Sol")
             hierophant_magic_number ^= (1 << 1)
 
-        if lib.VENUS in jupiter_conjunctions:
-            print("Venus in Conjunction")
+        if lib.VENUS in sol_conjunctions:
+            print("Venus in Conjunction with Sol")
             hierophant_magic_number ^= (1 << 2)
 
-        if lib.MARS in jupiter_conjunctions:
-            print("Mars in Conjunction")
+        if lib.MARS in sol_conjunctions:
+            print("Mars in Conjunction with Sol")
             hierophant_magic_number ^= (1 << 3)
 
-        if lib.SATURN in jupiter_conjunctions:
-            print("Saturn in Conjunction")
+        if lib.SATURN in sol_conjunctions:
+            print("Saturn in Conjunction with Sol")
             hierophant_magic_number ^= (1 << 4)
-        if lib.SOL in jupiter_conjunctions:
-            print("Sol in Conjunction")
+        if lib.JUPITER in sol_conjunctions:
+            print("Jupiter in Conjunction with Sol")
             hierophant_magic_number ^= (1 << 5)
         print(hierophant_magic_number)
         return hierophant_magic_number
@@ -60,58 +60,76 @@ class Hierophant(Wizard):
     def read_the_stars(self):
         magic_number = self.make_magic_number()
 
-        jupiter_alone_html = ""
+        sol_alone_html = ""
         if magic_number & (1 << 0):
-            jupiter_alone_html = """
-                        <h2> Jupiter Stands Alone -- The masses are <i>Starving</i>. </h2>
-                            Take from each Temple, then create a Throng of Petitioners in the Temple with the fewest Abundances, representing a community in desperate need of help.
+            sol_alone_html = """
+                        <h2> Sol Stands Alone -- The Temples reflect and re-evaluate their Doctrine </h2>
+                            Each Temple tied for the lowest Conviction must change its Doctrine to any random other Doctrine.
                         """
 
-        jupiter_mercury_html = ""
+        mercury_html = ""
         if magic_number & (1 << 1):
-            jupiter_mercury_html = """
-                        <h2> Mercury in Conjunction -- The masses are <i>Demanding</i>. </h2>
-                        All Petitioners gain another Hunger. If there are no Petitioners, create a Petitioner in a Temple --- a lost soul with nowhere else to turn.
+            mercury_html = """
+                        <h2> Mercury in Conjunction with Sol -- The Temples are in need of repair. </h2>
+                        Each Temple takes -1 Abundance. If any Temple has no Abundance, it instead gains a random Supplicant and takes -1 Conviction.
                     """
 
-        jupiter_venus_html = ""
+        venus_html = ""
         if magic_number & (1 << 2):
-            jupiter_venus_html = """
-                               <h2> Venus in Conjunction -- The masses are <i>Devoted</i>. </h2>
-                               I.   Add a new Patron to a Temple. <br>
-                               II.  Create a Throng of Petitioners at that Temple --- a surge of faithful looking for support
+            venus_html = f"""
+                               <h2> Venus in Conjunction with Sol -- A new Supplicant arrives at the Temples, looking for guidance and advice</h2>
+                               For each Temple tied for the fewest Supplicants (besides Temple Hestar) roll a D6, adding a Supplicant with three Woe based on the result.
+                               <ul>
+                               <li>If {lib.SALT} was rolled add a Gentry. </li>
+                               <li>If {lib.JUPITER} was rolled add a Peasant. </li>
+                               <li>If {lib.MARS} was rolled add an Artisan. </li>
+                               <li>If {lib.VENUS} was rolled add a Merchant. </li>
+                               </ul>
                            """
 
-        jupiter_mars_html = ""
+        mars_html = ""
         if magic_number & (1 << 3):
-            jupiter_mars_html = """
-                                       <h2> Mars in Conjunction -- The masses are <i>Violent</i></h2>
-                                       Each Petitioner Takes from their associated Temple (<i>this doesn't satisfy Hunger</i>). If there are no Petitioners, createa Petitoner in a Temple --- a heartbroken soul whose home was destroyed by violence.
+            ars_html = f"""
+                                       <h2> Mars in Conjunction with Sol -- Violence and conflict brings a Supplicant to the Temples, someone whose life has been marred by war.</h2>
+                                       For each Temple tied for the least Abundance (besides Temple Hestar) roll a D6, adding a Supplicant with four Woe based on the result.
+                                           <ul>
+                                           <li>If {lib.SALT} was rolled add a Pariah. </li>
+                                           <li>If {lib.JUPITER} was rolled add a Peasant. </li>
+                                           <li>If {lib.MARS} was rolled add an Artisan. </li>
+                                           <li>If {lib.VENUS} was rolled add a Merchant. </li>
+                                           </ul>
                                    """
 
-        jupiter_saturn_html = ""
+        saturn_html = ""
         if magic_number & (1 << 4):
-            jupiter_saturn_html = """
-                                            <h2> Saturn in Conjunction -- The masses are <i>Superstitious</i></h2>
-                                            You must Spend Time this month sacrificing a named character to the Immortal Flames. Choose someone, and ask the Celestial Audience if any of them have the right to stop the sacrifice (through the king's authority, someone's destiny, and so on). If someone stops you, they take a Major Complication. If you don't sacrifice somone by the end of the month, create a Throng of Petitoners in the Temple with the fewest Abundances, convinced that the world is ending once more.
+            saturn_html = f"""
+                                            <h2> Saturn in Conjunction with Sol -- The populaces flood the Temple, seeking respite from the chaos of the outside world.</h2>
+                                            For each Temple tied for the most Abundance (besides Temple Hestar) roll a D6, adding a Supplicant with four Woe based on the result.
+                                           <ul>
+                                           <li>If {lib.SALT} was rolled add a Pariah. </li>
+                                           <li>If {lib.JUPITER} was rolled add a Peasant. </li>
+                                           <li>If {lib.MARS} was rolled add an Artisan. </li>
+                                           <li>If {lib.VENUS} was rolled add a Merchant. </li>
+                                           </ul>
                                         """
 
-        jupiter_sol_html = ""
+        jupiter_html = ""
         if magic_number & (1 << 5):
-            jupiter_sol_html = """
-                                               <h2> Sol in Conjunction -- The masses are <i>Observant</i></h2>
-                                               Choose a Holidat this month. It counts as a Feast Day for the rest of the month. If the current month is already a Feast Day, instead a new Prophet appears at the Temple with the greatest number of Abundances, preaching of a radical interpeation to the Orthodoxy of the Immortal Flame.
+            jupiter_html = """
+                                               <h2> Jupiter is in Conjunction with Sol -- The populace look to the Flames for guidance.</h2>
+                                               Each Temple with a Holiday Marker takes -2 Conviction. <br>
+                                               <b><i>If it is a Feast Day,</i></b> then create a new Prophet at any Temple with the most Conviction.
                                            """
         self.set_date_string()
         self.read_the_stars_html = f"""
                     <div style="font-family: serif;">
                       <h1 class="break-page"> Keeper of the Flames whose fate is controlled by %s </h1> 
-                      {jupiter_alone_html}
-                      {jupiter_mercury_html}
-                      {jupiter_venus_html}
-                      {jupiter_mars_html}
-                      {jupiter_saturn_html}
-                      {jupiter_sol_html}
+                      {sol_alone_html}
+                      {mercury_html}
+                      {venus_html}
+                      {mars_html}
+                      {saturn_html}
+                      {sol_html}
                       <br><br><br>
                           <center><h3> Report produced for {self.date_string}</h3> </center>
                     </div>
