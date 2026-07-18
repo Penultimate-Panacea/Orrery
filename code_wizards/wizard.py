@@ -20,7 +20,7 @@ class Wizard:
             'April', 'May', 'June', 'July', 'August', 'September',
             'October', 'November', 'December', 'January', 'February', 'March'
         ]
-        date_string = str(months[lib.current_cycle & 12])
+        date_string = str(months[lib.current_cycle % 12])
         date_string += ' of Year '
         date_string += str(floor(lib.current_cycle / 12))
         date_string += ' in the '

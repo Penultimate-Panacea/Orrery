@@ -362,12 +362,13 @@ class MainWindow(QWidget):
 
 
     def advance_all_spans(self):
+        lib.current_cycle += 1
         for p in self.planets:
             p.current_step = (p.current_step + p.span_steps) % p.step_count_circle
             print(p.name + " is at " + str(p.current_step))
         self.redraw()
         time.sleep(0.01)
-        lib.current_cycle += 1
+
 
     def redraw(self):
         self.scene.redraw(
