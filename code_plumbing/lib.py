@@ -21,10 +21,13 @@ MARS = '\u2642'
 JUPITER = '\u2643'
 SATURN = '\u2644'
 SOL = '\u2609'
+SALT = '\U0001F714'
+
 
 SUN_SIGN ='\u2609'
 MOON_SIGN = '\u263E'
 RISING_SIGN = '\u260A'
+
 
 SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces']
 
