@@ -3,7 +3,6 @@ from code_wizards.wizard import Wizard
 from code_plumbing import lib
 from PyQt6.QtGui import QTextDocument
 from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
-test_king = [{'name':"Joe",'sun': 'Taurus','moon':'Gemini','rising':'Aries'}]
 
 class Warlock(Wizard):
     def __init__(self,planetary_conjunction_dict, planets, king):
@@ -137,9 +136,7 @@ class Warlock(Wizard):
             return False
 
     def read_the_stars(self):
-        test_king = {'name': 'john', 'sun': 'Aries', 'moon': 'Aries', 'rising': 'Aries', 'aristocracy': 6, 'mercantilism': 6, 'orthodoxy': 6, 'piracy': 6, 'rebellion': 6, 'ergoism': 6, 'monarchy': 6}
         king = self.king
-        #king = self.king for later
 
         mercury = ""
 
