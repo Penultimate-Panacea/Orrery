@@ -67,7 +67,7 @@ class MoonPhaseWidget(QWidget):
             self.info_browser.setHtml("<b>Missing SVG file.</b>")
             return
 
-        self.svg_title.setText(f"SVG Viewer ({self.index + 1}/{len(self.svg_paths)})")
+        self.svg_title.setText(f"Game Phase ({self.index + 1}/{len(self.svg_paths)})")
         self.svg_widget.load(path)
 
         html_item = self.html_snippets[self.index] if self.index < len(self.html_snippets) else ""
