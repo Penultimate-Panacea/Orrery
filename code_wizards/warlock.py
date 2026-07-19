@@ -6,10 +6,10 @@ from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
 test_king = [{'name':"Joe",'sun': 'Taurus','moon':'Gemini','rising':'Aries'}]
 
 class Warlock(Wizard):
-    def __init__(self,planetary_conjunction_dict, planets, kings):
+    def __init__(self,planetary_conjunction_dict, planets, king):
         super().__init__(planetary_conjunction_dict)
         self.planets = planets
-        self.kings = kings
+        self.king = king
 
     def popup(self):
         warlock_pop = QDialog()
@@ -33,53 +33,53 @@ class Warlock(Wizard):
 
 
         sun_string = ""
-        if self.determine_if_in_sign(self.planets[0],king['sun']):
+        if self.determine_if_in_sign(self.planets[0],king.sun_sign):
             sun_string += """
                 <h3>Sun Sign contains Mercury</h3>
                 Secure all Nobles of Ascendant Allegiance.
             """
-        if self.determine_if_in_sign(self.planets[1],king['sun']):
+        if self.determine_if_in_sign(self.planets[1],king.sun_sign):
             sun_string += """
                 <h3>Sun Sign contains Venus</h3>
                 Add a <i>Knight</i> from the Ascendant Allegiance to the Court.
             """
-        if self.determine_if_in_sign(self.planets[2],king['sun']):
+        if self.determine_if_in_sign(self.planets[2],king.sun_sign):
             sun_string += """
                 <h3>Sun Sign contains Mars -- Insecurity and distrust ravage the court</h3>
                A rival faction within the Populous Allegiance reveals itself. Choose half of all Nobles within that Allegiance and create a new Allegiance from them.
             """
-        if self.determine_if_in_sign(self.planets[3],king['sun']):
+        if self.determine_if_in_sign(self.planets[3],king.sun_sign):
             sun_string += """
                 <h3>Sun Sign contains Jupiter -- A royal pregnancy is discovered</h3>
                 Ask the Celestial Audience who the mother is. Six months (two trimesters) from now, the child will be born and enter the Court as a Prince or Princess, unless their mother dies.
             """
-        if self.determine_if_in_sign(self.planets[4],king['sun']):
+        if self.determine_if_in_sign(self.planets[4],king.sun_sign):
             sun_string += """
                 <h3>Sun Sign contains Saturn</h3>
                 Roll an Arcane Import die for each non-Secure, non-Prince, male Noble. For each \"\U0001F714\", Dispose of that Noble.
             """
-        if self.determine_if_in_sign(self.planets[5],king['sun']):
+        if self.determine_if_in_sign(self.planets[5],king.sun_sign):
             sun_string += """
                 <h3>Sun Sign contains Sun -- It is the King's birthday.</h3>
                 All Wizards must Spend Time to attend and have a collective Scene, during which each Wizard must follow the rules of Court and give him a birthday present. Any errant Wizards receive a Complication.
             """
         moon_string = ""
-        if self.determine_if_in_sign(self.planets[0],king['moon']):
+        if self.determine_if_in_sign(self.planets[0],king.moon_sign):
             moon_string += """
                 <h3>Moon Sign contains Mercury</h3>
                 Secure all Nobles of Populous Allegiance.
             """
-        if self.determine_if_in_sign(self.planets[1],king['moon']):
+        if self.determine_if_in_sign(self.planets[1],king.moon_sign):
             moon_string += """
                 <h3>Moon Sign contains Venus</h3>
                 Add a <i>Lady</i> from the Frail Allegiance to the Court.
             """
-        if self.determine_if_in_sign(self.planets[2],king['moon']):
+        if self.determine_if_in_sign(self.planets[2],king.moon_sign):
             moon_string += """
                 <h3>Moon Sign contains Mars</h3>
                Choose the most common Authority. All Nobles of that Authority become members of a new Allegiance, a secret society they swear themselves to.
             """
-        if self.determine_if_in_sign(self.planets[3],king['moon']):
+        if self.determine_if_in_sign(self.planets[3],king.moon_sign):
             moon_string += """
                 <h3>Sun Sign contains Jupiter -- An attempt is made on the King's life.</h3>
                 I. Flip a coin. <br>
@@ -89,29 +89,29 @@ class Warlock(Wizard):
 
 
         rising_string = ""
-        if self.determine_if_in_sign(self.planets[0],king['rising']):
+        if self.determine_if_in_sign(self.planets[0],king.rise_sign):
             rising_string += """
                 <h3>Rising Sign contains Mercury</h3>
                 Secure all Nobles of Frail Allegiances.
             """
-        if self.determine_if_in_sign(self.planets[1],king['rising']):
+        if self.determine_if_in_sign(self.planets[1],king.rise_sign):
             rising_string += """
                 <h3>Rising Sign contains Venus</h3>
                 Add a <i>Bard</i> or <i>Mistress</i> from a new, previously unrepresented, Allegiance to the Court.
             """
-        if self.determine_if_in_sign(self.planets[2],king['rising']):
+        if self.determine_if_in_sign(self.planets[2],king.rise_sign):
             rising_string += """
                 <h3>Rising Sign contains Mars</h3>
                Choose another Domain. A powerful force from that region (perhaps even the Wizard himself) has taken an interest in politics. Add a new <i>Advisor</i> with Allegiance to a force from that Domain to the Court.
             """
 
         unrepresented_string = ""
-        if (not self.determine_if_in_sign(self.planets[0],king['sun'])) and (not self.determine_if_in_sign(self.planets[0],king['moon'])) and (not self.determine_if_in_sign(self.planets[0],king['rising'])):
+        if (not self.determine_if_in_sign(self.planets[0],king.sun_sign)) and (not self.determine_if_in_sign(self.planets[0],king.moon_sign)) and (not self.determine_if_in_sign(self.planets[0],king.rise_sign)):
             unrepresented_string += """ 
             <h3> Mercury is not aligned with any sign </h3>
                 All Nobles with an unrevealed Secret are reduced in Standing.
             """
-        if (not self.determine_if_in_sign(self.planets[1],king['sun'])) and (not self.determine_if_in_sign(self.planets[1],king['moon'])) and (not self.determine_if_in_sign(self.planets[1],king['rising'])):
+        if (not self.determine_if_in_sign(self.planets[1],king.sun_sign)) and (not self.determine_if_in_sign(self.planets[1],king.moon_sign)) and (not self.determine_if_in_sign(self.planets[1],king.rise_sign)):
             unrepresented_string.join(""" 
             <h3> Venus is not aligned with any sign </h3>
                 A Noble of your choice from any non-Frail Allegiance returns home and peacefully departs. Remove them from the Court.
@@ -124,7 +124,7 @@ class Warlock(Wizard):
         {moon_string}
         {rising_string}
         {unrepresented_string}
-        """ % king['name']
+        """ % king.name
         return king_string
 
     def determine_if_in_sign(self, planet, sign):
@@ -138,27 +138,27 @@ class Warlock(Wizard):
 
     def read_the_stars(self):
         test_king = {'name': 'john', 'sun': 'Aries', 'moon': 'Aries', 'rising': 'Aries', 'aristocracy': 6, 'mercantilism': 6, 'orthodoxy': 6, 'piracy': 6, 'rebellion': 6, 'ergoism': 6, 'monarchy': 6}
-        king = test_king
+        king = self.king
         #king = self.king for later
 
         mercury = ""
 
         # MERCURY
-        if (self.determine_if_in_sign(self.planets[0], king['sun']) or self.determine_if_in_sign(self.planets[0], king['moon']) or self.determine_if_in_sign(self.planets[0], king['rising'])):
+        if (self.determine_if_in_sign(self.planets[0], king.sun_sign) or self.determine_if_in_sign(self.planets[0], king.moon_sign) or self.determine_if_in_sign(self.planets[0], king.rise_sign)):
             mercury += f"""
                         <h2> Mercury is aligned with any sign, the King struggles to maintain power.  </h2>
                         Move one Authority from the King to any Ideology with the lowest Authority.
                         """
         # VENUS
         venus = ""
-        if (self.determine_if_in_sign(self.planets[1], king['sun']) or self.determine_if_in_sign(self.planets[1],king[ 'moon']) or self.determine_if_in_sign(self.planets[1], king['rising'])):
+        if (self.determine_if_in_sign(self.planets[1], king.sun_sign) or self.determine_if_in_sign(self.planets[1],king.moon_sign) or self.determine_if_in_sign(self.planets[1], king.rise_sign)):
             venus += f"""
                             <h2> Venus is aligned with any sign, power leeches from the King's grasp.</h2>
                             Move one Authority from the King to any Ideology with the highest Authority.
                             """
         # MARS
         mars = ""
-        if (self.determine_if_in_sign(self.planets[2], king['sun']) or self.determine_if_in_sign(self.planets[2], king['moon']) or self.determine_if_in_sign(self.planets[2], king['rising'])):
+        if (self.determine_if_in_sign(self.planets[2], king.sun_sign) or self.determine_if_in_sign(self.planets[2], king.moon_sign) or self.determine_if_in_sign(self.planets[2], king.rise_sign)):
             mars += f"""<h2> Mars is aligned with any sign, the King turns to outside advice to guide his hand. </h2>
             Draw a random Lord from any Clan who didn't otherwise contribute to the Agenda this month.
                 """
@@ -193,44 +193,44 @@ class Warlock(Wizard):
 
         #JUPITER
         jupiter = ""
-        if self.determine_if_in_sign(self.planets[3], king['sun']):
+        if self.determine_if_in_sign(self.planets[3], king.sun_sign):
             jupiter += f"""<h2> Jupiter is in conjunction with the King's Sun Sign, one of the King's lovers gives birth to a son.</h2>
             Choose a Lady. During the Royal Ball this season, if that Lady is still alive, place a <i>Bastard Son of the King</i> Title in that Confidant's associated Clan. <i>(If this conjunction has occurred multiple times this season, its associated event only happens once.)</i>
             """
-        if self.determine_if_in_sign(self.planets[3], king['moon']):
+        if self.determine_if_in_sign(self.planets[3], king.moon_sign):
             jupiter += f"""<h2> Jupiter is in conjunction with the King's Moon Sign, one of the King's lovers gives birth to a daughter.</h2>
             Choose a Lady. During the Royal Ball this season, if that Lady is still alive, add a Lady from that Clan to the King's Family. <i>(If this conjunction has occurred multiple times this season, its associated event only happens once.)</i>
             """
-        if self.determine_if_in_sign(self.planets[3], king['rising']):
+        if self.determine_if_in_sign(self.planets[3], king.rise_sign):
             jupiter += f"""<h2> Jupiter is in conjunction with the King's Rising Sign, the King offers the hand of one of his daughters in marriage to another.</h2>
             Choose a Lady. During the Royal Ball this season, if that Lady is still alive, add a Lady from that Clan to the King's Family. <i>(If this conjunction has occurred multiple times this season, its associated event only happens once.)</i>
             """
 
         #SATURN
         saturn = ""
-        if self.determine_if_in_sign(self.planets[4], king['sun']):
+        if self.determine_if_in_sign(self.planets[4], king.sun_sign):
             saturn += f"""<h2> Saturn is in conjunction with the King's Sun Sign, the loves of the King grow weak.</h2>
             Roll two D10s \u2014 one for the King's Family and one for his Confidants. For each "{lib.SATURN}" (<i>Saturn</i>) rolled, a Lady of your choice from that group dies.
             """
-        if self.determine_if_in_sign(self.planets[4], king['moon']):
+        if self.determine_if_in_sign(self.planets[4], king.moon_sign):
             saturn += f"""<h2> Saturn is in conjunction with the King's Moon Sign, the Lords of Isha take stock of their health.</h2>
                         For each Clan, roll a D10. For each "{lib.SATURN}" (<i>Saturn</i>) rolled, kill a random Lord from that Clan.
                         """
-        if self.determine_if_in_sign(self.planets[4], king['rising']):
+        if self.determine_if_in_sign(self.planets[4], king.rise_sign):
             saturn += f"""<h2> Saturn is in conjunction with the King's Rising Sign, the King of Isha's health is threatened.</h2>
                         Roll a D12. If "{lib.SATURN}" (<i>Saturn</i>) is rolled, the King grows deathly ill. Unless someone can aid him, through magic or medical care, he will die at the end of the month.
                         """
         #SOL
         sol = ""
-        if self.determine_if_in_sign(self.planets[5], king['sun']):
+        if self.determine_if_in_sign(self.planets[5], king.sun_sign):
             sol += f"""<h2> Sol is in conjunction with the King's Sun Sign, it's the King's birthday</h2>
             Each wizard may schedule Time on the King this month to attend a collective scene celebrating the King's birthday, during which they must follow the Laws of the Court and present the King with a present that pleases him. Give each wizard who fails to do this a Complication.
             """
-        if self.determine_if_in_sign(self.planets[5], king['moon']):
+        if self.determine_if_in_sign(self.planets[5], king.moon_sign):
             sol += f"""<h2> Sol is in conjunction with the King's Moon Sign, the King passes a new Law reflecting the positive qualities of how he wants people to perceive him.</h2>
                         Choose any Law and inform the Celestial Audience and ask them if they plan to follow it. If they do, move an Authority from any Ideology to the King. If they don't move two Authority from the King to any two Ideologies that most fervently oppose the Law.
                         """
-        if self.determine_if_in_sign(self.planets[5], king['rising']):
+        if self.determine_if_in_sign(self.planets[5], king.rise_sign):
             sol += f"""<h2> Sol is in conjunction with the King's Rising Sign, the King passes a new Law reflecting the negative qualities of how people perceive him.</h2>
                         Choose any Law and inform the Celestial Audience and ask them if they plan to follow it. If they do, move an Authority from any Ideology to the King. If they don't, move two Authority from the King to any two Ideologies that most fervently oppose the Law.  
                         """

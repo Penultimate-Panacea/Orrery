@@ -84,17 +84,19 @@ class SetKingDialog(QDialog):
         """
         super().__init__(parent)
         self.setWindowTitle("The Crown of Isha")
+        if type(king) == None:
+            king = King()
         self.king = king
         self.name_edit = QLineEdit()
         self.sun_combo = QComboBox()
         self.moon_combo = QComboBox()
         self.rising_combo = QComboBox()
-        self.aristocracy_box = QSpinBox(minimum=0, maximum=24, value=king.aristocracy)
-        self.mercantilism_box = QSpinBox(minimum=0, maximum=24, value=king.mercantilism)
-        self.orthodoxy_box = QSpinBox(minimum=0, maximum=24, value=king.orthodoxy)
-        self.piracy_box = QSpinBox(minimum=0, maximum=24, value=king.piracy)
-        self.rebellion_box = QSpinBox(minimum=0, maximum=24, value=king.rebellion)
-        self.ergoism_box = QSpinBox(minimum=0, maximum=24, value=king.ergoism)
+        self.aristocracy_box = QSpinBox(minimum=0, maximum=24, value=self.king.aristocracy)
+        self.mercantilism_box = QSpinBox(minimum=0, maximum=24, value=self.king.mercantilism)
+        self.orthodoxy_box = QSpinBox(minimum=0, maximum=24, value=self.king.orthodoxy)
+        self.piracy_box = QSpinBox(minimum=0, maximum=24, value=self.king.piracy)
+        self.rebellion_box = QSpinBox(minimum=0, maximum=24, value=self.king.rebellion)
+        self.ergoism_box = QSpinBox(minimum=0, maximum=24, value=self.king.ergoism)
         for combo in (self.sun_combo, self.moon_combo, self.rising_combo):
             combo.addItems(lib.SIGNS)
         form = QVBoxLayout()

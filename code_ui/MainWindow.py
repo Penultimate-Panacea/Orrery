@@ -21,7 +21,7 @@ from code_wizards.faustian import Faustian
 # from code_wizards.sorcerer import Sorcerer
 from code_wizards.sage import Sage
 from code_wizards.wizard import Wizard
-from code_plumbing.king import SetKingDialog
+from code_plumbing.king import SetKingDialog, King
 from code_ui.SaveLoad import SaveLoadWidget
 from code_plumbing.PrinterOfTheStars import PrinterOfTheStars
 
@@ -63,7 +63,7 @@ class MainWindow(QWidget):
         ]
         self.house_color_mode = ["estate"] * 12
 
-        self.king = None # placeholder king
+        self.king = King() # placeholder king
 
         self.wizards: List[Wizard] = [
             Necromancer(self.planet_conjunction_dict()),
