@@ -3,6 +3,8 @@ from code_wizards.wizard import Wizard
 from code_plumbing import lib
 from PyQt6.QtGui import QTextDocument
 from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
+from collections import Counter
+
 class Sage(Wizard):
     def __init__(self,planetary_conjunction_dict, planet_list, dreaming):
         super().__init__(planetary_conjunction_dict)
@@ -35,10 +37,14 @@ class Sage(Wizard):
 
     def read_the_stars(self):
         houses = lib.SIGNS
-        for house in houses:
-            if any(house in planet.conjunction_table[planet.current_step] for planet in self.planets): #i think this is right, we'll see
-                self.alignments[house] += 1
-        celestial_alignment = max(self.alignments)
+        all_conjunction_tables = []
+        for p in self.planets:
+            all_conjunction_tables.append(p.conjunction_table[p.current_step])
+        all_houses = [x for lst in all_conjunction_tables for x in lst]
+        counts = Counter(all_houses)
+        celestial_alignment = max(counts.values(), default=0)
+
+
 
         result = ""
 
