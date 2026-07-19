@@ -455,6 +455,7 @@ class MainWindow(QWidget):
         dlg = SetKingDialog(self,self.king)
         if dlg.exec() == dlg.DialogCode.Accepted:
             self.king=dlg.get_king_data()
+            self.wizards[2].update_king(self.king)
 
     def load_planet_steps(self, steps_list):
         print("loading planet steps")

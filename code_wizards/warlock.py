@@ -246,3 +246,7 @@ class Warlock(Wizard):
                     </div>
             """ % king.name
         return
+
+    def update_king(self, king):
+        self.king = king
+        return
