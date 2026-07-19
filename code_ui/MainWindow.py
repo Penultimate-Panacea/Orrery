@@ -289,14 +289,21 @@ class MainWindow(QWidget):
         read_the_stars_layout.addWidget(btn_sage)
         btn_sage.clicked.connect(self.wizards[5].popup)
         btn_sage.setMinimumHeight(watcher_button_height)
-
+        dreaming_combo_label = QLabel("State of the Dreaming:")
         self.dreaming_combo = QComboBox()
-        read_the_stars_layout.addWidget(self.dreaming_combo)
         self.dreaming_combo.addItem("Calm")
         self.dreaming_combo.addItem("Uncertain")
         self.dreaming_combo.addItem("Chaotic")
         self.dreaming_combo.addItem("Bleak")
         self.dreaming_combo.currentTextChanged.connect(self.wizards[5].set_dreaming)
+        dreaming_box = QWidget()
+        dreaming_layout = QHBoxLayout(dreaming_box)
+        dreaming_layout.setContentsMargins(0, 0, 0, 0)
+        dreaming_layout.addWidget(dreaming_combo_label)
+        dreaming_layout.addWidget(self.dreaming_combo)
+        dreaming_box.setMaximumHeight(35)
+        read_the_stars_layout.addWidget(dreaming_box)
+
 
 
 
