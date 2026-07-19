@@ -91,6 +91,8 @@ class MainWindow(QWidget):
                                         conjunction_update=self.update_conjunction_table)
         self.printer = PrinterOfTheStars(self.wizards, self.planets)
 
+        self.ppc_table = None
+
         # Left panel: swatches + per-house color radio
         left = QVBoxLayout()
         color_box = QGroupBox("House color (global per house)")
@@ -232,48 +234,59 @@ class MainWindow(QWidget):
 
         # right: conjunction
         right = QVBoxLayout()
-        right.addWidget(QLabel("House Conjunctions"))
-        self.conjunction_table = self.create_conjunction_table(self.generate_house_planet_conjunction_array())
-        right.addWidget(self.conjunction_table, 0)
+        #right.addWidget(QLabel("House Conjunctions"))
+        #self.conjunction_table = self.create_conjunction_table(self.generate_house_planet_conjunction_array())
+        right.addWidget(QLabel("Planetary Conjunctions"))
+        self.generate_planet_planet_conjunction_array()
+        right.addWidget(self.ppc_table, 0)
 
         btn_row = QHBoxLayout()
-        self.add_king_btn = QPushButton("Set King")
+        self.add_king_btn = QPushButton("𝔎𝔦𝔫𝔤 𝔞𝔫𝔡 ℭ𝔬𝔲𝔯𝔱")
         btn_row.addWidget(self.add_king_btn)
         right.addLayout(btn_row)
-
+        self.add_king_btn.setMinimumHeight(100)
         self.add_king_btn.clicked.connect(self.on_add_king)
+        self.add_king_btn.setStyleSheet("font-size: 32px;")
 
         read_the_stars_box = QGroupBox("Read the stars")
         read_the_stars_layout = QGridLayout()
         read_the_stars_box.setLayout(read_the_stars_layout)
 
-        btn_necromancer = QPushButton("Keeper of the Gates")
+        watcher_button_height = 50
+
+        btn_necromancer = QPushButton("Gate-Watcher")
         read_the_stars_layout.addWidget(btn_necromancer)
         btn_necromancer.clicked.connect(self.wizards[0].popup)
+        btn_necromancer.setMinimumHeight(watcher_button_height)
 
-        btn_hierophant = QPushButton("Keeper of the Flames")
+        btn_hierophant = QPushButton("Flame-Watcher")
         read_the_stars_layout.addWidget(btn_hierophant)
         btn_hierophant.clicked.connect(self.wizards[1].popup)
+        btn_hierophant.setMinimumHeight(watcher_button_height)
 
-        btn_warlock = QPushButton("Keeper of the Throne")
+        btn_warlock = QPushButton("Throne-Watcher")
         read_the_stars_layout.addWidget(btn_warlock)
-        btn_warlock.clicked.connect(self.wizards[2].popup)
+        btn_warlock.clicked.connect(self.wizards[2].king_popup)
+        btn_warlock.setMinimumHeight(watcher_button_height)
 
         btn_mariner = QPushButton("Keeper of the Wilds")
         read_the_stars_layout.addWidget(btn_mariner)
         btn_mariner.clicked.connect(self.wizards[3].popup)
+        btn_mariner.setMinimumHeight(watcher_button_height)
 
-        btn_faustian = QPushButton("Keeper of the Chains")
+        btn_faustian = QPushButton("Chain-Watcher")
         read_the_stars_layout.addWidget(btn_faustian)
         btn_faustian.clicked.connect(self.wizards[4].popup)
+        btn_faustian.setMinimumHeight(watcher_button_height)
 
 #       btn_sorcerer = QPushButton("Keeper of the Runes")
 #       read_the_stars_layout.addWidget(btn_sorcerer)
 #       btn_sorcerer.clicked.connect(self.wizards[5].sorcerer_popup)
 
-        btn_sage = QPushButton("Keeper of the Stars")
+        btn_sage = QPushButton("Star-Watcher")
         read_the_stars_layout.addWidget(btn_sage)
         btn_sage.clicked.connect(self.wizards[5].popup)
+        btn_sage.setMinimumHeight(watcher_button_height)
 
         self.dreaming_combo = QComboBox()
         read_the_stars_layout.addWidget(self.dreaming_combo)
@@ -448,3 +461,26 @@ class MainWindow(QWidget):
         print("loading pendulum")
         self.dreaming_combo.setCurrentIndex(self.dreaming_combo.findText(pendulum))
         self.redraw()
+
+    def generate_planet_planet_conjunction_array(self):
+        pcd_keys = list(self.planet_conjunction_dict().keys)
+        key_count = len(pcd_keys) # should always be six but just in case
+        matrix = [[bool(self.planet_conjunction_dict()[pcd_keys[i]] & self.planet_conjunction_dict()[pcd_keys[j]]) for j in range(key_count)]
+                  for i in range(key_count)]
+
+        table = QTableWidget(key_count, key_count)
+        table.setHorizontalHeaderLabels(pcd_keys)
+        table.setVerticalHeaderLabels(pcd_keys)
+
+        symbol_true = lib.CONJ_MARK
+        blank = ""
+
+        for i, k1 in enumerate(pcd_keys):
+            for j, k2 in enumerate(pcd_keys):
+                item = QTableWidgetItem(symbol_true if self.shared_conj(k1, k2) else blank)
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                table.setItem(i, j, item)
+
+        self.ppc_table = table
+    def shared_conj(self, key1, key2):
+        return bool(self.planet_conjunction_dict()[key1] & self.planet_conjunction_dict()[key2])
