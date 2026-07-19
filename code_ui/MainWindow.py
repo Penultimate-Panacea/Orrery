@@ -70,7 +70,7 @@ class MainWindow(QWidget):
             Hierophant(self.planet_conjunction_dict()),
             Warlock(self.planet_conjunction_dict(),self.planets,self.king),
             Mariner(self.planet_conjunction_dict(), self.planets),
-            Faustian(self.planet_conjunction_dict(), self.generate_house_planet_conjunction_array()),
+            Faustian(self.planet_conjunction_dict(), self.planets),
             Sorcerer(self.planet_conjunction_dict()),
             Sage(self.planet_conjunction_dict, self.planets, "Terrestrial")
         ]
@@ -313,10 +313,9 @@ class MainWindow(QWidget):
     def create_conjunction_table(self, house_planet_conjunction_array):
         table = QTableWidget(len(house_planet_conjunction_array), 2)
         table.setHorizontalHeaderLabels(["House", "Conjunctions"])
-        DELIM = "\u260C"
         for r, (sign, planets) in enumerate(house_planet_conjunction_array):
             table.setItem(r, 0, QTableWidgetItem(sign))
-            table.setItem(r, 1, QTableWidgetItem(lib.DELIM.join(planets)))
+            table.setItem(r, 1, QTableWidgetItem(lib.CONJ_MARK.join(planets)))
 
             for c in (0, 1):
                 item = table.item(r, c)
@@ -332,7 +331,7 @@ class MainWindow(QWidget):
         table.clearContents()
         for r, (house, planets) in enumerate(new_data):
             table.setItem(r, 0, QTableWidgetItem(house))
-            table.setItem(r, 1, QTableWidgetItem(lib.DELIM.join(planets)))
+            table.setItem(r, 1, QTableWidgetItem(lib.CONJ.join(planets)))
         table.resizeColumnsToContents()
         table.viewport().update()
         for w in self.wizards:
