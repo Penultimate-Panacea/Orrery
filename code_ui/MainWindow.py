@@ -4,7 +4,7 @@ import time
 from typing import List
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor
+from PyQt6.QtGui import QColor, QFontMetrics
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
                              QGraphicsView, QPushButton, QLabel, QTableWidget,
                              QTableWidgetItem, QGroupBox, QRadioButton, QButtonGroup, QSizePolicy, QComboBox
@@ -229,13 +229,14 @@ class MainWindow(QWidget):
         adv_all.setMinimumHeight(75)
         adv_all.clicked.connect(self.advance_all_spans)
         adv_all.clicked.connect(self.update_conjunction_table)
+        adv_all.clicked.connect(self.update_planet_planet_conjunction_array)
 
         center.addWidget(adv_all)
 
         # right: conjunction
         right = QVBoxLayout()
         #right.addWidget(QLabel("House Conjunctions"))
-        #self.conjunction_table = self.create_conjunction_table(self.generate_house_planet_conjunction_array())
+        self.conjunction_table = self.create_conjunction_table(self.generate_house_planet_conjunction_array())
         right.addWidget(QLabel("Planetary Conjunctions"))
         self.generate_planet_planet_conjunction_array()
         right.addWidget(self.ppc_table, 0)
@@ -417,7 +418,7 @@ class MainWindow(QWidget):
 
             self.swatch_grid.addWidget(swatch_widget, r, 0)
 
-    def planet_conjunction_dict(self):
+    def planet_conjunction_dict(self) -> dict:
         planets_to_check = []
         for i in self.planets:
             planets_to_check.append(i.name)
@@ -437,7 +438,8 @@ class MainWindow(QWidget):
                         adj[p].add(q)
 
         # return in the same order as planets_to_check
-        return {p: sorted(adj.get(p, set()), key=str) for p in planets_to_check}
+        pcd = {p: sorted(adj.get(p, set()), key=str) for p in planets_to_check}
+        return pcd
 
     def on_add_king(self):
         dlg = SetKingDialog(self,self.king)
@@ -463,24 +465,63 @@ class MainWindow(QWidget):
         self.redraw()
 
     def generate_planet_planet_conjunction_array(self):
-        pcd_keys = list(self.planet_conjunction_dict().keys)
+        pcd = self.planet_conjunction_dict()
+        pcd_keys = list(pcd)
         key_count = len(pcd_keys) # should always be six but just in case
-        matrix = [[bool(self.planet_conjunction_dict()[pcd_keys[i]] & self.planet_conjunction_dict()[pcd_keys[j]]) for j in range(key_count)]
-                  for i in range(key_count)]
 
         table = QTableWidget(key_count, key_count)
         table.setHorizontalHeaderLabels(pcd_keys)
         table.setVerticalHeaderLabels(pcd_keys)
 
         symbol_true = lib.CONJ_MARK
-        blank = ""
+        symbol_false = ""
+
+        d = self.planet_conjunction_dict()
+        sd = {k: set(d[k]) for k in pcd_keys}
 
         for i, k1 in enumerate(pcd_keys):
             for j, k2 in enumerate(pcd_keys):
-                item = QTableWidgetItem(symbol_true if self.shared_conj(k1, k2) else blank)
+                shared = bool(sd[k1] & sd[k2])
+                item = QTableWidgetItem(symbol_true if shared else symbol_false)
                 item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 table.setItem(i, j, item)
 
+        fm = QFontMetrics(table.font())
+
+        two_char_width = fm.horizontalAdvance("0") * 2
+        row_height = fm.height() * 1  # “1 lines” tall approximation
+
+        table.verticalHeader().setDefaultSectionSize(row_height)
+
+        for r in range(table.rowCount()):
+            table.setRowHeight(r, row_height)
+
+        for c in range(table.columnCount()):
+            table.setColumnWidth(c, two_char_width)
+
         self.ppc_table = table
-    def shared_conj(self, key1, key2):
-        return bool(self.planet_conjunction_dict()[key1] & self.planet_conjunction_dict()[key2])
+
+    from PyQt6.QtWidgets import QTableWidgetItem
+    from PyQt6.QtCore import Qt
+
+    def update_planet_planet_conjunction_array(self):
+        pcd = self.planet_conjunction_dict()
+        pcd_keys = list(pcd)
+        symbol_true = lib.CONJ_MARK
+        symbol_false = ""
+
+        d = self.planet_conjunction_dict()
+        sd = {k: set(d[k]) for k in pcd_keys}
+
+        for i, k1 in enumerate(pcd_keys):
+            s1 = sd[k1]
+            for j, k2 in enumerate(pcd_keys):
+                shared = bool(s1 & sd[k2])
+
+                item = self.ppc_table.item(i, j)
+                if item is None:
+                    item = QTableWidgetItem()
+                    self.ppc_table.setItem(i, j, item)
+
+                item.setText(symbol_true if shared else symbol_false)
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
