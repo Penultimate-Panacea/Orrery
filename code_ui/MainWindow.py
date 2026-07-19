@@ -18,7 +18,7 @@ from code_wizards.hierophant import Hierophant
 from code_wizards.mariner import Mariner
 from code_wizards.warlock import Warlock
 from code_wizards.faustian import Faustian
-from code_wizards.sorcerer import Sorcerer
+# from code_wizards.sorcerer import Sorcerer
 from code_wizards.sage import Sage
 from code_wizards.wizard import Wizard
 from code_plumbing.king import SetKingDialog
@@ -71,34 +71,24 @@ class MainWindow(QWidget):
             Warlock(self.planet_conjunction_dict(),self.planets,self.king),
             Mariner(self.planet_conjunction_dict(), self.planets),
             Faustian(self.planet_conjunction_dict(), self.planets),
-            Sorcerer(self.planet_conjunction_dict()),
-            Sage(self.planet_conjunction_dict, self.planets, "Terrestrial")
+            # Sorcerer(self.planet_conjunction_dict()),
+            Sage(self.planet_conjunction_dict, self.planets, "Calm")
         ]
 
 
 
 
-        self.kings_table = QTableWidget()
-        self.kings_table.setColumnCount(4)
-        self.kings_table.setHorizontalHeaderLabels([
-            "\u2654", lib.SUN_SIGN, lib.MOON_SIGN, lib.RISING_SIGN
-        ])
-        self.kings_table.setEditTriggers(
-            QTableWidget.EditTrigger.NoEditTriggers
-        )
-        self.kings_table.setSelectionBehavior(
-            QTableWidget.SelectionBehavior.SelectRows
-        )
-        self.kings_table.setSelectionMode(
-            QTableWidget.SelectionMode.SingleSelection
-        )
 
         self.scene = ArcScene()
         self.view = QGraphicsView(self.scene)
         self.view.setRenderHint(self.view.renderHints().Antialiasing)
         self.view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.dreaming_combo = QComboBox()
-        self.save_load = SaveLoadWidget(get_planets=self.planets,get_king=self.king,get_pendulum=self.dreaming_combo.currentText(),set_planets_steps=self.load_planet_steps, set_king=self.load_king, set_pendulum=self.load_pendulum, conjunction_update=self.update_conjunction_table)
+        self.save_load = SaveLoadWidget(get_planets=self.planets, get_kings=self.king,
+                                        get_pendulum=self.dreaming_combo.currentText(),
+                                        set_planets_steps=self.load_planet_steps,
+                                        set_kings=self.load_king, set_pendulum=self.load_pendulum,
+                                        conjunction_update=self.update_conjunction_table)
         self.printer = PrinterOfTheStars(self.wizards, self.planets)
 
         # Left panel: swatches + per-house color radio
@@ -247,17 +237,11 @@ class MainWindow(QWidget):
         right.addWidget(self.conjunction_table, 0)
 
         btn_row = QHBoxLayout()
-        self.add_king_btn = QPushButton("Add King")
-        self.remove_king_btn = QPushButton("Remove King")
+        self.add_king_btn = QPushButton("Set King")
         btn_row.addWidget(self.add_king_btn)
-        btn_row.addWidget(self.remove_king_btn)
-
-        # Add to the existing `right` layout
-        right.addWidget(self.kings_table)
         right.addLayout(btn_row)
 
         self.add_king_btn.clicked.connect(self.on_add_king)
-        self.remove_king_btn.clicked.connect(self.on_remove_king_by_selection)
 
         read_the_stars_box = QGroupBox("Read the stars")
         read_the_stars_layout = QGridLayout()
@@ -265,31 +249,31 @@ class MainWindow(QWidget):
 
         btn_necromancer = QPushButton("Keeper of the Gates")
         read_the_stars_layout.addWidget(btn_necromancer)
-        btn_necromancer.clicked.connect(self.wizards[0].necromancer_popup)
+        btn_necromancer.clicked.connect(self.wizards[0].popup)
 
         btn_hierophant = QPushButton("Keeper of the Flames")
         read_the_stars_layout.addWidget(btn_hierophant)
-        btn_hierophant.clicked.connect(self.wizards[1].hierophant_popup)
+        btn_hierophant.clicked.connect(self.wizards[1].popup)
 
         btn_warlock = QPushButton("Keeper of the Throne")
         read_the_stars_layout.addWidget(btn_warlock)
-        btn_warlock.clicked.connect(self.wizards[2].warlock_popup)
+        btn_warlock.clicked.connect(self.wizards[2].popup)
 
         btn_mariner = QPushButton("Keeper of the Wilds")
         read_the_stars_layout.addWidget(btn_mariner)
-        btn_mariner.clicked.connect(self.wizards[3].mariner_popup)
+        btn_mariner.clicked.connect(self.wizards[3].popup)
 
         btn_faustian = QPushButton("Keeper of the Chains")
         read_the_stars_layout.addWidget(btn_faustian)
-        btn_faustian.clicked.connect(self.wizards[4].faustian_popup)
+        btn_faustian.clicked.connect(self.wizards[4].popup)
 
-        btn_sorcerer = QPushButton("Keeper of the Runes")
-        read_the_stars_layout.addWidget(btn_sorcerer)
-        btn_sorcerer.clicked.connect(self.wizards[5].sorcerer_popup)
+#       btn_sorcerer = QPushButton("Keeper of the Runes")
+#       read_the_stars_layout.addWidget(btn_sorcerer)
+#       btn_sorcerer.clicked.connect(self.wizards[5].sorcerer_popup)
 
         btn_sage = QPushButton("Keeper of the Stars")
         read_the_stars_layout.addWidget(btn_sage)
-        btn_sage.clicked.connect(self.wizards[6].sage_popup)
+        btn_sage.clicked.connect(self.wizards[5].popup)
 
         self.dreaming_combo = QComboBox()
         read_the_stars_layout.addWidget(self.dreaming_combo)
@@ -297,7 +281,7 @@ class MainWindow(QWidget):
         self.dreaming_combo.addItem("Uncertain")
         self.dreaming_combo.addItem("Chaotic")
         self.dreaming_combo.addItem("Bleak")
-        self.dreaming_combo.currentTextChanged.connect(self.wizards[6].set_dreaming)
+        self.dreaming_combo.currentTextChanged.connect(self.wizards[5].set_dreaming)
 
 
 
@@ -332,7 +316,7 @@ class MainWindow(QWidget):
         table.clearContents()
         for r, (house, planets) in enumerate(new_data):
             table.setItem(r, 0, QTableWidgetItem(house))
-            table.setItem(r, 1, QTableWidgetItem(lib.CONJ.join(planets)))
+            table.setItem(r, 1, QTableWidgetItem(lib.CONJ_MARK.join(planets)))
         table.resizeColumnsToContents()
         table.viewport().update()
         for w in self.wizards:
@@ -445,25 +429,7 @@ class MainWindow(QWidget):
     def on_add_king(self):
         dlg = SetKingDialog(self,self.king)
         if dlg.exec() == dlg.DialogCode.Accepted:
-            self.king=get_king_data
-        print(self.king)
-
-    def _append_king_to_table(self, king):
-        row = self.kings_table.rowCount()
-        self.kings_table.insertRow(row)
-
-        self.kings_table.setItem(row, 0, QTableWidgetItem(king["name"]))
-        self.kings_table.setItem(row, 1, QTableWidgetItem(king["sun"]))
-        self.kings_table.setItem(row, 2, QTableWidgetItem(king["moon"]))
-        self.kings_table.setItem(row, 3, QTableWidgetItem(king["rising"]))
-
-    def on_remove_king_by_selection(self):
-        row = self.kings_table.currentRow()
-        if row < 0:
-            return
-        if row < len(self.king):
-            self.king.pop(row) # remove from data
-        self.kings_table.removeRow(row) # remove from view
+            self.king=dlg.get_king_data()
 
     def load_planet_steps(self, steps_list):
         print("loading planet steps")
@@ -475,12 +441,8 @@ class MainWindow(QWidget):
             w.update_conjunctions(self.planets)
         self.redraw()
 
-    def load_king(self):
-        print("loading kings")
-        self.kings_table.clearContents()
-        self.kings_table.setRowCount(0)
-        self._append_king_to_table(self.king)
-        self.redraw()
+    def load_king(self, king):
+        self.king = king
 
     def load_pendulum(self, pendulum):
         print("loading pendulum")

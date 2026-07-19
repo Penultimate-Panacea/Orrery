@@ -13,7 +13,7 @@ class Sage(Wizard):
     def set_dreaming(self, new_dreaming):
         self.dreaming = new_dreaming
 
-    def sage_popup(self):
+    def popup(self):
         sage_pop = QDialog()
         sage_pop.setWindowTitle("Sage")
 

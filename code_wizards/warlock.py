@@ -11,7 +11,7 @@ class Warlock(Wizard):
         self.planets = planets
         self.kings = kings
 
-    def warlock_popup(self):
+    def popup(self):
         warlock_pop = QDialog()
         warlock_pop.setWindowTitle("Warlock")
 

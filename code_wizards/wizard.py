@@ -1,6 +1,9 @@
 # coding=utf-8
 import code_plumbing.lib as lib
 from math import floor
+from PyQt6.QtGui import QTextDocument
+from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
+
 class Wizard:
     def __init__(self,planet_conjunction_dict):
         self.associated_planet = None
@@ -26,3 +29,19 @@ class Wizard:
         date_string += ' in the '
         date_string += lib.name_of_calendar
         self.date_string = date_string
+
+    def popup(self):
+        wiz_pop = QDialog()
+        wiz_pop.setWindowTitle("Generic Wizard Popup")
+        layout = QVBoxLayout(wiz_pop)
+        wiz_document = QTextDocument()
+        wiz_document.setHtml("""<h1>ERROR: Generic Wizard Popup</h1>""")
+
+        text = QTextEdit()
+        text.setReadOnly(True)
+        text.setDocument(wix_document)
+
+        layout.addWidget(text)
+
+        wiz_pop.resize(900, 600)
+        wiz_pop.exec()

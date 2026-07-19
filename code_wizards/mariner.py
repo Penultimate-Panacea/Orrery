@@ -50,7 +50,7 @@ class Mariner(Wizard):
         else:
             return False
 
-    def mariner_popup(self):
+    def popup(self):
         mariner_pop = QDialog()
         mariner_pop.setWindowTitle("Mariner")
 

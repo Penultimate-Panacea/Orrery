@@ -9,7 +9,7 @@ class Faustian(Wizard):
         super().__init__(planetary_conjunction_dict)
         self.planets = planets
 
-    def faustian_popup(self):
+    def popup(self):
         faust_pop = QDialog()
         faust_pop.setWindowTitle("Faustian Reads the Stars")
 

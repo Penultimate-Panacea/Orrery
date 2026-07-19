@@ -39,7 +39,7 @@ class Hierophant(Wizard):
         ## TODO: Magic number bits 6 & 7 are reserved for calamity and extinction which are beyond the scope of the project at the moment
 
 
-    def hierophant_popup(self):
+    def popup(self):
         hiero_pop = QDialog()
         hiero_pop.setWindowTitle("Hierophant Reads the Stars")
         self.read_the_stars()

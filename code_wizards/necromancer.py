@@ -33,7 +33,7 @@ class Necromancer(Wizard):
         print(necromancer_magic_number)
         return necromancer_magic_number
             ## TODO: Magic number bits 6 & 7 are reserved for calamity and extinction which are beyond the scope of the project at the moment
-    def necromancer_popup(self):
+    def popup(self):
         necro_pop = QDialog()
         necro_pop.setWindowTitle("Necromancer Reads the Stars")
         layout = QVBoxLayout(necro_pop)
