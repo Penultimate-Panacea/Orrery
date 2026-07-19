@@ -1,32 +1,87 @@
 # coding=utf-8
-from PyQt6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
-    QComboBox, QPushButton, QGridLayout, QSpinBox
-)
-from dataclasses import dataclass
+from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QComboBox, QPushButton, QGridLayout,
+                             QSpinBox)
+from code_plumbing import lib
 
-SIGNS = [
-    "Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra",
-    "Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"
-]
 
-@dataclass
 class King:
-    def __init__(self):
-        self.sun_sign = 4
-        self.moon_sign = 3
-        self.rise_sign = 10
-        self.aristocracy = 0
-        self.mercantilism = 0
-        self.orthodoxy = 0
-        self.piracy = 0
-        self.rebellion = 0
-        self.ergoism = 0
-        self.monarchy = 24
+    def __init__(
+            self,
+            name='Ozmir IV',
+            sun_sign='Gemini',
+            moon_sign='Taurus',
+            rise_sign='Cancer',
+            aristocracy=0,
+            mercantilism=0,
+            orthodoxy=0,
+            piracy=0,
+            rebellion=0,
+            ergoism=0,
+    ):
+        """Create a King model.
+
+        Stores a king's identity (name and three astrological signs) and six
+        integer trait values. Computes and stores the derived monarchy authority
+        score immediately via `calc_monarchy()`.
+
+        Args:
+            name: The king's display name.
+            sun_sign: Sun sign label.
+            moon_sign: Moon sign label.
+            rise_sign: Rising sign label.
+            aristocracy: Integer authority component.
+            mercantilism: Integer authority component.
+            orthodoxy: Integer authority component.
+            piracy: Integer authority component.
+            rebellion: Integer authority component.
+            ergoism: Integer authority component.
+        """
+        self.name = name
+        self.sun_sign = sun_sign
+        self.moon_sign = moon_sign
+        self.rise_sign = rise_sign
+        self.aristocracy = aristocracy
+        self.mercantilism = mercantilism
+        self.orthodoxy = orthodoxy
+        self.piracy = piracy
+        self.rebellion = rebellion
+        self.ergoism = ergoism
+        self.monarchy = self.calc_monarchy()
+
+    def calc_monarchy(self) -> int:
+        """Compute the derived monarchy score.
+
+        The monarchy score is computed as:
+            24 - (sum of all configured trait/threat components). This assumes the total amount of authority is set at
+            24 and does not increase.
+
+        Returns:
+            int: The computed monarchy value.
+        """
+        threats = (
+                self.aristocracy
+                + self.mercantilism
+                + self.piracy
+                + self.orthodoxy
+                + self.rebellion
+                + self.ergoism
+        )
+        return 24 - threats
 
 
 class SetKingDialog(QDialog):
     def __init__(self, parent=None, king=King()):
+        """Create the king-edit dialog.
+
+        Builds a Qt widget dialog as a popup window that lets the user view and update properties
+        of a `King`, including name, sun/moon/rising signs, and trait scores
+        (aristocracy, mercantilism, orthodoxy, piracy, rebellion, ergoism).
+        Also shows the computed `king.monarchy` value.
+
+        Args:
+            parent: Optional Qt parent widget.
+            king: Initial `King` instance whose values populate the dialog.
+        """
         super().__init__(parent)
         self.setWindowTitle("The Crown of Isha")
         self.king = king
@@ -40,24 +95,17 @@ class SetKingDialog(QDialog):
         self.piracy_box = QSpinBox(minimum=0, maximum=24, value=king.piracy)
         self.rebellion_box = QSpinBox(minimum=0, maximum=24, value=king.rebellion)
         self.ergoism_box = QSpinBox(minimum=0, maximum=24, value=king.ergoism)
-        self.monarchy = self.calc_monarchy()
-
         for combo in (self.sun_combo, self.moon_combo, self.rising_combo):
-            combo.addItems(SIGNS)
-
+            combo.addItems(lib.SIGNS)
         form = QVBoxLayout()
         form.addWidget(QLabel("King's name:"))
         form.addWidget(self.name_edit)
-
         form.addWidget(QLabel("Sun sign:"))
         form.addWidget(self.sun_combo)
-
         form.addWidget(QLabel("Moon sign:"))
         form.addWidget(self.moon_combo)
-
         form.addWidget(QLabel("Rising sign:"))
         form.addWidget(self.rising_combo)
-
         auth = QGridLayout()
         auth.addWidget(QLabel("Aristocracy"))
         auth.addWidget(self.aristocracy_box)
@@ -72,8 +120,8 @@ class SetKingDialog(QDialog):
         auth.addWidget(QLabel("Ergoism"))
         auth.addWidget(self.ergoism_box)
         auth.addWidget(QLabel("Monarchy"))
-        monarchy = self.monarchy
-        auth.addWidget(QLabel(monarchy))
+        monarchy = self.king.monarchy
+        auth.addWidget(QLabel(str(monarchy)))
         form.addLayout(auth)
         buttons = QHBoxLayout()
         self.ok_btn = QPushButton("Update")
@@ -81,24 +129,37 @@ class SetKingDialog(QDialog):
         buttons.addWidget(self.ok_btn)
         buttons.addWidget(self.cancel_btn)
         form.addLayout(buttons)
-
-
         self.setLayout(form)
-
         self.ok_btn.clicked.connect(self.accept)
         self.cancel_btn.clicked.connect(self.reject)
 
     def get_king_data(self) -> King:
-        self.calc_monarchy()
-        return King(self.name_edit.text().strip(),self.sun_combo.currentText(),self.moon_combo.currentText(),self.rising_combo.currentText(),self.aristocracy_box.value, self.mercantilism_box.value,self.orthodoxy_box.value,self.piracy_boxvalue,self.rebellion_box.value,self.ergoism_box.value,self.monarchy)
+        """Extract the edited king data from the dialog.
+
+        Recomputes authorities for the internally stored `self.king`,
+        then returns a new `King` instance populated from the current UI
+        values.
+
+        Returns:
+            King: A new `King` object based on the dialog inputs.
+        """
+        return King(
+            self.name_edit.text().strip(),
+            self.sun_combo.currentText(),
+            self.moon_combo.currentText(),
+            self.rising_combo.currentText(),
+            self.aristocracy_box.value(),
+            self.mercantilism_box.value(),
+            self.orthodoxy_box.value(),
+            self.piracy_box.value(),
+            self.rebellion_box.value(),
+            self.ergoism_box.value(),
+        )
 
     def accept(self):
-        data = self.get_king_data()
-        if not data["name"]:
-            self.name_edit.setFocus()
-            return
-        super().accept()
+        """Handle the dialog 'accept' action.
 
-    def calc_monarchy(self):
-        threats = (self.aristocracy_box.value + self.mercantilism_box.value + self.piracy_box.value + self.orthodoxy_box.value + self.rebellion_box.value + self.ergoism_box.value)
-        return 24 - threats
+        Calls the base class implementation to close the dialog and mark it as
+        accepted. This function used to have further functionality that was depreciated with a rule change.
+        """
+        super().accept()
