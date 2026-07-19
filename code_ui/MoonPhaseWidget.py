@@ -29,7 +29,7 @@ class MoonPhaseWidget(QWidget):
         top_row = QHBoxLayout()
         top_row.setSpacing(10)
 
-        self.svg_title = QLabel("SVG Viewer")
+        self.svg_title = QLabel("Game Phase")
         self.svg_title.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
 
         self.next_btn = QPushButton("Next")
