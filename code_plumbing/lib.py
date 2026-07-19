@@ -1,7 +1,7 @@
 # coding=utf-8
 
 estate_color_dict = {'cosmic': "#b7cece", 'spiritual': "#89408c", 'terrestrial': "#583e23"}
-element_color_dict = {'fire': "#7c1b1b", 'water': "#0e40ad", 'earth': "#774714", 'air': "#19b3ad"}
+element_color_dict = {'fire': "#e03c13", 'water': "#61b5ff", 'earth': "#7b7554", 'air': "#efd28d"}
 season_color_dict = {'winter': "#43acc7", 'spring': "#0d5945", 'summer': "#edd892", 'autumn': "#dd8c61"}
 
 current_cycle = 0
