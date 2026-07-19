@@ -7,7 +7,7 @@ from code_plumbing import lib
 class King:
     def __init__(
             self,
-            name='Ozmir IV',
+            name='Default King',
             sun_sign='Gemini',
             moon_sign='Taurus',
             rise_sign='Cancer',
@@ -84,13 +84,16 @@ class SetKingDialog(QDialog):
         """
         super().__init__(parent)
         self.setWindowTitle("The Crown of Isha")
-        if type(king) == None:
-            king = King()
+
         self.king = king
         self.name_edit = QLineEdit()
+
         self.sun_combo = QComboBox()
+
         self.moon_combo = QComboBox()
+
         self.rising_combo = QComboBox()
+
         self.aristocracy_box = QSpinBox(minimum=0, maximum=24, value=self.king.aristocracy)
         self.mercantilism_box = QSpinBox(minimum=0, maximum=24, value=self.king.mercantilism)
         self.orthodoxy_box = QSpinBox(minimum=0, maximum=24, value=self.king.orthodoxy)
@@ -100,6 +103,14 @@ class SetKingDialog(QDialog):
         for combo in (self.sun_combo, self.moon_combo, self.rising_combo):
             combo.addItems(lib.SIGNS)
         form = QVBoxLayout()
+        rise_index = lib.SIGNS.index(self.king.rise_sign)
+        self.rising_combo.setCurrentIndex(rise_index)
+
+        sun_index = lib.SIGNS.index(self.king.sun_sign)
+        self.sun_combo.setCurrentIndex(sun_index)
+        self.name_edit.setText(self.king.name)
+        moon_index = lib.SIGNS.index(self.king.moon_sign)
+        self.moon_combo.setCurrentIndex(moon_index)
         form.addWidget(QLabel("King's name:"))
         form.addWidget(self.name_edit)
         form.addWidget(QLabel("Sun sign:"))
