@@ -1,6 +1,7 @@
 # coding=utf-8
 import pickle
 from pathlib import Path
+from code_plumbing import lib
 
 from PyQt6.QtWidgets import (
     QWidget, QFileDialog, QMessageBox
@@ -35,10 +36,11 @@ class SaveLoadWidget(QWidget):
             file_path += ".orrery"
 
         data = {
-            "version": 1,
+            "version": 2,
             "current_steps": steps,
             "kings" : kings,
-            "pendulum" : pendulum
+            "pendulum" : pendulum,
+            "cycle": lib.current_cycle
         }
 
         try:
@@ -63,6 +65,7 @@ class SaveLoadWidget(QWidget):
             steps = data.get("current_steps", None)
             kings = data.get("kings", None)
             pendulum = data.get("pendulum", None)
+            cycle = data.get("cycle", None)
             if not isinstance(steps, list):
                 raise ValueError("Invalid file contents: current_steps must be a list")
 
@@ -70,6 +73,7 @@ class SaveLoadWidget(QWidget):
             self.set_kings(kings)
             self.set_pendulum(pendulum)
             self.update_conjunction_table()
+            lib.current_cycle = cycle
 
         except Exception as e:
             QMessageBox.critical(self, "Load failed", str(e))
