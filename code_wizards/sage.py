@@ -125,4 +125,4 @@ class Sage(Wizard):
                           <br><br><br>
                           <center><h3> Report produced for {self.date_string}</h3> </center>
                         </div>
-                    """ % self.dreaming
+                    """
