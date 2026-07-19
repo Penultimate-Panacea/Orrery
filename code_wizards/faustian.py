@@ -128,7 +128,7 @@ class Faustian(Wizard):
         self.set_date_string()
         self.read_the_stars_html = f"""
                     <div style="font-family: serif;">
-                      <h1 class="break-page"> Keeper of the Chains whose fate is controlled by Mercury</h1>
+                      <h1 class="break-page"> Chain-Watcher who is concerened with the movements of %s </h1>
                       <h2> First, shuffle the Devil's Deck</h2>
                       {aires}
                       {taurus}
@@ -146,5 +146,5 @@ class Faustian(Wizard):
                       <br><br><br>
                           <center><h3> Report produced for {self.date_string}</h3> </center>
                     </div>
-                """
+                """ % lib.MERCURY
         return

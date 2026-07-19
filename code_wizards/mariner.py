@@ -242,7 +242,7 @@ class Mariner(Wizard):
         self.set_date_string()
         self.read_the_stars_html = f"""
                             <div style="font-family: serif;">
-                              <h1 class="break-page"> Keeper of the Wilds whose fate is controlled by the Seasons </h1>
+                              <h1 class="break-page"> Wilds-Watcher who is concerned with the movements of the Seasons </h1>
                               {general_seasonal_effects}
                               {none_in_season}
                               {mercury_venus}

@@ -101,7 +101,7 @@ class Necromancer(Wizard):
         self.set_date_string()
         self.read_the_stars_html = f"""
                     <div style="font-family: serif;">
-                      <h1 class="break-page"> Keeper of the Gates whose fate is controlled by %s </h1>
+                      <h1 class="break-page"> Gate-Watcher who is concerned with the movement of %s </h1>
                       {saturn_alone_html}
                       {saturn_mercury_html}
                       {saturn_venus_html}

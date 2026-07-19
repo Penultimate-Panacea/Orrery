@@ -123,7 +123,7 @@ class Hierophant(Wizard):
         self.set_date_string()
         self.read_the_stars_html = f"""
                     <div style="font-family: serif;">
-                      <h1 class="break-page"> Keeper of the Flames whose fate is controlled by %s </h1> 
+                      <h1 class="break-page"> Flame-Watcher who is concerned with the movements of %s </h1> 
                       {sol_alone_html}
                       {mercury_html}
                       {venus_html}
@@ -133,5 +133,5 @@ class Hierophant(Wizard):
                       <br><br><br>
                           <center><h3> Report produced for {self.date_string}</h3> </center>
                     </div>
-                """ % lib.JUPITER
+                """ % lib.SOL
         return

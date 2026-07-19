@@ -11,7 +11,7 @@ class Warlock(Wizard):
         self.planets = planets
         self.king = king
 
-    def popup(self):
+    def king_popup(self):
         warlock_pop = QDialog()
         warlock_pop.setWindowTitle("Warlock")
 
@@ -237,7 +237,7 @@ class Warlock(Wizard):
         self.set_date_string()
         self.read_the_stars_html = f"""
             <div style="font-family: serif;">
-                      <h1 class="break-page"> Keeper of the Flames whose fate is controlled by %s </h1> 
+                      <h1 class="break-page"> Throne-Watcher who is concerned with the Stars of %s </h1> 
                       {mercury}
                       {venus}
                       {mars}
@@ -247,5 +247,5 @@ class Warlock(Wizard):
                       <br><br><br>
                           <center><h3> Report produced for {self.date_string}</h3> </center>
                     </div>
-            """
+            """ % king.name
         return

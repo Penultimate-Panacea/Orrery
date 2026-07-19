@@ -120,7 +120,7 @@ class Sage(Wizard):
         self.set_date_string()
         self.read_the_stars_html = f"""
                         <div style="font-family: serif;">
-                          <h1 class="break-page"> Keeper of the Stars whose fate is controlled by the %s Estate</h1>
+                          <h1 class="break-page"> Star-Watcher who is concerned with the Dreaming</h1>
                             {result}
                           <br><br><br>
                           <center><h3> Report produced for {self.date_string}</h3> </center>
