@@ -25,6 +25,7 @@ from code_wizards.wizard import Wizard
 from code_plumbing.king import SetKingDialog, King
 from code_ui.SaveLoad import SaveLoadWidget
 from code_plumbing.PrinterOfTheStars import PrinterOfTheStars
+from code_ui.ConjunctionTable import ConjunctionTable
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -76,10 +77,6 @@ class MainWindow(QWidget):
             Sage(self.planet_conjunction_dict, self.planets, "Calm")
         ]
 
-
-
-
-
         self.scene = ArcScene()
         self.view = QGraphicsView(self.scene)
         self.view.setRenderHint(self.view.renderHints().Antialiasing)
@@ -90,231 +87,17 @@ class MainWindow(QWidget):
                                         set_planets_steps=self.load_planet_steps,
                                         set_kings=self.load_king, set_pendulum=self.load_pendulum,
                                         conjunction_update=self.update_conjunction_table)
+
         self.printer = PrinterOfTheStars(self.wizards, self.planets)
 
-        self.ppc_table = None
-
-        # Left panel: swatches + per-house color radio
-        left = QVBoxLayout()
-        color_box = QGroupBox("Orrery Key")
-        cb_layout = QGridLayout()
-        color_box.setLayout(cb_layout)
-
-        bg = QButtonGroup(self)
-        bg.setExclusive(True)
-
-        rb_est = QRadioButton("Estate")
-        rb_sea = QRadioButton("Season")
-        rb_ele = QRadioButton("Element")
-
-        rb_est.setChecked(True)
-
-        # when the global mode changes, apply it to all houses
-        rb_est.toggled.connect(lambda checked: self.update_all_houses_mode("estate") if checked else None)
-        rb_sea.toggled.connect(lambda checked: self.update_all_houses_mode("season") if checked else None)
-        rb_ele.toggled.connect(lambda checked: self.update_all_houses_mode("element") if checked else None)
-
-        bg.addButton(rb_est)
-        bg.addButton(rb_sea)
-        bg.addButton(rb_ele)
-
-        cb_layout.addWidget(QLabel("Mode"), 0, 1)
-        cb_layout.addWidget(rb_est, 0, 2)
-        cb_layout.addWidget(rb_sea, 0, 3)
-        cb_layout.addWidget(rb_ele, 0, 4)
-
-        # connect radio toggles to both “update houses” and “update swatches”
-        rb_est.toggled.connect(lambda checked: self.update_all_houses_mode("estate") if checked else None)
-        rb_sea.toggled.connect(lambda checked: self.update_all_houses_mode("season") if checked else None)
-        rb_ele.toggled.connect(lambda checked: self.update_all_houses_mode("element") if checked else None)
-
-        rb_est.toggled.connect(lambda checked: self.rebuild_swatches_for_mode("estate") if checked else None)
-        rb_sea.toggled.connect(lambda checked: self.rebuild_swatches_for_mode("season") if checked else None)
-        rb_ele.toggled.connect(lambda checked: self.rebuild_swatches_for_mode("element") if checked else None)
-
-        self.swatch_grid = QGridLayout()
-
-        # initial swatches (Estate selected by default)
-        self.rebuild_swatches_for_mode("estate")
-
-        left.addWidget(color_box, 1)
-        left.addLayout(self.swatch_grid, 1)
-
-        # Game Phase Widget
-        game_phase = MoonPhaseWidget(lib.moonphases, lib.html)
-        left.addWidget(game_phase,8)
-
-        # middle: graphics
-        center = QVBoxLayout()
-
-        # Move controls (left box)
-        move_box = QGroupBox("Move arcs (snap)")
-        move_layout = QGridLayout()
-        move_box.setLayout(move_layout)
-
-        for row, planet in enumerate(self.planets):
-            move_layout.addWidget(QLabel(planet.name), row, 0)
-
-            def bind(p: Planet, kind: str):
-                def cb():
-                    if kind == "span_cw":
-                        p.current_step = (p.current_step + p.span_steps) % p.step_count_circle
-                    elif kind == "span_ccw":
-                        p.current_step = (p.current_step - p.span_steps) % p.step_count_circle
-                    elif kind == "step_cw":
-                        p.current_step = (p.current_step + 1) % p.step_count_circle
-                    elif kind == "step_ccw":
-                        p.current_step = (p.current_step - 1) % p.step_count_circle
-                    self.redraw()
-
-                return cb
-
-            btn_span_ccw = QPushButton("span ↓")
-            btn_span_cw = QPushButton("span ↑")
-            btn_step_ccw = QPushButton("-1")
-            btn_step_cw = QPushButton("+1")
-
-            btn_span_ccw.clicked.connect(bind(planet, "span_ccw"))
-            btn_span_cw.clicked.connect(bind(planet, "span_cw"))
-            btn_step_ccw.clicked.connect(bind(planet, "step_ccw"))
-            btn_step_cw.clicked.connect(bind(planet, "step_cw"))
-
-            move_layout.addWidget(btn_span_ccw, row, 1)
-            move_layout.addWidget(btn_span_cw, row, 2)
-            move_layout.addWidget(btn_step_ccw, row, 3)
-            move_layout.addWidget(btn_step_cw, row, 4)
-
-        save_load_box = QGroupBox("Utilities")
-        save_load_layout = QGridLayout()
-        save_load_box.setLayout(save_load_layout)
-
-        utility_button_height = 80
-
-        btn_save = QPushButton("Save Data")
-        btn_save.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        btn_save.setMinimumHeight(utility_button_height)
-        btn_save.clicked.connect(lambda checked=False: self.save_load.save_to_file(self.planets, self.king, self.dreaming_combo.currentText()))
-        btn_load = QPushButton("Load Data")
-        btn_load.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        btn_load.setMinimumHeight(utility_button_height)
-        btn_load.clicked.connect(self.save_load.load_from_file)
-        btn_print = QPushButton("Print")
-        btn_print.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        btn_print.setMinimumHeight(utility_button_height)
-        btn_print.clicked.connect(self.printer_logic)
-        btn_cal = QPushButton("Calendar Controls")
-        btn_cal.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        btn_cal.setMinimumHeight(utility_button_height)
-        save_load_layout.setColumnStretch(1, 1)
-        save_load_layout.setColumnStretch(0, 1)
-        save_load_layout.setRowStretch(0, 1)
-        save_load_layout.setRowStretch(1, 1)
-        save_load_layout.addWidget(btn_save, 0, 0)
-        save_load_layout.addWidget(btn_load, 0, 1)
-        save_load_layout.addWidget(btn_print, 1, 0)
-        save_load_layout.addWidget(btn_cal, 1, 1)
-
-        center.addWidget(self.view, 1)
-
-        row_layout = QHBoxLayout()
-        row_layout.addWidget(move_box)
-        row_layout.addWidget(save_load_box)
-
-        row_layout.setStretchFactor(move_box, 1)
-        row_layout.setStretchFactor(save_load_box, 1)
-
-        center.addLayout(row_layout)
-
-        # advance-all button
-        adv_all = DelayProgressButton("Advance all planets by span (CW) + active house +1")
-        adv_all.setMinimumHeight(75)
-        adv_all.activated.connect(self.advance_all_spans)
-        adv_all.activated.connect(self.update_conjunction_table)
-        adv_all.activated.connect(self.update_planet_planet_conjunction_array)
-
-        center.addWidget(adv_all)
-
-        # right: conjunction
-        right = QVBoxLayout()
-        #right.addWidget(QLabel("House Conjunctions"))
-        self.conjunction_table = self.create_conjunction_table(self.generate_house_planet_conjunction_array())
-        right.addWidget(QLabel("Planetary Conjunctions"))
-        self.generate_planet_planet_conjunction_array()
-        right.addWidget(self.ppc_table, 0)
-
-        btn_row = QHBoxLayout()
-        self.add_king_btn = QPushButton("𝔎𝔦𝔫𝔤 𝔞𝔫𝔡 ℭ𝔬𝔲𝔯𝔱")
-        btn_row.addWidget(self.add_king_btn)
-        right.addLayout(btn_row)
-        self.add_king_btn.setMinimumHeight(100)
-        self.add_king_btn.clicked.connect(self.on_add_king)
-        self.add_king_btn.setStyleSheet("font-size: 32px;")
-
-        read_the_stars_box = QGroupBox("Read the stars")
-        read_the_stars_layout = QGridLayout()
-        read_the_stars_box.setLayout(read_the_stars_layout)
-
-        watcher_button_height = 50
-
-        btn_necromancer = QPushButton("Gate-Watcher")
-        read_the_stars_layout.addWidget(btn_necromancer)
-        btn_necromancer.clicked.connect(self.wizards[0].popup)
-        btn_necromancer.setMinimumHeight(watcher_button_height)
-
-        btn_hierophant = QPushButton("Flame-Watcher")
-        read_the_stars_layout.addWidget(btn_hierophant)
-        btn_hierophant.clicked.connect(self.wizards[1].popup)
-        btn_hierophant.setMinimumHeight(watcher_button_height)
-
-        btn_warlock = QPushButton("Throne-Watcher")
-        read_the_stars_layout.addWidget(btn_warlock)
-        btn_warlock.clicked.connect(self.wizards[2].king_popup)
-        btn_warlock.setMinimumHeight(watcher_button_height)
-
-        btn_mariner = QPushButton("Keeper of the Wilds")
-        read_the_stars_layout.addWidget(btn_mariner)
-        btn_mariner.clicked.connect(self.wizards[3].popup)
-        btn_mariner.setMinimumHeight(watcher_button_height)
-
-        btn_faustian = QPushButton("Chain-Watcher")
-        read_the_stars_layout.addWidget(btn_faustian)
-        btn_faustian.clicked.connect(self.wizards[4].popup)
-        btn_faustian.setMinimumHeight(watcher_button_height)
-
-#       btn_sorcerer = QPushButton("Keeper of the Runes")
-#       read_the_stars_layout.addWidget(btn_sorcerer)
-#       btn_sorcerer.clicked.connect(self.wizards[5].sorcerer_popup)
-
-        btn_sage = QPushButton("Star-Watcher")
-        read_the_stars_layout.addWidget(btn_sage)
-        btn_sage.clicked.connect(self.wizards[5].popup)
-        btn_sage.setMinimumHeight(watcher_button_height)
-        dreaming_combo_label = QLabel("State of the Dreaming:")
-        self.dreaming_combo = QComboBox()
-        self.dreaming_combo.addItem("Calm")
-        self.dreaming_combo.addItem("Uncertain")
-        self.dreaming_combo.addItem("Chaotic")
-        self.dreaming_combo.addItem("Bleak")
-        self.dreaming_combo.currentTextChanged.connect(self.wizards[5].set_dreaming)
-        dreaming_box = QWidget()
-        dreaming_layout = QHBoxLayout(dreaming_box)
-        dreaming_layout.setContentsMargins(0, 0, 0, 0)
-        dreaming_layout.addWidget(dreaming_combo_label)
-        dreaming_layout.addWidget(self.dreaming_combo)
-        dreaming_box.setMaximumHeight(35)
-        read_the_stars_layout.addWidget(dreaming_box)
-
-
-
-
-        right.addWidget(read_the_stars_box, 1)
+        self.ppc_table = ConjunctionTable(self.planets, self.planet_conjunction_dict())
 
         top = QHBoxLayout()
-        top.addLayout(left, 1)
-        top.addLayout(center, 3)
-        top.addLayout(right, 1)
-        self.setLayout(top)
+        top.addLayout(self.build_left_panel(), 1)
+        top.addLayout(self.build_center_panel(), 3)
+        top.addLayout(self.build_right_panel(), 1)
 
+        self.setLayout(top)
         self.redraw()
 
     def create_conjunction_table(self, house_planet_conjunction_array):
@@ -366,7 +149,6 @@ class MainWindow(QWidget):
         for idx in range(len(self.houses)):
             self.set_house_mode(idx, mode)
 
-
     def advance_all_spans(self):
         lib.current_cycle += 1
         for p in self.planets:
@@ -390,15 +172,6 @@ class MainWindow(QWidget):
         self.printer.update_wizards(self.wizards)
         self.printer.update_planets(self.planets)
         self.printer.print_html()
-
-
-
-    def clear_layout(layout):
-        while layout.count():
-            item = layout.takeAt(0)
-            w = item.widget()
-            if w is not None:
-                w.deleteLater()
 
     def rebuild_swatches_for_mode(self, mode: str):
         while self.swatch_grid.count():
@@ -483,64 +256,227 @@ class MainWindow(QWidget):
         self.dreaming_combo.setCurrentIndex(self.dreaming_combo.findText(pendulum))
         self.redraw()
 
-    def generate_planet_planet_conjunction_array(self):
-        pcd = self.planet_conjunction_dict()
-        pcd_keys = list(pcd)
-        key_count = len(pcd_keys) # should always be six but just in case
+    def build_center_panel(self) -> QVBoxLayout:
+        center = QVBoxLayout()
 
-        table = QTableWidget(key_count, key_count)
-        table.setHorizontalHeaderLabels(pcd_keys)
-        table.setVerticalHeaderLabels(pcd_keys)
+        # If `self.view` is created elsewhere, keep it; if not, create it here.
+        center.addWidget(self.view, 1)
 
-        symbol_true = lib.CONJ_MARK
-        symbol_false = ""
+        move_box = QGroupBox("Move arcs (snap)")
+        move_layout = QGridLayout()
+        move_box.setLayout(move_layout)
 
-        d = self.planet_conjunction_dict()
-        sd = {k: set(d[k]) for k in pcd_keys}
+        for row, planet in enumerate(self.planets):
+            move_layout.addWidget(QLabel(planet.name), row, 0)
 
-        for i, k1 in enumerate(pcd_keys):
-            for j, k2 in enumerate(pcd_keys):
-                shared = bool(sd[k1] & sd[k2])
-                item = QTableWidgetItem(symbol_true if shared else symbol_false)
-                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-                table.setItem(i, j, item)
+            def bind(p: Planet, kind: str):
+                def cb():
+                    if kind == "span_cw":
+                        p.current_step = (p.current_step + p.span_steps) % p.step_count_circle
+                    elif kind == "span_ccw":
+                        p.current_step = (p.current_step - p.span_steps) % p.step_count_circle
+                    elif kind == "step_cw":
+                        p.current_step = (p.current_step + 1) % p.step_count_circle
+                    elif kind == "step_ccw":
+                        p.current_step = (p.current_step - 1) % p.step_count_circle
+                    self.redraw()
+                return cb
 
-        fm = QFontMetrics(table.font())
+            btn_span_ccw = QPushButton("span ↓")
+            btn_span_cw = QPushButton("span ↑")
+            btn_step_ccw = QPushButton("-1")
+            btn_step_cw = QPushButton("+1")
 
-        two_char_width = fm.horizontalAdvance("0") * 2
-        row_height = fm.height() * 1  # “1 lines” tall approximation
+            btn_span_ccw.clicked.connect(bind(planet, "span_ccw"))
+            btn_span_cw.clicked.connect(bind(planet, "span_cw"))
+            btn_step_ccw.clicked.connect(bind(planet, "step_ccw"))
+            btn_step_cw.clicked.connect(bind(planet, "step_cw"))
 
-        table.verticalHeader().setDefaultSectionSize(row_height)
+            move_layout.addWidget(btn_span_ccw, row, 1)
+            move_layout.addWidget(btn_span_cw, row, 2)
+            move_layout.addWidget(btn_step_ccw, row, 3)
+            move_layout.addWidget(btn_step_cw, row, 4)
 
-        for r in range(table.rowCount()):
-            table.setRowHeight(r, row_height)
+        save_load_box = QGroupBox("Utilities")
+        save_load_layout = QGridLayout()
+        save_load_box.setLayout(save_load_layout)
 
-        for c in range(table.columnCount()):
-            table.setColumnWidth(c, two_char_width)
+        utility_button_height = 80
 
-        self.ppc_table = table
+        btn_save = QPushButton("Save Data")
+        btn_save.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        btn_save.setMinimumHeight(utility_button_height)
+        btn_save.clicked.connect(
+            lambda checked=False: self.save_load.save_to_file(
+                self.planets, self.king, self.dreaming_combo.currentText()
+            )
+        )
 
-    from PyQt6.QtWidgets import QTableWidgetItem
-    from PyQt6.QtCore import Qt
+        btn_load = QPushButton("Load Data")
+        btn_load.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        btn_load.setMinimumHeight(utility_button_height)
+        btn_load.clicked.connect(self.save_load.load_from_file)
 
-    def update_planet_planet_conjunction_array(self):
-        pcd = self.planet_conjunction_dict()
-        pcd_keys = list(pcd)
-        symbol_true = lib.CONJ_MARK
-        symbol_false = ""
+        btn_print = QPushButton("Print")
+        btn_print.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        btn_print.setMinimumHeight(utility_button_height)
+        btn_print.clicked.connect(self.printer_logic)
 
-        d = self.planet_conjunction_dict()
-        sd = {k: set(d[k]) for k in pcd_keys}
+        btn_cal = QPushButton("Calendar Controls")
+        btn_cal.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        btn_cal.setMinimumHeight(utility_button_height)
 
-        for i, k1 in enumerate(pcd_keys):
-            s1 = sd[k1]
-            for j, k2 in enumerate(pcd_keys):
-                shared = bool(s1 & sd[k2])
+        save_load_layout.setColumnStretch(1, 1)
+        save_load_layout.setColumnStretch(0, 1)
+        save_load_layout.setRowStretch(0, 1)
+        save_load_layout.setRowStretch(1, 1)
 
-                item = self.ppc_table.item(i, j)
-                if item is None:
-                    item = QTableWidgetItem()
-                    self.ppc_table.setItem(i, j, item)
+        btn_cal.clicked.connect(self.advance_all_spans)  # <-- replace with your real handler if different
 
-                item.setText(symbol_true if shared else symbol_false)
-                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        save_load_layout.addWidget(btn_save, 0, 0)
+        save_load_layout.addWidget(btn_load, 0, 1)
+        save_load_layout.addWidget(btn_print, 1, 0)
+        save_load_layout.addWidget(btn_cal, 1, 1)
+
+        row_layout = QHBoxLayout()
+        row_layout.addWidget(move_box)
+        row_layout.addWidget(save_load_box)
+
+        row_layout.setStretchFactor(move_box, 1)
+        row_layout.setStretchFactor(save_load_box, 1)
+
+        center.addLayout(row_layout)
+
+        adv_all = DelayProgressButton("𝔓𝔯𝔬𝔤𝔯𝔢𝔰𝔰 𝔱𝔥𝔢 ℌ𝔢𝔞𝔳𝔢𝔫𝔰 𝔉𝔬𝔯𝔴𝔞𝔯𝔡")
+        adv_all.setMinimumHeight(75)
+        adv_all.setStyleSheet("font-size: 48px;")
+        adv_all.activated.connect(self.advance_all_spans)
+        adv_all.activated.connect(self.update_conjunction_table)
+        # adv_all.activated.connect(self.update_ppc)
+
+        center.addWidget(adv_all)
+
+        return center
+
+    def build_left_panel(self) -> QVBoxLayout:
+        left = QVBoxLayout()
+
+        color_box = QGroupBox("Orrery Key")
+        cb_layout = QGridLayout()
+        color_box.setLayout(cb_layout)
+
+        bg = QButtonGroup(self)
+        bg.setExclusive(True)
+
+        rb_est = QRadioButton("Estate")
+        rb_sea = QRadioButton("Season")
+        rb_ele = QRadioButton("Element")
+        rb_est.setChecked(True)
+
+        bg.addButton(rb_est)
+        bg.addButton(rb_sea)
+        bg.addButton(rb_ele)
+
+        cb_layout.addWidget(QLabel("Mode"), 0, 1)
+        cb_layout.addWidget(rb_est, 0, 2)
+        cb_layout.addWidget(rb_sea, 0, 3)
+        cb_layout.addWidget(rb_ele, 0, 4)
+
+        # connect radio toggles (one set of functions, no duplicated lambdas)
+        rb_est.toggled.connect(lambda checked: self.update_all_houses_mode("estate") if checked else None)
+        rb_sea.toggled.connect(lambda checked: self.update_all_houses_mode("season") if checked else None)
+        rb_ele.toggled.connect(lambda checked: self.update_all_houses_mode("element") if checked else None)
+
+        rb_est.toggled.connect(lambda checked: self.rebuild_swatches_for_mode("estate") if checked else None)
+        rb_sea.toggled.connect(lambda checked: self.rebuild_swatches_for_mode("season") if checked else None)
+        rb_ele.toggled.connect(lambda checked: self.rebuild_swatches_for_mode("element") if checked else None)
+
+        self.swatch_grid = QGridLayout()
+
+        # initial swatches (Estate selected by default)
+        self.rebuild_swatches_for_mode("estate")
+
+        left.addWidget(color_box, 1)
+        left.addLayout(self.swatch_grid, 1)
+
+        # Game Phase Widget
+        game_phase = MoonPhaseWidget(lib.moonphases, lib.html)
+        left.addWidget(game_phase, 8)
+
+        return left
+
+    def build_right_panel(self) -> QVBoxLayout:
+        right = QVBoxLayout()
+
+        self.conjunction_table = self.create_conjunction_table(
+            self.generate_house_planet_conjunction_array()
+        )
+        right.addWidget(QLabel("Planetary Conjunctions"))
+        self.ppc_table.make_table()
+        right.addWidget(self.ppc_table.table, 0)
+
+        btn_row = QHBoxLayout()
+        self.add_king_btn = QPushButton("𝔎𝔦𝔫𝔤 𝔞𝔫𝔡 ℭ𝔬𝔲𝔯𝔱")
+        btn_row.addWidget(self.add_king_btn)
+        right.addLayout(btn_row)
+        self.add_king_btn.setMinimumHeight(100)
+        self.add_king_btn.clicked.connect(self.on_add_king)
+        self.add_king_btn.setStyleSheet("font-size: 32px;")
+
+        read_the_stars_box = QGroupBox("Read the stars")
+        read_the_stars_layout = QGridLayout()
+        read_the_stars_box.setLayout(read_the_stars_layout)
+
+        watcher_button_height = 50
+
+        btn_necromancer = QPushButton("Gate-Watcher")
+        btn_necromancer.clicked.connect(self.wizards[0].popup)
+        btn_necromancer.setMinimumHeight(watcher_button_height)
+        read_the_stars_layout.addWidget(btn_necromancer)
+
+        btn_hierophant = QPushButton("Flame-Watcher")
+        btn_hierophant.clicked.connect(self.wizards[1].popup)
+        btn_hierophant.setMinimumHeight(watcher_button_height)
+        read_the_stars_layout.addWidget(btn_hierophant)
+
+        btn_warlock = QPushButton("Throne-Watcher")
+        btn_warlock.clicked.connect(self.wizards[2].king_popup)
+        btn_warlock.setMinimumHeight(watcher_button_height)
+        read_the_stars_layout.addWidget(btn_warlock)
+
+        btn_mariner = QPushButton("Keeper of the Wilds")
+        btn_mariner.clicked.connect(self.wizards[3].popup)
+        btn_mariner.setMinimumHeight(watcher_button_height)
+        read_the_stars_layout.addWidget(btn_mariner)
+
+        btn_faustian = QPushButton("Chain-Watcher")
+        btn_faustian.clicked.connect(self.wizards[4].popup)
+        btn_faustian.setMinimumHeight(watcher_button_height)
+        read_the_stars_layout.addWidget(btn_faustian)
+
+        btn_sage = QPushButton("Star-Watcher")
+        btn_sage.clicked.connect(self.wizards[5].popup)
+        btn_sage.setMinimumHeight(watcher_button_height)
+        read_the_stars_layout.addWidget(btn_sage)
+
+        dreaming_combo_label = QLabel("State of the Dreaming:")
+        self.dreaming_combo = QComboBox()
+        self.dreaming_combo.addItem("Calm")
+        self.dreaming_combo.addItem("Uncertain")
+        self.dreaming_combo.addItem("Chaotic")
+        self.dreaming_combo.addItem("Bleak")
+        self.dreaming_combo.currentTextChanged.connect(self.wizards[5].set_dreaming)
+
+        dreaming_box = QWidget()
+        dreaming_layout = QHBoxLayout(dreaming_box)
+        dreaming_layout.setContentsMargins(0, 0, 0, 0)
+        dreaming_layout.addWidget(dreaming_combo_label)
+        dreaming_layout.addWidget(self.dreaming_combo)
+        dreaming_box.setMaximumHeight(35)
+        read_the_stars_layout.addWidget(dreaming_box)
+
+        right.addWidget(read_the_stars_box, 1)
+
+        return right
+
+
