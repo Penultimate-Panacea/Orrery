@@ -13,6 +13,7 @@ from code_plumbing.house import House
 from code_plumbing.planet import Planet
 from code_ui.ArcScene import ArcScene
 from code_ui.MoonPhaseWidget import MoonPhaseWidget
+from code_ui.DelayButton import DelayProgressButton
 from code_wizards.necromancer import Necromancer
 from code_wizards.hierophant import Hierophant
 from code_wizards.mariner import Mariner
@@ -225,11 +226,11 @@ class MainWindow(QWidget):
         center.addLayout(row_layout)
 
         # advance-all button
-        adv_all = QPushButton("Advance all planets by span (CW) + active house +1")
+        adv_all = DelayProgressButton("Advance all planets by span (CW) + active house +1")
         adv_all.setMinimumHeight(75)
-        adv_all.clicked.connect(self.advance_all_spans)
-        adv_all.clicked.connect(self.update_conjunction_table)
-        adv_all.clicked.connect(self.update_planet_planet_conjunction_array)
+        adv_all.activated.connect(self.advance_all_spans)
+        adv_all.activated.connect(self.update_conjunction_table)
+        adv_all.activated.connect(self.update_planet_planet_conjunction_array)
 
         center.addWidget(adv_all)
 
