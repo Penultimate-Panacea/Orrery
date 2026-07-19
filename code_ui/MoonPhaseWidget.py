@@ -32,22 +32,22 @@ class MoonPhaseWidget(QWidget):
         self.svg_title = QLabel("Game Phase")
         self.svg_title.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
 
-        self.next_btn = QPushButton("Next")
+        self.next_btn = QPushButton("Next Phase")
         self.next_btn.clicked.connect(self.next_svg)
 
         top_row.addWidget(self.svg_title, 1)
-        top_row.addWidget(self.next_btn, 0)
+        top_row.addWidget(self.next_btn, 1)
 
         self.svg_widget = QSvgWidget()
         self.svg_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.svg_widget.setMinimumHeight(300)
+        self.svg_widget.setMinimumHeight(260)
 
         self.info_browser = QTextBrowser()
         self.info_browser.setOpenExternalLinks(True)
 
         main_layout.addLayout(top_row)
         main_layout.addWidget(self.svg_widget, 0)
-        main_layout.addWidget(self.info_browser, 1)
+        main_layout.addWidget(self.info_browser, 2)
 
         if not self.svg_paths:
             self.info_browser.setHtml("<b>No SVGs provided.</b>")

@@ -95,7 +95,7 @@ class MainWindow(QWidget):
 
         # Left panel: swatches + per-house color radio
         left = QVBoxLayout()
-        color_box = QGroupBox("House color (global per house)")
+        color_box = QGroupBox("Orrery Key")
         cb_layout = QGridLayout()
         color_box.setLayout(cb_layout)
 
@@ -402,7 +402,12 @@ class MainWindow(QWidget):
         colors = self.color_dicts.get(mode, {})
         items = list(colors.items())  # [(label, QColor), ...]
 
-        for r, (label, qc) in enumerate(items):  # up to 4 entries
+        cols = 2  # 2x2 grid
+
+        for i, (label, qc) in enumerate(items):
+            r = i // cols
+            c = i % cols
+
             swatch_widget = QWidget()
             swatch_layout = QHBoxLayout(swatch_widget)
             swatch_layout.setContentsMargins(0, 0, 0, 0)
@@ -416,7 +421,12 @@ class MainWindow(QWidget):
             swatch_layout.addWidget(color_dot)
             swatch_layout.addWidget(text_label)
 
-            self.swatch_grid.addWidget(swatch_widget, r, 0)
+            self.swatch_grid.addWidget(swatch_widget, r, c)
+
+        self.swatch_grid.setRowStretch(0, 1)
+        self.swatch_grid.setRowStretch(1, 1)
+        self.swatch_grid.setColumnStretch(0, 1)
+        self.swatch_grid.setColumnStretch(1, 1)
 
     def planet_conjunction_dict(self) -> dict:
         planets_to_check = []
