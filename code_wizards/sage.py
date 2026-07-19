@@ -4,38 +4,14 @@ from code_plumbing import lib
 from PyQt6.QtGui import QTextDocument
 from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
 class Sage(Wizard):
-    def __init__(self,planetary_conjunction_dict, planet_list, estate):
+    def __init__(self,planetary_conjunction_dict, planet_list, dreaming):
         super().__init__(planetary_conjunction_dict)
         self.planets = planet_list
-        self.estate = estate
+        self.dreaming = dreaming
+        self.alignments = [0,0,0,0,0,0,0,0,0,0,0,0]
 
-    def set_estate(self, new_estate):
-        self.estate = new_estate
-
-    def generate_planets_in_estate(self):
-        in_estate_names = []
-        for p in self.planets:
-            if self.determine_if_in_estate(p):
-                in_estate_names.append(p.name)
-        print("The following planets are in estate: %s" % in_estate_names)
-        return in_estate_names
-
-    def determine_if_in_estate(self, planet):
-        estate = self.estate
-        estate_houses = []
-        print("Estate is is: %s" % estate)
-        if estate == "Terrestrial":
-            estate_houses = [0,1,2,3]
-        if estate == "Spiritual":
-            estate_houses = [4,5,6,7]
-        if estate == "Cosmic":
-            estate_houses = [8,9,10,11]
-        print("Houses in Estate: %s" % estate_houses)
-        print("Conjunction Table: %s" % planet.conjunction_table)
-        if any(p in planet.conjunction_table[planet.current_step] for p in estate_houses):
-            return True
-        else:
-            return False
+    def set_dreaming(self, new_dreaming):
+        self.dreaming = new_dreaming
 
     def sage_popup(self):
         sage_pop = QDialog()
@@ -58,127 +34,89 @@ class Sage(Wizard):
         sage_pop.exec()
 
     def read_the_stars(self):
-        planets_in_estate = self.generate_planets_in_estate()
-        print("self.estate is %s" % self.estate)
-        print("planets_in_estate %s" % planets_in_estate)
-        none_in_estate = ""
-        mercury = ""
-        venus = ""
-        mars = ""
-        jupiter_xor_saturn = ""
-        jupiter_and_saturn = ""
+        houses = lib.SIGNS
+        for house in houses:
+            if any(house in planet.conjunction_table[planet.current_step] for planet in self.planets): #i think this is right, we'll see
+                self.alignments[house] += 1
+        celestial_alignment = max(self.alignments)
 
-        if self.estate == "Terrestrial":
-            if lib.MERCURY in planets_in_estate:
-                mercury = """
-                            <h3> Mercury is in the First Estate, the dreaming world is dominated by the petty cruelty of mortal men </h3>
-                            Choose two Sleepers, Mark them, and present them before the Celestial Audience. They enter a contest of wills, words, swords, or law. Ask the Celestial Audience who triumphs. If the Celestial Audience confidently and unanimously chooses one victor over another, give an associated Wizard a Gift. If the Celestial Audience disagrees or debates, instead there is no clear winner, and give an associated Wizard a Complication as a result.
-                        """
-            if lib.VENUS in planets_in_estate:
-                venus = """
-                            <h3> Venus is in the First Estate, a  Sleeper goes to a Wizard seeking his assistance, advice, or companionship.</h3>
-                            ark that Sleeper. If the Wizard will Spend Time with them this month, give him a Gift as a result, and that Sleeper will attempt to achieve one of their Star Sign’s Goals. If the Wizard refuses, give him a Complication.
-                        """
-            if lib.MARS in planets_in_estate:
-                mars = """
-                            <h3> Mars in in the First Estate, a Sleeper is influenced by the Paradigms of the Cosmic Estate.</h3>
-                            Choose a Paradigm’s Plot, and either invent or choose a Sleeper who would be a good fit. Describe a vision to the Celestial Audience of that Character setting off that Plot, Mark them, and ask an associated Keepers any appropriate questions about the vision. Give one Wizard a Gift and another a Complication as a result.
-                        """
-            if (lib.JUPITER in planets_in_estate) ^ (lib.SATURN in planets_in_estate):
-                jupiter_xor_saturn = """
-                            <h3> Jupiter or Saturn is in the First Estate, magic slowly drains from the world. </h3>
-                            Choose one piece of Lore in any Codex (perhaps a Wizard’s Isle or Sanctum) and Change it to be less magical, more modern, or more unremarkable.
-                        """
-            if (lib.JUPITER in planets_in_estate) and (lib.SATURN in planets_in_estate):
-                jupiter_and_saturn = """
-                            <h3> Jupiter and Saturn are in the First Estate, magic slowly drains from the world. </h3>
-                            I.  Choose one piece of Lore in any Codex (perhaps a Wizard’s Isle or Sanctum) and Change it to be less magical, more modern, or more unremarkable. <br>
-                            II. <b>Move towards Extinction.</b>
-                        """
-            if len(planets_in_estate) == 0:
-                none_in_estate = """
-                            <h3> The First Estate is empty of planets, the dreaming world is struck by tragedy</h3>
-                            I. Choose any Sleeper and ask the Gate-Keeper how they suddenly and unfairly died. Give an associated Wizard a Complication as a result. If any member of the Pact wishes for this Sleeper not to die, they must take a major Complication to subconsciously save their life.<br>
-                            II. <b>Move towards Extinction.</b>
-                        """
+        result = ""
 
-        elif self.estate == "Spiritual":
-            if lib.MERCURY in planets_in_estate:
-                mercury = """
-                            <h3> Mercury is present in the Second Estate, a Luminary takes action and shapes the world around them.</h3>
-                            Choose any other Luminary and, if they’re not a Wizard, ask a Keeper to speak for them. Present them with a simple situation in which one of the options involves completing a Quest (without revealing that Quest to them). If they choose the path with the Quest, give the associated Wizard a Complication. If they make a different choice, give the associated Wizard a Gift.
+        if self.dreaming == "Calm":
+            if celestial_alignment == 1:
+                result = f"""<h2>The Dreaming is Calm and the Celestial Alignment is 1.</h2>
+                            A cataclysmic Omen appears — perhaps a falling star, monstrous dragon, or approaching fleet. The Dreamscape immediately becomes Chaotic.
                         """
-            if lib.VENUS in planets_in_estate:
-                venus = """
-                            <h3> Venus is present in the Second Estate, a Luminary makes a new friend. </h3>
-                             Choose any other Luminary and create a new Sleeper who is urging the Luminary towards their Destiny. If the Luminary is a Wizard, the Sleeper will request their audience. If the Wizard Spends Time with them this month, give him a Gift, and during that scene, attempt to nudge the Wizard towards a Destiny. If the Wizard refuses, give him a Complication associated with that Sleeper.
+            elif celestial_alignment == 2:
+                result = f"""<h2>The Dreaming is Calm and the Celestial Alignment is 2.</h2>
+                                Choose two Denizens who struggle against one another, give them each an Omen, and present them to the Celestial Audience. They enter a contest of wills, words, swords, or law. Ask the Celestial Audience who triumphs. If the Celestial Audience confidently and unanimously chooses one victor over another, give any wizard a Gift. If the Celestial Audience disagrees or debates, instead there is no clear winner, and remove an Omen from the Pact.
+                            """
+            elif celestial_alignment == 3:
+                result = f"""<h2>The Dreaming is Calm and the Celestial Alignment is 3.</h2>
+                                Choose or create a Denizen with advice for the Pact. Give them an Omen and present them to any wizard. That wizard may schedule Time on them to hear their issues. He spends that Time to have a short scene with them. If the wizard has this scene, place an Omen on him. If the wizard refuses, remove an Omen from the Pact.
+                            """
+            elif celestial_alignment >= 4:
+                 result = f"""<h2>The Dreaming is Calm and the Celestial Alignment is 4 or more.</h2>
+                                A newcomer arrives to Isha with strange tidings. Create a Denizen from a distant land and give them a Destiny. They are the embodiment of this destiny in all ways, and consciously seek to model it. Create a major Complication for another wizard related to their arrival. The Dreaming becomes Uncertain.
+                            """
+        elif self.dreaming == "Uncertain":
+            if celestial_alignment == 1:
+                result = f"""<h2>The Dreaming is Uncertain and the Celestial Alignment is 1.</h2>
+                            The Dreaming settles into peace. Place an Omen on any Denizen who exemplifies calmness and reflection. The Dreaming becomes Calm.
                         """
-            if lib.MARS in planets_in_estate:
-                mars = """
-                            <h3> Mars is present in the Second Estate, a Luminary is called to action. </h3>
-                            Choose any one Luminary tied for fewest Quests completed. This month, they <i>must</i> complete at least one Quest. If they do, give an associated Wizard a Gift. If they fail to do so, give an associated Wizard a Complication. Replace their Destiny with a random different Destiny.
+            elif celestial_alignment == 2:
+                result = f"""<h2>The Dreaming is Uncertain and the Celestial Alignment is 2.</h2>
+                            Choose two Denizens who suffer a deep and violent betrayal. Give them each an Omen and present them to the Celestial Audience, asking which one betrayed the other. If the Celestial Audience confidently and unanimously chooses one victor over another, place a second Omen on the traitor and the betrayed manages to survive. If the Celestial Audience disagrees or debates, instead they destroy each other, and give a minor Complication to any wizard as a result.
                         """
-            if (lib.JUPITER in planets_in_estate) ^ (lib.SATURN in planets_in_estate):
-                jupiter_xor_saturn = """
-                            <h3> Jupiter or Saturn is present in the Second Estate, the world responds to the power of the Pact.</h3>
-                             Choose one piece of Lore from any Codex (perhaps a Wizard’s Isle or Sanctum) and Change it to reflect that Wizard’s behavior, the changing of the seasons, or the events of the narrative as it unfolds.
+            elif celestial_alignment == 3:
+                result = f"""<h2>The Dreaming is Uncertain and the Celestial Alignment is 3.</h2>
+                            Choose or create a Denizen who needs the Pact's help. Give them an Omen and present them to any wizard. That wizard may schedule Time on them to hear their issues. He spends that Time to have a short scene with them. If the wizard refuses to help them, give him a Complication.
                         """
-            if (lib.JUPITER in planets_in_estate) and (lib.SATURN in planets_in_estate):
-                jupiter_and_saturn = """
-                            <h3> Jupiter and Saturn are present in the Second Estate, the world responds to the power of the Pact.</h3>
-                             I.     Choose one piece of Lore from any Codex (perhaps a Wizard’s Isle or Sanctum) and Change it to reflect that Wizard’s behavior, the changing of the seasons, or the events of the narrative as it unfolds.<br>
-                             II.    Give the associated Wizard a Complication.
+            elif celestial_alignment >= 4:
+                result = f"""<h2>The Dreaming is Uncertain and the Celestial Alignment is 4 or more.</h2>
+                            A powerful Denizen arrives to Isha with dark intentions. Create a Denizen from a distant land with a random King or Beast Destiny. They are the embodiment of this destiny in all ways, and consciously seek to model it. Create a major Complication for another wizard related to their arrival. The Dreaming becomes Chaotic.
                         """
-            if len(planets_in_estate) == 0:
-                none_in_estate = """
-                            <h3> The Second Estate is empty of planets, a new Luminary arrives</h3>
-                            Choose a random Destiny and create a new character based on that Destiny. They arrive at the Wizardmoot this month carrying ill news, demands for change, or long-forgotten grudges. If they die, give each other Wizard a major Complication.
+        elif self.dreaming == "Chaotic":
+            if celestial_alignment == 1:
+                result = f"""<h2>The Dreaming is Chaotic and the Celestial Alignment is 1.</h2>
+                            An ancient bylaw crumbles and a forgotten power betrays the Pact. Create a major Complication for each other wizard.
                         """
+            elif celestial_alignment == 2:
+                result = f"""<h2>The Dreaming is Chaotic and the Celestial Alignment is 2</h2>
+                            Choose two Denizens who are both placed in a tragic set of circumstances. Give them both an Ome, describe the circumstances. Give them both an Omen, describe the circumstances and present them to the Celestial Audience, asking who manages to live. If the Celestial Audience confidently and unanimously chooses one survivor over the other, the one who lives gains all the Omens of the one who died. If the Celestial Audience disagrees or debates, they both die. Create a minor Complication for each other wizard.
+                        """
+            elif celestial_alignment == 3:
+                result = f"""<h2>The Dreaming is Chaotic and the Celestial Alignment is 3.</h2>
+                            Choose or create a Denizen who threatens the Pact. Give them an Omen and present them to any wizard. That wizard may schedule Time on them to parlay with them. He spends that Time to have a short scene with them. If the wizard does not take their threat seriously, give him a major Complication.
+                        """
+            elif celestial_alignment >= 4:
+                result = f"""<h2>The Dreaming is Chaotic and the Celestial Alignment is 4 or more.</h2>
+                            A kind soul arrives to Isha with desires to help the Pact. Create a Denizen from a distant land with a random Page or Knight Destiny. They are the embodiment of this destiny in all ways, and consciously seek to model it. If they die by the end of the month in pursuit of their Destiny, the Dreaming becomes Calm.
+                        """
+        elif self.dreaming == "Bleak":
+            if celestial_alignment == 1:
+                result = f"""<h2>The Future of the Pact is Bleak and the Celestial Alignment is 1.</h2>
+                            Magic grows rarer and harder to cast. Choose the spell in <i>The Grimoire</i> which you believe has been cast most frequently. It cannot be cast as long as the Dreaming is Bleak.
+                        """
+            elif celestial_alignment == 2:
+                result = f"""<h2>The Future of the Pact is Bleak and the Celestial Alignment is 2.</h2>
+                            The Pact's magic starts to fail them. Choose a Treasure which you believe has been especially vital for the Pact's endurance up to this point. It has been stolen and cannot be recovered as long as the Dreaming is Bleak.
+                        """
+            elif celestial_alignment == 3:
+                result = f"""<h2>The Future of the Pact is Bleak and the Celestial Alignment is 3.</h2>
+                            A former ally of the Pact now struggles against the darkness. Give them an Omen and present them to any wizard. That wizard may schedule Time on them to meet with them. He spends that Time to have a short scene with them. If the wizard doesn't, give every other wizard a Complication, and that ally will never trust the Pact again.
+                        """
+            elif celestial_alignment >= 4:
+                result = f"""<h2>The Future of the Pact is Bleak and the Celestial is 4 or more.</h2>
+                            The world violently changes the future turns away from the Pact. Create a Gamechanging Impact for any wizard.
+                            """
 
-        elif self.estate == "Cosmic":
-            if lib.MERCURY in planets_in_estate:
-                mercury = """
-                            <h3> Mercury is present within the Third Estate, the Pact is shaped by the winds of fate.</h3>
-                            Choose a Paradigm and give a different associated Wizard a minor Complication for each Unresolved Plot.
-                        """
-            if lib.VENUS in planets_in_estate:
-                venus = """
-                            <h3> Venus is present within the Third Estate, an agent of a Paradigm makes its will known to a member of the Pact.</h3>
-                            Choose or create a Sleeper, Mark them, and have them send a request for a meeting to a Wizard. If the Wizard Spends Time with them this month, give him a Gift, and attempt to Set Up one of that Paradigm’s Plots. If the Wizard refuses, give him a Complication associated with the Paradigm.
-                        """
-            if lib.MARS in planets_in_estate:
-                mars = """
-                            <h3> Mars is present within the Third Estate, a Paradigm moves openly against the Pact.</h3>
-                            Create a new Luminary to serve as the face of the Paradigm and place them within another Domain. Now, and at the start of each month the Luminary remains present in that Domain, give that Domain’s Wizard a Gift associated with the Luminary, and ask that Domain’s Keeper to give another Wizard a Complication. 
-                        """
-            if (lib.JUPITER in planets_in_estate) ^ (lib.SATURN in planets_in_estate):
-                jupiter_xor_saturn = """
-                            <h3> Jupiter or Saturn is within the Third Estate, the world spins towards madness.</h3>
-                            Choose one piece of Lore in any Codex (perhaps a Wizard’s Sanctum or Isle) and Change it to be more magical, more fantastical, or more dangerous.
-                        """
-            if (lib.JUPITER in planets_in_estate) and (lib.SATURN in planets_in_estate):
-                jupiter_and_saturn = """
-                            <h3 Jupiter and Saturn are within the Third Estate, the world spins towards madness.</h3>
-                            I. Choose one piece of Lore in any Codex (perhaps a Wizard’s Sanctum or Isle) and Change it to be more magical, more fantastical, or more dangerous.<br>
-                            II. <b>Move towards Calamity</b>
-                        """
-            if len(planets_in_estate) == 0:
-                none_in_estate = """
-                            <h3> The Third Estate is empty of planets.</h3>
-                            I. Add a new Paradigm of your choice and give a Complication to each other Wizard as the dreaming world quakes in fear of its arrival.<br>
-                            II. <b>Move towards Extinction.</b>
-                        """
         self.set_date_string()
         self.read_the_stars_html = f"""
                         <div style="font-family: serif;">
                           <h1 class="break-page"> Keeper of the Stars whose fate is controlled by the %s Estate</h1>
-                          {mercury}
-                          {venus}
-                          {mars}
-                          {jupiter_xor_saturn}
-                          {jupiter_and_saturn}
-                          {none_in_estate}
+                            {result}
                           <br><br><br>
                           <center><h3> Report produced for {self.date_string}</h3> </center>
                         </div>
-                    """ % self.estate
+                    """ % self.dreaming

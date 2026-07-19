@@ -97,8 +97,8 @@ class MainWindow(QWidget):
         self.view = QGraphicsView(self.scene)
         self.view.setRenderHint(self.view.renderHints().Antialiasing)
         self.view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.estate_combo = QComboBox()
-        self.save_load = SaveLoadWidget(get_planets=self.planets,get_king=self.king,get_pendulum=self.estate_combo.currentText(),set_planets_steps=self.load_planet_steps, set_king=self.load_king, set_pendulum=self.load_pendulum, conjunction_update=self.update_conjunction_table)
+        self.dreaming_combo = QComboBox()
+        self.save_load = SaveLoadWidget(get_planets=self.planets,get_king=self.king,get_pendulum=self.dreaming_combo.currentText(),set_planets_steps=self.load_planet_steps, set_king=self.load_king, set_pendulum=self.load_pendulum, conjunction_update=self.update_conjunction_table)
         self.printer = PrinterOfTheStars(self.wizards, self.planets)
 
         # Left panel: swatches + per-house color radio
@@ -200,7 +200,7 @@ class MainWindow(QWidget):
         btn_save = QPushButton("Save Data")
         btn_save.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_save.setMinimumHeight(utility_button_height)
-        btn_save.clicked.connect(lambda checked=False: self.save_load.save_to_file(self.planets, self.king, self.estate_combo.currentText()))
+        btn_save.clicked.connect(lambda checked=False: self.save_load.save_to_file(self.planets, self.king, self.dreaming_combo.currentText()))
         btn_load = QPushButton("Load Data")
         btn_load.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_load.setMinimumHeight(utility_button_height)
@@ -291,12 +291,13 @@ class MainWindow(QWidget):
         read_the_stars_layout.addWidget(btn_sage)
         btn_sage.clicked.connect(self.wizards[6].sage_popup)
 
-        self.estate_combo = QComboBox()
-        read_the_stars_layout.addWidget(self.estate_combo)
-        self.estate_combo.addItem("Terrestrial")
-        self.estate_combo.addItem("Spiritual")
-        self.estate_combo.addItem("Cosmic")
-        self.estate_combo.currentTextChanged.connect(self.wizards[6].set_estate)
+        self.dreaming_combo = QComboBox()
+        read_the_stars_layout.addWidget(self.dreaming_combo)
+        self.dreaming_combo.addItem("Calm")
+        self.dreaming_combo.addItem("Uncertain")
+        self.dreaming_combo.addItem("Chaotic")
+        self.dreaming_combo.addItem("Bleak")
+        self.dreaming_combo.currentTextChanged.connect(self.wizards[6].set_dreaming)
 
 
 
@@ -483,5 +484,5 @@ class MainWindow(QWidget):
 
     def load_pendulum(self, pendulum):
         print("loading pendulum")
-        self.estate_combo.setCurrentIndex(self.estate_combo.findText(pendulum))
+        self.dreaming_combo.setCurrentIndex(self.dreaming_combo.findText(pendulum))
         self.redraw()
