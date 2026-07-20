@@ -1,0 +1,78 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions / compiled artifacts
+*.so
+*.pyd
+*.dll
+*.dylib
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Unit test / coverage
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+*.cover
+*.py,cover
+*.log
+
+# Type checking / tooling
+.mypy_cache/
+.pytest_cache/
+.pyre/
+.ruff_cache/
+.pytype/
+
+# ---- PyCharm / IDE ----
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea/*
+
+# ---- Django (if applicable) ----
+*.sqlite3
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# ---- Flask (if applicable) ----
+instance/
+.webassets-cache/
+
+# ---- Jupyter (if applicable) ----
+.ipynb_checkpoints/
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ---- Logs ----
+logs/
+*.log
+
+# ---- Environment files ----
+.env
+.env.*
+!.env.example
