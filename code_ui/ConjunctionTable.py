@@ -1,6 +1,6 @@
 # coding=utf-8
 from PyQt6.QtWidgets import QTableWidget, QTableWidgetItem
-from PyQt6.QtGui import QFontMetrics
+from PyQt6.QtGui import QFontMetrics, QColor
 
 from code_plumbing import lib
 
@@ -54,6 +54,10 @@ class ConjunctionTable:
             for c, value in enumerate(row):
                 item_text = symbol_true if value else symbol_false
                 self.table.setItem(r, c, QTableWidgetItem(item_text))
+                if r == c:
+                    self.table.setItem(r, c, QTableWidgetItem(""))
+                    self.table.item(r,c).setBackground(QColor("white"))
+
 
         for r in range(self.table.rowCount()):
             self.table.setRowHeight(r, row_height)
