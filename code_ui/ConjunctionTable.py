@@ -9,31 +9,36 @@ class ConjunctionTable:
     def __init__(self, planets, planet_conjunction_dict):
         self.planets = planets
         self.pcd = planet_conjunction_dict
-        self.table = self.make_table()
+        self.table = QTableWidget()
+        self.rebuild_table()
 
     def update(self, new_planets, new_pcd):
         self.pcd = new_pcd
         self.planets = new_planets
-        self.table = self.make_table()
+        self.rebuild_table()
 
-    def make_table(self):
+    def rebuild_table(self):
+        # Keys define the size + headers
         pcd_keys = list(self.pcd)
         key_count = len(pcd_keys)
 
-        table = QTableWidget(key_count, key_count)
-        table.setHorizontalHeaderLabels(pcd_keys)
-        table.setVerticalHeaderLabels(pcd_keys)
+        n = len(self.planets)
+
+        # Resize the existing table
+        self.table.clearContents()  # clear old items (keeps the widget)
+        self.table.setRowCount(key_count)
+        self.table.setColumnCount(key_count)
+
+        self.table.setHorizontalHeaderLabels(pcd_keys)
+        self.table.setVerticalHeaderLabels(pcd_keys)
 
         symbol_true = lib.CONJ_MARK
         symbol_false = ""
 
-        fm = QFontMetrics(table.font())
+        fm = QFontMetrics(self.table.font())
         two_char_width = fm.horizontalAdvance("0") * 2
         row_height = fm.height()
-
-        table.verticalHeader().setDefaultSectionSize(row_height)
-
-        n = len(self.planets)
+        self.table.verticalHeader().setDefaultSectionSize(row_height)
 
         current_sets = [
             planet.conjunction_table[planet.current_step]
@@ -47,15 +52,11 @@ class ConjunctionTable:
 
         for r, row in enumerate(bool_array):
             for c, value in enumerate(row):
-                if value:
-                    table.setItem(r, c, QTableWidgetItem(symbol_true))
-                else:
-                    table.setItem(r, c, QTableWidgetItem(symbol_false))
+                item_text = symbol_true if value else symbol_false
+                self.table.setItem(r, c, QTableWidgetItem(item_text))
 
-        for r in range(table.rowCount()):
-            table.setRowHeight(r, row_height)
+        for r in range(self.table.rowCount()):
+            self.table.setRowHeight(r, row_height)
 
-        for c in range(table.columnCount()):
-            table.setColumnWidth(c, two_char_width)
-
-        return table
+        for c in range(self.table.columnCount()):
+            self.table.setColumnWidth(c, two_char_width)

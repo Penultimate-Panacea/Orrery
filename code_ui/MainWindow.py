@@ -89,13 +89,15 @@ class MainWindow(QWidget):
                                         conjunction_update=self.update_conjunction_table)
 
         self.printer = PrinterOfTheStars(self.wizards, self.planets)
-
-        self.ppc_table = ConjunctionTable(self.planets, self.planet_conjunction_dict())
+        self.conj_table_obj = ConjunctionTable(self.planets, self.planet_conjunction_dict())
+        self.table_widget = self.conj_table_obj.table
 
         top = QHBoxLayout()
         top.addLayout(self.build_left_panel(), 1)
         top.addLayout(self.build_center_panel(), 3)
         top.addLayout(self.build_right_panel(), 1)
+
+
 
         self.setLayout(top)
         self.redraw()
@@ -247,6 +249,8 @@ class MainWindow(QWidget):
         for w in self.wizards:
             w.update_conjunctions(self.planets)
         self.redraw()
+        self.update_conjunction_table()
+        self.update_conj_table_widget()
 
     def load_king(self, king):
         self.king = king
@@ -352,7 +356,7 @@ class MainWindow(QWidget):
         adv_all.setStyleSheet("font-size: 48px;")
         adv_all.activated.connect(self.advance_all_spans)
         adv_all.activated.connect(self.update_conjunction_table)
-        # adv_all.activated.connect(self.update_ppc)
+        adv_all.activated.connect(self.update_conj_table_widget)
 
         center.addWidget(adv_all)
 
@@ -412,8 +416,7 @@ class MainWindow(QWidget):
             self.generate_house_planet_conjunction_array()
         )
         right.addWidget(QLabel("Planetary Conjunctions"))
-        self.ppc_table.make_table()
-        right.addWidget(self.ppc_table.table, 0)
+        right.addWidget(self.conj_table_obj.table, 0)
 
         btn_row = QHBoxLayout()
         self.add_king_btn = QPushButton("𝔎𝔦𝔫𝔤 𝔞𝔫𝔡 ℭ𝔬𝔲𝔯𝔱")
@@ -479,4 +482,6 @@ class MainWindow(QWidget):
 
         return right
 
+    def update_conj_table_widget(self):
+        self.conj_table_obj.update(self.planets, self.planet_conjunction_dict())
 
