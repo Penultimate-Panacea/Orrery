@@ -4,8 +4,9 @@ from code_plumbing import lib
 from PyQt6.QtGui import QTextDocument
 from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
 
+
 class Faustian(Wizard):
-    def __init__(self,planetary_conjunction_dict, planets):
+    def __init__(self, planetary_conjunction_dict, planets):
         super().__init__(planetary_conjunction_dict)
         self.planets = planets
 
@@ -28,14 +29,16 @@ class Faustian(Wizard):
 
     def read_the_stars(self):
         effected_houses_by_index = self.planets[0].conjunction_table[self.planets[0].current_step]
-        cards_by_house = [0,0,0,0,0,0,0,0,0,0,0,0] # list with cards by house
+        cards_by_house = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # list with cards by house
 
         for house in effected_houses_by_index:
-            if (house in self.planets[1].conjunction_table[self.planets[1].current_step]) ^ (house in self.planets[2].conjunction_table[self.planets[2].current_step]):
-                cards_by_house[house] += 1 # add one card to the house if just one of merc and venus are present
-            elif (house in self.planets[1].conjunction_table[self.planets[1].current_step]) and (house in self.planets[2].conjunction_table[self.planets[2].current_step]):
-                cards_by_house[house] += 2 # add two cards to the house if both merc and venus are present
-            outer_planet_count = 0 # less elegant but easier to write version of three if ands
+            if (house in self.planets[1].conjunction_table[self.planets[1].current_step]) ^ (
+                    house in self.planets[2].conjunction_table[self.planets[2].current_step]):
+                cards_by_house[house] += 1  # add one card to the house if just one of merc and venus are present
+            elif (house in self.planets[1].conjunction_table[self.planets[1].current_step]) and (
+                    house in self.planets[2].conjunction_table[self.planets[2].current_step]):
+                cards_by_house[house] += 2  # add two cards to the house if both merc and venus are present
+            outer_planet_count = 0  # less elegant but easier to write version of three if ands
             if house in self.planets[3].conjunction_table[self.planets[3].current_step]:
                 outer_planet_count += 1
             if house in self.planets[4].conjunction_table[self.planets[4].current_step]:
@@ -46,7 +49,7 @@ class Faustian(Wizard):
                 outer_planet_card_increase = outer_planet_count * 2
                 cards_by_house[house] += outer_planet_card_increase
 
-        aires = ""
+        aries = ""
         taurus = ""
         gemini = ""
         cancer = ""
@@ -61,7 +64,7 @@ class Faustian(Wizard):
         none = ""
 
         if cards_by_house[0] != 0:
-            aires = f"""
+            aries = f"""
                     <h2> The Devil Schemes among the monks and pilgrims of the Temples in the Hierophant's domain.</h2>
                     Add %s Scheme cards from the Devil's Deck to this Community.
                     """ % cards_by_house[0]
@@ -128,9 +131,9 @@ class Faustian(Wizard):
         self.set_date_string()
         self.read_the_stars_html = f"""
                     <div style="font-family: serif;">
-                      <h1 class="break-page"> Chain-Watcher who is concerened with the movements of %s </h1>
+                      <h1 class="break-page"> Chain-Watcher who is concerned with the movements of %s </h1>
                       <h2> First, shuffle the Devil's Deck</h2>
-                      {aires}
+                      {aries}
                       {taurus}
                       {gemini}
                       {cancer}

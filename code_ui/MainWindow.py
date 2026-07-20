@@ -4,7 +4,7 @@ import time
 from typing import List
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor, QFontMetrics
+from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
                              QGraphicsView, QPushButton, QLabel, QTableWidget,
                              QTableWidgetItem, QGroupBox, QRadioButton, QButtonGroup, QSizePolicy, QComboBox
@@ -27,6 +27,7 @@ from code_ui.SaveLoad import SaveLoadWidget
 from code_plumbing.PrinterOfTheStars import PrinterOfTheStars
 from code_ui.ConjunctionTable import ConjunctionTable
 
+
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -39,38 +40,55 @@ class MainWindow(QWidget):
         lib.current_cycle = 0
 
         self.houses: List[House] = [
-            House("Aries", 0, lib.estate_color_dict['terrestrial'], lib.season_color_dict['spring'], lib.element_color_dict['fire']),
-            House("Taurus", 1, lib.estate_color_dict['terrestrial'], lib.season_color_dict['spring'], lib.element_color_dict['earth']),
-            House("Gemini", 2, lib.estate_color_dict['terrestrial'], lib.season_color_dict['spring'], lib.element_color_dict['air']),
-            House("Cancer", 3, lib.estate_color_dict['terrestrial'], lib.season_color_dict['summer'], lib.element_color_dict['water']),
-            House("Leo", 4, lib.estate_color_dict['spiritual'], lib.season_color_dict['summer'], lib.element_color_dict['fire']),
-            House("Virgo", 5, lib.estate_color_dict['spiritual'], lib.season_color_dict['summer'], lib.element_color_dict['earth']),
-            House("Libra ", 6, lib.estate_color_dict['spiritual'], lib.season_color_dict['autumn'], lib.element_color_dict['air']),
-            House("Scorpio", 7, lib.estate_color_dict['spiritual'], lib.season_color_dict['autumn'], lib.element_color_dict['water']),
-            House("Sagittarius", 8, lib.estate_color_dict['cosmic'], lib.season_color_dict['autumn'], lib.element_color_dict['fire']),
-            House("Capricorn", 9, lib.estate_color_dict['cosmic'], lib.season_color_dict['winter'], lib.element_color_dict['earth']),
-            House("Aquarius", 10, lib.estate_color_dict['cosmic'], lib.season_color_dict['winter'], lib.element_color_dict['air']),
-            House("Pisces", 11, lib.estate_color_dict['cosmic'], lib.season_color_dict['winter'], lib.element_color_dict['water'])
+            House("Aries", 0, lib.estate_color_dict['terrestrial'], lib.season_color_dict['spring'],
+                  lib.element_color_dict['fire']),
+            House("Taurus", 1, lib.estate_color_dict['terrestrial'], lib.season_color_dict['spring'],
+                  lib.element_color_dict['earth']),
+            House("Gemini", 2, lib.estate_color_dict['terrestrial'], lib.season_color_dict['spring'],
+                  lib.element_color_dict['air']),
+            House("Cancer", 3, lib.estate_color_dict['terrestrial'], lib.season_color_dict['summer'],
+                  lib.element_color_dict['water']),
+            House("Leo", 4, lib.estate_color_dict['spiritual'], lib.season_color_dict['summer'],
+                  lib.element_color_dict['fire']),
+            House("Virgo", 5, lib.estate_color_dict['spiritual'], lib.season_color_dict['summer'],
+                  lib.element_color_dict['earth']),
+            House("Libra ", 6, lib.estate_color_dict['spiritual'], lib.season_color_dict['autumn'],
+                  lib.element_color_dict['air']),
+            House("Scorpio", 7, lib.estate_color_dict['spiritual'], lib.season_color_dict['autumn'],
+                  lib.element_color_dict['water']),
+            House("Sagittarius", 8, lib.estate_color_dict['cosmic'], lib.season_color_dict['autumn'],
+                  lib.element_color_dict['fire']),
+            House("Capricorn", 9, lib.estate_color_dict['cosmic'], lib.season_color_dict['winter'],
+                  lib.element_color_dict['earth']),
+            House("Aquarius", 10, lib.estate_color_dict['cosmic'], lib.season_color_dict['winter'],
+                  lib.element_color_dict['air']),
+            House("Pisces", 11, lib.estate_color_dict['cosmic'], lib.season_color_dict['winter'],
+                  lib.element_color_dict['water'])
         ]
 
         self.planets: List[Planet] = [
-            Planet(lib.MERCURY, QColor("Blue"), span_steps=13, step_count_circle=48, current_step=0, ring_radius=80, ring_thickness=16, conjunction_table=lib.CONJ_MERCURY),
-            Planet(lib.VENUS, QColor("Green"), span_steps=9, step_count_circle=48, current_step=1, ring_radius=110, ring_thickness=16, conjunction_table=lib.CONJ_VENUS),
-            Planet(lib.MARS, QColor("Red"), span_steps=5, step_count_circle=48, current_step=2, ring_radius=140, ring_thickness=16, conjunction_table=lib.CONJ_MARS),
-            Planet(lib.JUPITER, QColor("Orange"), span_steps=3, step_count_circle=48, current_step=3, ring_radius=170, ring_thickness=16, conjunction_table=lib.CONJ_JUPITER),
-            Planet(lib.SATURN, QColor("Gray"), span_steps=1, step_count_circle=36, current_step=0, ring_radius=230, ring_thickness=16,
+            Planet(lib.MERCURY, QColor("Blue"), span_steps=13, step_count_circle=48, current_step=0, ring_radius=80,
+                   ring_thickness=16, conjunction_table=lib.CONJ_MERCURY),
+            Planet(lib.VENUS, QColor("Green"), span_steps=9, step_count_circle=48, current_step=1, ring_radius=110,
+                   ring_thickness=16, conjunction_table=lib.CONJ_VENUS),
+            Planet(lib.MARS, QColor("Red"), span_steps=5, step_count_circle=48, current_step=2, ring_radius=140,
+                   ring_thickness=16, conjunction_table=lib.CONJ_MARS),
+            Planet(lib.JUPITER, QColor("Orange"), span_steps=3, step_count_circle=48, current_step=3, ring_radius=170,
+                   ring_thickness=16, conjunction_table=lib.CONJ_JUPITER),
+            Planet(lib.SATURN, QColor("Gray"), span_steps=1, step_count_circle=36, current_step=0, ring_radius=230,
+                   ring_thickness=16,
                    grid_offset_half_step=True, conjunction_table=lib.CONJ_SATURN),
             Planet(lib.SOL, QColor("Yellow"), span_steps=1, step_count_circle=12, current_step=0, ring_radius=250,
                    ring_thickness=16, conjunction_table=lib.CONJ_SOL)
         ]
         self.house_color_mode = ["season"] * 12
 
-        self.king = King() # placeholder king
+        self.king = King()  # placeholder king
 
         self.wizards: List[Wizard] = [
             Necromancer(self.planet_conjunction_dict()),
             Hierophant(self.planet_conjunction_dict()),
-            Warlock(self.planet_conjunction_dict(),self.planets,self.king),
+            Warlock(self.planet_conjunction_dict(), self.planets, self.king),
             Mariner(self.planet_conjunction_dict(), self.planets),
             Faustian(self.planet_conjunction_dict(), self.planets),
             # Sorcerer(self.planet_conjunction_dict()),
@@ -96,8 +114,6 @@ class MainWindow(QWidget):
         top.addLayout(self.build_left_panel(), 1)
         top.addLayout(self.build_center_panel(), 3)
         top.addLayout(self.build_right_panel(), 1)
-
-
 
         self.setLayout(top)
         self.redraw()
@@ -147,6 +163,7 @@ class MainWindow(QWidget):
                 house_planet_conjunction_array.append([self.houses[i].name, planets_for_i])
         print(house_planet_conjunction_array)
         return house_planet_conjunction_array
+
     def update_all_houses_mode(self, mode: str):
         for idx in range(len(self.houses)):
             self.set_house_mode(idx, mode)
@@ -159,14 +176,12 @@ class MainWindow(QWidget):
         self.redraw()
         time.sleep(0.01)
 
-
     def redraw(self):
         self.scene.redraw(
             self.houses,
             self.planets,
             self.house_color_mode,
         )
-
 
     def printer_logic(self):
         for w in self.wizards:
@@ -235,9 +250,9 @@ class MainWindow(QWidget):
         return pcd
 
     def on_add_king(self):
-        dlg = SetKingDialog(self,self.king)
+        dlg = SetKingDialog(self, self.king)
         if dlg.exec() == dlg.DialogCode.Accepted:
-            self.king=dlg.get_king_data()
+            self.king = dlg.get_king_data()
             self.wizards[2].update_king(self.king)
 
     def load_planet_steps(self, steps_list):
@@ -284,6 +299,7 @@ class MainWindow(QWidget):
                     elif kind == "step_ccw":
                         p.current_step = (p.current_step - 1) % p.step_count_circle
                     self.redraw()
+
                 return cb
 
             btn_span_ccw = QPushButton("span ↓")
@@ -322,7 +338,6 @@ class MainWindow(QWidget):
         btn_load.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_load.setMinimumHeight(utility_button_height)
         btn_load.clicked.connect(self.save_load.load_from_file)
-
 
         btn_print = QPushButton("Print to default Printer")
         btn_print.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
@@ -485,4 +500,3 @@ class MainWindow(QWidget):
 
     def update_conj_table_widget(self):
         self.conj_table_obj.update(self.planets, self.planet_conjunction_dict())
-

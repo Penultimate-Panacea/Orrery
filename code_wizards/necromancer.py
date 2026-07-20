@@ -3,42 +3,42 @@ from code_wizards.wizard import Wizard
 from code_plumbing import lib
 from PyQt6.QtGui import QTextDocument
 from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
+
+
 class Necromancer(Wizard):
-    def __init__(self,planetary_conjunction_dict):
+    def __init__(self, planetary_conjunction_dict):
         super().__init__(planetary_conjunction_dict)
 
     def make_magic_number(self):
         conjunctions = self.planet_conjunction_dict
         print("Conjunctions are: " + str(conjunctions))
         saturn_conjunctions = conjunctions[lib.SATURN]
-        necromancer_magic_number =0b0000000
+        necromancer_magic_number = 0b0000000
         if len(saturn_conjunctions) == 0:
-            print ("Saturn Stands Alone")
-            necromancer_magic_number ^= ( 1 << 0)
+            print("Saturn Stands Alone")
+            necromancer_magic_number ^= (1 << 0)
         if lib.MERCURY in saturn_conjunctions:
-            print ("Mercury in Conjunction")
+            print("Mercury in Conjunction")
             necromancer_magic_number ^= (1 << 1)
         if lib.VENUS in saturn_conjunctions:
-            print ("Venus in Conjunction")
+            print("Venus in Conjunction")
             necromancer_magic_number ^= (1 << 2)
         if lib.MARS in saturn_conjunctions:
-            print ("Mars in Conjunction")
+            print("Mars in Conjunction")
             necromancer_magic_number ^= (1 << 3)
         if lib.JUPITER in saturn_conjunctions:
-            print ("Jupiter in Conjunction")
+            print("Jupiter in Conjunction")
             necromancer_magic_number ^= (1 << 4)
         if lib.SOL in saturn_conjunctions:
-            print ("Sol in Conjunction")
+            print("Sol in Conjunction")
             necromancer_magic_number ^= (1 << 5)
         print(necromancer_magic_number)
         return necromancer_magic_number
-            ## TODO: Magic number bits 6 & 7 are reserved for calamity and extinction which are beyond the scope of the project at the moment
+
     def popup(self):
         necro_pop = QDialog()
         necro_pop.setWindowTitle("Necromancer Reads the Stars")
         layout = QVBoxLayout(necro_pop)
-
-
 
         self.read_the_stars()
         saturn_document = QTextDocument()

@@ -5,6 +5,8 @@ from PyQt6.QtCore import Qt, QRectF, QPointF
 from PyQt6.QtGui import QPen, QColor, QPainterPath, QBrush, QFont
 from PyQt6.QtWidgets import QGraphicsScene
 from code_plumbing.planet import Planet
+from code_plumbing.house import House
+
 
 class ArcScene(QGraphicsScene):
     def __init__(self):
@@ -20,7 +22,7 @@ class ArcScene(QGraphicsScene):
     def polar_point_scene(r: float, qt_deg: float) -> QPointF:
         rad = math.radians(qt_deg)  # Qt: 0 at +x, CCW+
         x = r * math.cos(rad)
-        y = -r * math.sin(rad)     # scene y grows downward
+        y = -r * math.sin(rad)  # scene y grows downward
         return QPointF(x, y)
 
     def clear_all(self):
@@ -153,15 +155,16 @@ class ArcScene(QGraphicsScene):
         self.planets_items.append(item)
 
         # planet label near arc midpoint
-        mid_step_offset = planet.span_steps / 2.0
+        mid_step_offset = int(planet.span_steps / 2.0)
         mid_our = planet.angle_for_step(mid_step_offset)
         qt_mid = 90.0 - (mid_our % 360.0)
         label_pos = self.polar_point_scene(r_outer - t * 0.4, qt_mid)
 
         text = self.addText(planet.name)
-        if planet.grid_offset_half_step: # Saturn will be black in background so the color must be white
+        if planet.grid_offset_half_step:  # Saturn will be black in background so the color must be white
             text.setDefaultTextColor(QColor("White"))
-        else: text.setDefaultTextColor(QColor("Black"))
+        else:
+            text.setDefaultTextColor(QColor("Black"))
         f = QFont()
         f.setPointSize(14)
         text.setFont(f)

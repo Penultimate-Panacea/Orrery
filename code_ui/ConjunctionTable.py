@@ -56,8 +56,7 @@ class ConjunctionTable:
                 self.table.setItem(r, c, QTableWidgetItem(item_text))
                 if r == c:
                     self.table.setItem(r, c, QTableWidgetItem(""))
-                    self.table.item(r,c).setBackground(QColor("white"))
-
+                    self.table.item(r, c).setBackground(QColor("white"))
 
         for r in range(self.table.rowCount()):
             self.table.setRowHeight(r, row_height)

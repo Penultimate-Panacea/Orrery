@@ -17,7 +17,7 @@ class King:
             piracy=0,
             rebellion=0,
             ergoism=0,
-            monarchy = 0
+            monarchy=0
     ):
         """Create a King model.
 

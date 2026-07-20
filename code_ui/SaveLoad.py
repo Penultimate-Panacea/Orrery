@@ -9,7 +9,8 @@ from PyQt6.QtWidgets import (
 
 
 class SaveLoadWidget(QWidget):
-    def __init__(self, get_planets, set_planets_steps, get_kings, set_kings, get_dreaming, set_dreaming, conjunction_update, parent=None):
+    def __init__(self, get_planets, set_planets_steps, get_kings, set_kings, get_dreaming, set_dreaming,
+                 conjunction_update, parent=None):
         super().__init__(parent)
         self.get_planets = get_planets
         self.set_planets_steps = set_planets_steps
@@ -38,8 +39,8 @@ class SaveLoadWidget(QWidget):
         data = {
             "version": 2,
             "current_steps": steps,
-            "kings" : kings,
-            "dreaming" : dreaming,
+            "kings": kings,
+            "dreaming": dreaming,
             "cycle": lib.current_cycle
         }
 

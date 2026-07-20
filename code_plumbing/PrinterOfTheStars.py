@@ -1,10 +1,10 @@
 # coding=utf-8
-import time
-import code_plumbing.lib as lib
-from PyQt6.QtWidgets import QApplication, QDialog, QLabel,QProgressBar,QVBoxLayout
-from PyQt6.QtCore import Qt,QTimer
+from typing import Optional
+from PyQt6.QtWidgets import QApplication, QDialog, QLabel, QProgressBar, QVBoxLayout
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QTextDocument, QPageSize
 from PyQt6.QtPrintSupport import QPrinter, QPrinterInfo
+
 
 class SpoolingDialog(QDialog):
     def __init__(self, parent=None, message: str = "Sending print job…"):
@@ -27,7 +27,7 @@ class SpoolingDialog(QDialog):
 
 
 class PrinterOfTheStars:
-    def __init__(self, wizards, planets, timeout_s: int = 30, printer_name: str | None = None):
+    def __init__(self, wizards, planets, timeout_s: int = 30, printer_name: Optional[str] = None):
         self.wizards = wizards
         self.timeout_s = timeout_s
         self.printer_name = printer_name
@@ -41,13 +41,13 @@ class PrinterOfTheStars:
             full_html += """<div class="break"></div>"""
             full_html += w.read_the_stars_html
         full_html += ("</body></html>")
-        self.document= full_html
+        self.document = full_html
 
     def _configure_printer(self) -> QPrinter:
         printer = QPrinter(QPrinterInfo.defaultPrinter())
-        printer.setFromTo(2,8)
+        printer.setFromTo(2, 8)
 
-        # a bit of future proofing if multiplre printers are to be used
+        # a bit of future proofing if multiple printers are to be used
         if self.printer_name:
             chosen = next(
                 (p for p in QPrinterInfo.availablePrinters() if p.printerName() == self.printer_name),
@@ -69,7 +69,7 @@ class PrinterOfTheStars:
         # Qt requires a QApplication for printing
         app = QApplication.instance()
         # if app is None:
-       #     app = QApplication([])
+        #     app = QApplication([])
 
         printer = self._configure_printer()
 
@@ -90,7 +90,6 @@ class PrinterOfTheStars:
         print("Old Necromancer Text: %s" % self.wizards[0].read_the_stars_html)
         self.wizards = new_wizards
         print("New Necromancer Text: %s" % self.wizards[0].read_the_stars_html)
-
 
     def update_planets(self, new_planets):
         self.planets = new_planets

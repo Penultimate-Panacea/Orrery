@@ -3,8 +3,10 @@ from code_wizards.wizard import Wizard
 from code_plumbing import lib
 from PyQt6.QtGui import QTextDocument
 from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
+
+
 class Hierophant(Wizard):
-    def __init__(self,planetary_conjunction_dict):
+    def __init__(self, planetary_conjunction_dict):
         super().__init__(planetary_conjunction_dict)
 
     def make_magic_number(self):
@@ -37,7 +39,6 @@ class Hierophant(Wizard):
         print(hierophant_magic_number)
         return hierophant_magic_number
         ## TODO: Magic number bits 6 & 7 are reserved for calamity and extinction which are beyond the scope of the project at the moment
-
 
     def popup(self):
         hiero_pop = QDialog()

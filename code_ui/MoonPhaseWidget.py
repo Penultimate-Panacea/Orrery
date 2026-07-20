@@ -1,17 +1,18 @@
 # coding=utf-8
 import os
+from typing import Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QSizePolicy, QTextBrowser
 from PyQt6.QtSvgWidgets import QSvgWidget
 
 
-
 class MoonPhaseWidget(QWidget):
     """
     Displays the current SVG from a list, a Next button, and an HTML info area.
     """
-    def __init__(self, svg_paths: list[str], html_snippets: list[str] | None = None, parent=None):
+
+    def __init__(self, svg_paths: list[str], html_snippets: Optional[list[str]] = None, parent=None):
         super().__init__(parent)
 
         self.svg_paths = svg_paths or []
@@ -55,7 +56,7 @@ class MoonPhaseWidget(QWidget):
         else:
             self.update_view()
 
-    def current_svg_path(self) -> str | None:
+    def current_svg_path(self) -> Optional[str]:
         if 0 <= self.index < len(self.svg_paths):
             return self.svg_paths[self.index]
         return None

@@ -5,12 +5,13 @@ from PyQt6.QtGui import QTextDocument
 from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
 from collections import Counter
 
+
 class Sage(Wizard):
-    def __init__(self,planetary_conjunction_dict, planet_list, dreaming):
+    def __init__(self, planetary_conjunction_dict, planet_list, dreaming):
         super().__init__(planetary_conjunction_dict)
         self.planets = planet_list
         self.dreaming = dreaming
-        self.alignments = [0,0,0,0,0,0,0,0,0,0,0,0]
+        self.alignments = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     def set_dreaming(self, new_dreaming):
         self.dreaming = new_dreaming
@@ -32,7 +33,7 @@ class Sage(Wizard):
 
         layout.addWidget(text)
 
-        sage_pop.resize(900,600)
+        sage_pop.resize(900, 600)
         sage_pop.exec()
 
     def read_the_stars(self):
@@ -43,8 +44,6 @@ class Sage(Wizard):
         all_houses = [x for lst in all_conjunction_tables for x in lst]
         counts = Counter(all_houses)
         celestial_alignment = max(counts.values(), default=0)
-
-
 
         result = ""
 
@@ -62,7 +61,7 @@ class Sage(Wizard):
                                 Choose or create a Denizen with advice for the Pact. Give them an Omen and present them to any wizard. That wizard may schedule Time on them to hear their issues. He spends that Time to have a short scene with them. If the wizard has this scene, place an Omen on him. If the wizard refuses, remove an Omen from the Pact.
                             """
             elif celestial_alignment >= 4:
-                 result = f"""<h2>The Dreaming is Calm and the Celestial Alignment is 4 or more.</h2>
+                result = f"""<h2>The Dreaming is Calm and the Celestial Alignment is 4 or more.</h2>
                                 A newcomer arrives to Isha with strange tidings. Create a Denizen from a distant land and give them a Destiny. They are the embodiment of this destiny in all ways, and consciously seek to model it. Create a major Complication for another wizard related to their arrival. The Dreaming becomes Uncertain.
                             """
         elif self.dreaming == "Uncertain":

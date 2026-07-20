@@ -1,6 +1,6 @@
 # coding=utf-8
 from PyQt6.QtWidgets import QPushButton, QProgressBar, QVBoxLayout
-from PyQt6.QtCore import QTimer, pyqtSignal, Qt, QEvent
+from PyQt6.QtCore import QTimer, pyqtSignal, Qt
 from PyQt6.QtGui import QGuiApplication
 
 
@@ -45,7 +45,6 @@ class DelayProgressButton(QPushButton):
             self.timer.stop()
         self.progress_bar.setValue(0)
 
-
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
         if event.button() != Qt.MouseButton.LeftButton:
@@ -54,8 +53,6 @@ class DelayProgressButton(QPushButton):
         self._pressed = True
         self.current_time = 0
         self.progress_bar.setValue(0)
-
-
 
         self.timer.start(self.update_interval)
 

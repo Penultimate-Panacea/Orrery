@@ -4,8 +4,9 @@ from math import floor
 from PyQt6.QtGui import QTextDocument
 from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
 
+
 class Wizard:
-    def __init__(self,planet_conjunction_dict):
+    def __init__(self, planet_conjunction_dict):
         self.associated_planet = None
         self.water = None
         self.fire = None
@@ -39,7 +40,7 @@ class Wizard:
 
         text = QTextEdit()
         text.setReadOnly(True)
-        text.setDocument(wix_document)
+        text.setDocument(wiz_document)
 
         layout.addWidget(text)
 

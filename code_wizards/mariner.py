@@ -3,21 +3,24 @@ from code_wizards.wizard import Wizard
 from code_plumbing import lib
 from PyQt6.QtGui import QTextDocument
 from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
+
+
 class Mariner(Wizard):
-    def __init__(self,planetary_conjunction_dict, planet_list):
+    def __init__(self, planetary_conjunction_dict, planet_list):
         super().__init__(planetary_conjunction_dict)
         self.planets = planet_list
+
     def determine_season(self):
         current_house = self.planets[5].current_step
         season = ""
         print("Sol is at position %s" % current_house)
-        if current_house in range(0,3):
+        if current_house in range(0, 3):
             season = "Spring"
-        elif current_house in range(3,6):
+        elif current_house in range(3, 6):
             season = "Summer"
-        elif current_house in range(6,9):
+        elif current_house in range(6, 9):
             season = "Autumn"
-        elif current_house in range(9,12):
+        elif current_house in range(9, 12):
             season = "Winter"
         return season
 
@@ -25,7 +28,7 @@ class Mariner(Wizard):
         in_season_names = []
         self.determine_season()
         for p in self.planets:
-            if p.name != lib.SOL: # avoid duplicate
+            if p.name != lib.SOL:  # avoid duplicate
                 if self.determine_if_in_season(p):
                     in_season_names.append(p.name)
         print("The following planets are in season: %s" % in_season_names)
@@ -36,13 +39,13 @@ class Mariner(Wizard):
         season_houses = []
         print("Season is: %s" % season)
         if season == "Spring":
-            season_houses = [0,1,2]
+            season_houses = [0, 1, 2]
         if season == "Summer":
-            season_houses = [3,4,5]
+            season_houses = [3, 4, 5]
         if season == "Autumn":
-            season_houses = [6,7,8]
+            season_houses = [6, 7, 8]
         if season == "Winter":
-            season_houses = [9,10,11]
+            season_houses = [9, 10, 11]
         print("Houses in Season: %s" % season_houses)
         print("Conjunction Table: %s" % planet.conjunction_table)
         if any(p in planet.conjunction_table[planet.current_step] for p in season_houses):
@@ -66,7 +69,7 @@ class Mariner(Wizard):
 
         layout.addWidget(text)
 
-        mariner_pop.resize(900,600)
+        mariner_pop.resize(900, 600)
         mariner_pop.exec()
 
     def read_the_stars(self):

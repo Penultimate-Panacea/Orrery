@@ -3,41 +3,43 @@ from code_wizards.wizard import Wizard
 from code_plumbing import lib
 from PyQt6.QtGui import QTextDocument
 from PyQt6.QtWidgets import QTextEdit, QDialog, QVBoxLayout
+
+
 class Sorcerer(Wizard):
-    def __init__(self,planetary_conjunction_dict):
+    def __init__(self, planetary_conjunction_dict):
         super().__init__(planetary_conjunction_dict)
 
     def make_magic_number(self):
         conjunctions = self.planet_conjunction_dict
         print("Conjunctions are: " + str(conjunctions))
         sol_conjunctions = conjunctions[lib.SOL]
-        sorcerer_magic_number =0b0000000
+        sorcerer_magic_number = 0b0000000
         if len(sol_conjunctions) == 0:
-            print ("Sol Stands Alone")
-            sorcerer_magic_number ^= ( 1 << 0)
+            print("Sol Stands Alone")
+            sorcerer_magic_number ^= (1 << 0)
 
         if (lib.MERCURY in sol_conjunctions) ^ (lib.VENUS in sol_conjunctions):
-            print ("Mercury or Venus in Conjunction")
+            print("Mercury or Venus in Conjunction")
             sorcerer_magic_number ^= (1 << 1)
 
         if lib.MERCURY in sol_conjunctions and lib.VENUS in sol_conjunctions:
-            print ("Mercury and Venus in Conjunction")
+            print("Mercury and Venus in Conjunction")
             sorcerer_magic_number ^= (1 << 2)
 
         if lib.MARS in sol_conjunctions:
-            print ("Mars in Conjunction")
+            print("Mars in Conjunction")
             sorcerer_magic_number ^= (1 << 3)
 
         if lib.JUPITER in sol_conjunctions:
-            print ("Jupiter in Conjunction")
+            print("Jupiter in Conjunction")
             sorcerer_magic_number ^= (1 << 4)
 
         if lib.SATURN in sol_conjunctions:
-            print ("Saturn in Conjunction")
+            print("Saturn in Conjunction")
             sorcerer_magic_number ^= (1 << 5)
         print(sorcerer_magic_number)
         return sorcerer_magic_number
-            ## TODO: Magic number bits 6 & 7 are reserved for calamity and extinction which are beyond the scope of the project at the moment
+
     def sorcerer_popup(self):
         sorc_pop = QDialog()
         sorc_pop.setWindowTitle("Sorcerer Reads the Stars")
@@ -66,16 +68,16 @@ class Sorcerer(Wizard):
                             For each Region with any number of Hidden Traces on it, double the number of Traces in that region. If there are no hidden traces, instead ask the Celestial Audience which Wizard has the last control over his Domain. Place a Hidden Trace in each Region of that Wizard's Domain.
                         """
 
-        sol_mercury_XOR_venus_html = ""
+        sol_mercury_xor_venus_html = ""
         if magic_number & (1 << 1):
-            sol_mercury_XOR_venus_html = """
+            sol_mercury_xor_venus_html = """
                         <h2> Mercury or Venus in Conjunction -- Magic dreams of Power, and those who serve it feel its call.</h2>
                         Place a hidden trace on each Occultist. If there are no Occultists, place a new Occultist, accompanied by three Hidden Traces, in one of the Wizard's Authorities.
                     """
 
-        sol_mercury_AND_venus_html = ""
+        sol_mercury_and_venus_html = ""
         if magic_number & (1 << 2):
-            sol_mercury_AND_venus_html = """
+            sol_mercury_and_venus_html = """
                                <h2> Mercury and Venus in Conjunction -- Magic dreams of Power, and those who serve it feel its call </h2>
                                I.   Place a hidden trace on each Occultist. <br>
                                II.  Place a new Occultist, accompanied by three Hidden Traces, in one of the Wizard's Authorities.
@@ -109,8 +111,8 @@ class Sorcerer(Wizard):
                     <div style="font-family: serif;">
                       <h1 class="break-page"> Keeper of the Runes whose fate is controlled by %s </h1>
                       {sol_alone_html}
-                      {sol_mercury_XOR_venus_html}
-                      {sol_mercury_AND_venus_html}
+                      {sol_mercury_xor_venus_html}
+                      {sol_mercury_and_venus_html}
                       {sol_mars_html}
                       {sol_saturn_html}
                       {sol_jupiter_html}
