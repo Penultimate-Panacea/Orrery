@@ -83,9 +83,9 @@ class MainWindow(QWidget):
         self.view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.dreaming_combo = QComboBox()
         self.save_load = SaveLoadWidget(get_planets=self.planets, get_kings=self.king,
-                                        get_pendulum=self.dreaming_combo.currentText(),
+                                        get_dreaming=self.dreaming_combo.currentText(),
                                         set_planets_steps=self.load_planet_steps,
-                                        set_kings=self.load_king, set_pendulum=self.load_pendulum,
+                                        set_kings=self.load_king, set_dreaming=self.load_dreaming,
                                         conjunction_update=self.update_conjunction_table)
 
         self.printer = PrinterOfTheStars(self.wizards, self.planets)
@@ -251,9 +251,9 @@ class MainWindow(QWidget):
     def load_king(self, king):
         self.king = king
 
-    def load_pendulum(self, pendulum):
-        print("loading pendulum")
-        self.dreaming_combo.setCurrentIndex(self.dreaming_combo.findText(pendulum))
+    def load_dreaming(self, dreaming):
+        print("loading dreaming")
+        self.dreaming_combo.setCurrentIndex(self.dreaming_combo.findText(dreaming))
         self.redraw()
 
     def build_center_panel(self) -> QVBoxLayout:

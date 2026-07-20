@@ -9,17 +9,17 @@ from PyQt6.QtWidgets import (
 
 
 class SaveLoadWidget(QWidget):
-    def __init__(self, get_planets, set_planets_steps, get_kings, set_kings, get_pendulum, set_pendulum, conjunction_update, parent=None):
+    def __init__(self, get_planets, set_planets_steps, get_kings, set_kings, get_dreaming, set_dreaming, conjunction_update, parent=None):
         super().__init__(parent)
         self.get_planets = get_planets
         self.set_planets_steps = set_planets_steps
         self.get_kings = get_kings
         self.set_kings = set_kings
-        self.get_pendulum = get_pendulum
-        self.set_pendulum = set_pendulum
+        self.get_dreaming = get_dreaming
+        self.set_dreaming = set_dreaming
         self.update_conjunction_table = conjunction_update
 
-    def save_to_file(self, planets, kings, pendulum):
+    def save_to_file(self, planets, kings, dreaming):
         print("launching save to file")
         steps = [p.current_step for p in planets]
 
@@ -39,7 +39,7 @@ class SaveLoadWidget(QWidget):
             "version": 2,
             "current_steps": steps,
             "kings" : kings,
-            "pendulum" : pendulum,
+            "dreaming" : dreaming,
             "cycle": lib.current_cycle
         }
 
@@ -64,14 +64,14 @@ class SaveLoadWidget(QWidget):
 
             steps = data.get("current_steps", None)
             kings = data.get("kings", None)
-            pendulum = data.get("pendulum", None)
+            dreaming = data.get("dreaming", None)
             cycle = data.get("cycle", None)
             if not isinstance(steps, list):
                 raise ValueError("Invalid file contents: current_steps must be a list")
 
             self.set_planets_steps(steps)
             self.set_kings(kings)
-            self.set_pendulum(pendulum)
+            self.set_dreaming(dreaming)
             self.update_conjunction_table()
             lib.current_cycle = cycle
 
