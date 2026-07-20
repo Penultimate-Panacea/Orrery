@@ -7,7 +7,7 @@ from PyQt6.QtGui import QGuiApplication
 class DelayProgressButton(QPushButton):
     activated = pyqtSignal()
 
-    def __init__(self, text, parent=None, delay_ms=3000):
+    def __init__(self, text, parent=None, delay_ms=1750):
         super().__init__(text, parent)
         self.delay_ms = delay_ms
         self.current_time = 0
@@ -24,10 +24,10 @@ class DelayProgressButton(QPushButton):
             QProgressBar {
                 border: none;
                 background-color: transparent;
-                max-height: 75px;
+                max-height: 1000px;
             }
             QProgressBar::chunk {
-                background-color: #ffffff;
+                background-color: rgba(255, 255, 255, 0.4)
             }
         """)
 
