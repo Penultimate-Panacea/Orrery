@@ -67,7 +67,7 @@ jobs:
           else
             pyinstaller --clean \
               --noconfirm \
-              --name YourApp \
+              --name Orrery \
               --onefile \
               --windowed \
               --add-data "resources:resources" \
