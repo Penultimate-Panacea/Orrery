@@ -54,16 +54,16 @@ class MainWindow(QWidget):
         ]
 
         self.planets: List[Planet] = [
-            Planet(lib.MERCURY, QColor("Blue"), span_steps=13, step_count_circle=48, current_step=0, ring_radius=100, ring_thickness=16, conjunction_table=lib.CONJ_MERCURY),
-            Planet(lib.VENUS, QColor("Green"), span_steps=9, step_count_circle=48, current_step=1, ring_radius=140, ring_thickness=16, conjunction_table=lib.CONJ_VENUS),
-            Planet(lib.MARS, QColor("Red"), span_steps=5, step_count_circle=48, current_step=2, ring_radius=180, ring_thickness=16, conjunction_table=lib.CONJ_MARS),
-            Planet(lib.JUPITER, QColor("Orange"), span_steps=3, step_count_circle=48, current_step=3, ring_radius=220, ring_thickness=16, conjunction_table=lib.CONJ_JUPITER),
-            Planet(lib.SATURN, QColor("Gray"), span_steps=1, step_count_circle=36, current_step=0, ring_radius=280, ring_thickness=16,
+            Planet(lib.MERCURY, QColor("Blue"), span_steps=13, step_count_circle=48, current_step=0, ring_radius=80, ring_thickness=16, conjunction_table=lib.CONJ_MERCURY),
+            Planet(lib.VENUS, QColor("Green"), span_steps=9, step_count_circle=48, current_step=1, ring_radius=110, ring_thickness=16, conjunction_table=lib.CONJ_VENUS),
+            Planet(lib.MARS, QColor("Red"), span_steps=5, step_count_circle=48, current_step=2, ring_radius=140, ring_thickness=16, conjunction_table=lib.CONJ_MARS),
+            Planet(lib.JUPITER, QColor("Orange"), span_steps=3, step_count_circle=48, current_step=3, ring_radius=170, ring_thickness=16, conjunction_table=lib.CONJ_JUPITER),
+            Planet(lib.SATURN, QColor("Gray"), span_steps=1, step_count_circle=36, current_step=0, ring_radius=230, ring_thickness=16,
                    grid_offset_half_step=True, conjunction_table=lib.CONJ_SATURN),
-            Planet(lib.SOL, QColor("Yellow"), span_steps=1, step_count_circle=12, current_step=0, ring_radius=240,
+            Planet(lib.SOL, QColor("Yellow"), span_steps=1, step_count_circle=12, current_step=0, ring_radius=250,
                    ring_thickness=16, conjunction_table=lib.CONJ_SOL)
         ]
-        self.house_color_mode = ["estate"] * 12
+        self.house_color_mode = ["season"] * 12
 
         self.king = King() # placeholder king
 
@@ -266,7 +266,7 @@ class MainWindow(QWidget):
         # If `self.view` is created elsewhere, keep it; if not, create it here.
         center.addWidget(self.view, 1)
 
-        move_box = QGroupBox("Move arcs (snap)")
+        move_box = QGroupBox("Adjust the Orrery (+/- 1 only for setup)")
         move_layout = QGridLayout()
         move_box.setLayout(move_layout)
 
@@ -308,6 +308,7 @@ class MainWindow(QWidget):
         utility_button_height = 80
 
         btn_save = QPushButton("Save Data")
+        btn_save.setStyleSheet("font-size: 36px;")
         btn_save.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_save.setMinimumHeight(utility_button_height)
         btn_save.clicked.connect(
@@ -317,16 +318,18 @@ class MainWindow(QWidget):
         )
 
         btn_load = QPushButton("Load Data")
+        btn_load.setStyleSheet("font-size: 36px;")
         btn_load.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_load.setMinimumHeight(utility_button_height)
         btn_load.clicked.connect(self.save_load.load_from_file)
 
-        btn_print = QPushButton("Print")
+
+        btn_print = QPushButton("Print to default Printer")
         btn_print.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_print.setMinimumHeight(utility_button_height)
         btn_print.clicked.connect(self.printer_logic)
 
-        btn_cal = QPushButton("Calendar Controls")
+        btn_cal = QPushButton("Calendar Control\nUnder Construction")
         btn_cal.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn_cal.setMinimumHeight(utility_button_height)
 
@@ -334,8 +337,6 @@ class MainWindow(QWidget):
         save_load_layout.setColumnStretch(0, 1)
         save_load_layout.setRowStretch(0, 1)
         save_load_layout.setRowStretch(1, 1)
-
-        btn_cal.clicked.connect(self.advance_all_spans)  # <-- replace with your real handler if different
 
         save_load_layout.addWidget(btn_save, 0, 0)
         save_load_layout.addWidget(btn_load, 0, 1)
@@ -375,7 +376,7 @@ class MainWindow(QWidget):
         rb_est = QRadioButton("Estate")
         rb_sea = QRadioButton("Season")
         rb_ele = QRadioButton("Element")
-        rb_est.setChecked(True)
+        rb_sea.setChecked(True)
 
         bg.addButton(rb_est)
         bg.addButton(rb_sea)
@@ -397,8 +398,8 @@ class MainWindow(QWidget):
 
         self.swatch_grid = QGridLayout()
 
-        # initial swatches (Estate selected by default)
-        self.rebuild_swatches_for_mode("estate")
+        # initial swatches (Season selected by default)
+        self.rebuild_swatches_for_mode("season")
 
         left.addWidget(color_box, 1)
         left.addLayout(self.swatch_grid, 1)
@@ -447,7 +448,7 @@ class MainWindow(QWidget):
         btn_warlock.setMinimumHeight(watcher_button_height)
         read_the_stars_layout.addWidget(btn_warlock)
 
-        btn_mariner = QPushButton("Keeper of the Wilds")
+        btn_mariner = QPushButton("Wilds-Watcher")
         btn_mariner.clicked.connect(self.wizards[3].popup)
         btn_mariner.setMinimumHeight(watcher_button_height)
         read_the_stars_layout.addWidget(btn_mariner)
