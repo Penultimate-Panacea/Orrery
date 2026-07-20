@@ -1,0 +1,80 @@
+name: Build executables
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pyinstaller
+
+      - name: Build (PyInstaller)
+        shell: bash
+        run: |
+          set -e
+
+          # Clean previous outputs
+          rm -rf build dist
+
+          # Build GUI app
+          # Use --add-data to bundle resources folder.
+          # Format differs per OS, so we branch:
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            # Windows uses ; as the separator and backslashes in paths
+            pyinstaller --clean ^
+              --noconfirm ^
+              --name YourApp ^
+              --onefile ^
+              --windowed ^
+              --add-data "resources;resources" ^
+              main.py
+          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            # macOS/Linux uses : as the separator
+            pyinstaller --clean \
+              --noconfirm \
+              --name YourApp \
+              --onefile \
+              --windowed \
+              --add-data "resources:resources" \
+              main.py
+          else
+            pyinstaller --clean \
+              --noconfirm \
+              --name YourApp \
+              --onefile \
+              --windowed \
+              --add-data "resources:resources" \
+              main.py
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-dist
+          path: dist/**
