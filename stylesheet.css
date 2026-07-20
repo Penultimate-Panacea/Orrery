@@ -1,8 +1,0 @@
-@media print {
-    .break-page{
-        page-break-before: always;
-    }
-}
-h1 {
-  color: red;
-}
