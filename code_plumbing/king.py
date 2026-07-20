@@ -17,6 +17,7 @@ class King:
             piracy=0,
             rebellion=0,
             ergoism=0,
+            monarchy = 0
     ):
         """Create a King model.
 
@@ -46,27 +47,7 @@ class King:
         self.piracy = piracy
         self.rebellion = rebellion
         self.ergoism = ergoism
-        self.monarchy = self.calc_monarchy()
-
-    def calc_monarchy(self) -> int:
-        """Compute the derived monarchy score.
-
-        The monarchy score is computed as:
-            24 - (sum of all configured trait/threat components). This assumes the total amount of authority is set at
-            24 and does not increase.
-
-        Returns:
-            int: The computed monarchy value.
-        """
-        threats = (
-                self.aristocracy
-                + self.mercantilism
-                + self.piracy
-                + self.orthodoxy
-                + self.rebellion
-                + self.ergoism
-        )
-        return 24 - threats
+        self.monarchy = monarchy
 
 
 class SetKingDialog(QDialog):
@@ -100,6 +81,7 @@ class SetKingDialog(QDialog):
         self.piracy_box = QSpinBox(minimum=0, maximum=24, value=self.king.piracy)
         self.rebellion_box = QSpinBox(minimum=0, maximum=24, value=self.king.rebellion)
         self.ergoism_box = QSpinBox(minimum=0, maximum=24, value=self.king.ergoism)
+        self.monarchy_box = QSpinBox(minimum=0, maximum=24, value=self.king.monarchy)
         for combo in (self.sun_combo, self.moon_combo, self.rising_combo):
             combo.addItems(lib.SIGNS)
         form = QVBoxLayout()
@@ -133,8 +115,7 @@ class SetKingDialog(QDialog):
         auth.addWidget(QLabel("Ergoism"))
         auth.addWidget(self.ergoism_box)
         auth.addWidget(QLabel("Monarchy"))
-        monarchy = self.king.monarchy
-        auth.addWidget(QLabel(str(monarchy)))
+        auth.addWidget(self.monarchy_box)
         form.addLayout(auth)
         buttons = QHBoxLayout()
         self.ok_btn = QPushButton("Update")
@@ -167,6 +148,7 @@ class SetKingDialog(QDialog):
             self.piracy_box.value(),
             self.rebellion_box.value(),
             self.ergoism_box.value(),
+            self.monarchy_box.value()
         )
 
     def accept(self):
