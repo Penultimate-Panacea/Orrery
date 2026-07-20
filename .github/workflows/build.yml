@@ -29,6 +29,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
+        shell: bash
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
@@ -47,18 +48,18 @@ jobs:
           # Format differs per OS, so we branch:
           if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
             # Windows uses ; as the separator and backslashes in paths
-            pyinstaller --clean ^
-              --noconfirm ^
-              --name YourApp ^
-              --onefile ^
-              --windowed ^
-              --add-data "resources;resources" ^
+            pyinstaller --clean \
+              --noconfirm \
+              --name Orrery \
+              --onefile \
+              --windowed \
+              --add-data "resources;resources" \
               main.py
           elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
             # macOS/Linux uses : as the separator
             pyinstaller --clean \
               --noconfirm \
-              --name YourApp \
+              --name Orrery \
               --onefile \
               --windowed \
               --add-data "resources:resources" \
